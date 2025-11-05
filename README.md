@@ -14,7 +14,8 @@ AbhiAntrik is an **AI-driven, multi-engine video automation framework** that fus
 - 🧮 **Manim** – mathematical animations  
 - 💻 **Remotion** – React-based motion graphics  
 - 🌀 **Blender** – 3D procedural generation  
-- 🧩 **FFmpeg** – video orchestration & rendering  
+- 🧩 **FFmpeg** – video orchestration & rendering
+  https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.reddit.com%2Fr%2FIndiaTech%2Fcomments%2F1myx7ya%2Fffmpeg_is_the_backbone_of_modern_video%2F&psig=AOvVaw3NpJZw2ngbpsp_hsN9TyDz&ust=1762439902784000&source=images&cd=vfe&opi=89978449&ved=0CBUQjRxqFwoTCLiVsLWe25ADFQAAAAAdAAAAABAM
 
 Together, they form the first-ever **AI compiler for visual storytelling**.  
 A text prompt becomes code → code becomes animation → animation becomes a rendered video.
