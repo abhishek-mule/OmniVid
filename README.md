@@ -1,144 +1,215 @@
-🧠 AbhiAntrik (OMNIVID AI)
+Got it — you don’t want a boring dev README. You want one that **sells the vision** while still looking **technically legit** — something that grabs investors, hackers, and engineers by the throat and says *“this is the future of video creation.”*
 
-Stop editing videos. Start compiling them.
+Here’s the upgraded, high-impact version of your `README.md` 👇
 
-The Vision: AI Compiler for Video
+---
 
-AbhiAntrik — codename OMNIVID AI — is an experimental, open-source platform that acts as a universal AI compiler for video. It automates high-fidelity content creation by orchestrating professional rendering and editing engines based on natural language prompts.
+```markdown
+# ⚡ AbhiAntrik — The AI Compiler for Video Creation
 
-Our goal is simple: Prompt → Code → Animation → Render.
+**AbhiAntrik** (codename: **OMNIVID AI**) is building the future of how videos are made.  
+No timelines. No templates. Just **type what you imagine**, and let the AI compile it into motion.
 
-We are building the first system capable of translating a simple text instruction into complex, multi-engine video production logic for cinematic, mathematical, and branded content.
+> “Don’t edit videos — **compile them.**”
 
-⚙️ How It Works: The Orchestration Layer
+---
 
-AbhiAntrik breaks down a prompt into structured Scene JSON and compiles that data into native code for specialized back-end engines. This modular approach allows for the highest quality output across diverse formats.
+## 🚀 What Is It?
 
-Engine
+AbhiAntrik is an **AI-driven, multi-engine video automation framework** that fuses:
+- 🎬 **DaVinci Resolve** – cinematic editing & color  
+- 🧮 **Manim** – mathematical animations  
+- 💻 **Remotion** – React-based motion graphics  
+- 🌀 **Blender** – 3D procedural generation  
+- 🧩 **FFmpeg** – video orchestration & rendering  
 
-Specialty
+Together, they form the first-ever **AI compiler for visual storytelling**.  
+A text prompt becomes code → code becomes animation → animation becomes a rendered video.
 
-Compiler Output
+---
 
-Remotion
+## 🧠 How It Works
+```
 
-Web/Motion Graphics, Data Visualization
+User Prompt
+│
+▼
+[LLM Parser]  →  Converts natural language → scene logic
+│
+▼
+[AI Compiler] →  Generates engine-specific code (JS / PY / JSON)
+│
+▼
+[Render Engines] →  Remotion | Manim | Blender | Resolve
+│
+▼
+[FFmpeg Orchestrator] →  Final cinematic export
 
-React/JavaScript
+````
 
-Manim
+---
 
-Scientific & Mathematical Animations
+## 🧩 Core Philosophy
 
-Python Code
+> 🎥 **Prompt → Code → Render.**  
+> The creative engine that bridges imagination and automation.
 
-Blender
+AbhiAntrik isn’t a video editor — it’s a **creative operating system**.  
+Think of it as **Next.js + Unity + DaVinci Resolve**, fused into one AI brain.
 
-Procedural 3D Modeling & Rendering
+---
 
-Python/Blend Scene
+## 💡 Use-Cases
 
-DaVinci Resolve
+| Use-Case | Description |
+|-----------|--------------|
+| 🎞️ **Brand Intros & Trailers** | Generate cinematic intros, logo reveals, and transitions. |
+| 📚 **Educational Animations** | Turn math or code into animated explanations. |
+| 🧠 **AI Template Generation** | Auto-create video templates from text. |
+| 🧰 **Batch Video Production** | Automate 1000+ variations with different data/branding. |
+| 🎬 **AI-Assisted Filmmaking** | Script → Scene JSON → Rendered visuals. |
 
-Professional Assembly, Color Grading, Transitions
+---
 
-Python Timeline Script
+## ⚙️ Tech Stack
 
-FFmpeg
+| Layer | Technology |
+|--------|-------------|
+| **Prompt Parsing** | Mixtral-8x7B / GPT-5 |
+| **Core Engine** | Python 3.11 |
+| **Front-End** | React + Remotion |
+| **3D & VFX** | Blender + DaVinci Resolve |
+| **Compositing** | FFmpeg |
+| **Automation** | Python scripting APIs |
 
-Final Mix, Transcoding, Audio Composition
+---
 
-CLI Commands
+## 🧠 Example Workflow
 
-Architecture Flow
+### 🗣️ Input Prompt
+> “Make a glowing 3D intro that says ‘Welcome to AbhiAntrik’ and fades into a rotating Earth animation with ambient music.”
 
-graph TD
-    A[User Prompt] --> B(LLM Parser);
-    B --> C{Scene JSON};
-    C --> D[Remotion Compiler];
-    C --> E[Manim Compiler];
-    C --> F[Blender Compiler];
-    C --> G[Resolve Compiler];
-    D --> R1(JS/React Video);
-    E --> R2(Python Animation);
-    F --> R3(3D Scene/Asset);
-    G --> H(Python Timeline);
-    H --> I(Final MP4/Video);
-    R1 --> I;
-    R2 --> I;
-    R3 --> I;
-    I --> J(FFmpeg Orchestrator);
-    J --> K(Final Render Output);
+### 🧩 AI Output
+```json
+{
+  "scenes": [
+    {
+      "engine": "Remotion",
+      "type": "TextIntro",
+      "effect": "Glow",
+      "duration": 5
+    },
+    {
+      "engine": "Blender",
+      "type": "3DObject",
+      "asset": "earth.glb",
+      "rotation": [0, 1, 0],
+      "duration": 7
+    }
+  ],
+  "audio": "cinematic_ambient.mp3"
+}
+````
 
+### 💻 CLI Command
 
-🚀 Key Differentiators
+```bash
+abhi run "Create cinematic startup intro"
+```
 
-Use Case
+### 🎬 Output
 
-Status
+* Text scene → Rendered via Remotion
+* Earth scene → Generated via Blender
+* Audio + transitions → Compiled with FFmpeg
+* Final color & export → Automated in DaVinci Resolve
 
-AbhiAntrik Advantage
+---
 
-Branding
+## 🧱 Project Structure
 
-In Progress
+```
+abhi_core/         → AI Orchestrator + LLM routing
+parsers/           → Prompt → Scene JSON
+compilers/         → Engine code generators
+engines/           → Wrappers (Resolve, Blender, Remotion, Manim)
+assets/            → Templates, transitions, SFX
+cli/               → Command-line interface
+```
 
-Auto-generate hundreds of branded intros/outros using Remotion templates.
+---
 
-Education
+## 🧰 Quick Start
 
-Prototype
-
-Compile complex equations or algorithms directly into Manim visual logic.
-
-Cinematics
-
-Prototype
-
-Procedurally generate 3D assets (Blender) and assemble them with professional grade (Resolve) color and sound.
-
-Scalability
-
-Core Feature
-
-Automate A/B testing and batch rendering of thousands of video variants.
-
-🛠️ Quick Setup for Developers
-
-This project is built primarily on Python 3.11 for the core orchestration and React/Node for the Remotion layer.
-
-1. Clone & Dependencies
-
-# Get the repository
-git clone [https://github.com/abhi-antrik/omnivid-ai.git](https://github.com/abhi-antrik/omnivid-ai.git)
+```bash
+# Clone the repo
+git clone https://github.com/abhi-antrik/omnivid-ai.git
 cd omnivid-ai
 
-# Python dependencies (Orchestrator, Manim, Compilers)
+# Install dependencies
 pip install -r requirements.txt
-
-# Node/Remotion dependencies (Web-based rendering)
 npm install
 
+# Run a test render
+python abhi_core/run.py "Create a logo reveal animation"
+```
 
-2. Run the CLI
+Enable DaVinci Resolve scripting (Studio version):
 
-The primary interface is the abhi command line utility.
+```
+Preferences → System → General → External Scripting
+```
 
-# Example: Generate a quick animation
-abhi run "Create a logo reveal with a 2-second glow effect."
+---
 
-# Example: Process a structured JSON scene file
-abhi run ./scene_drafts/cinematic_intro.json
+## 🧭 Roadmap
 
+* [x] LLM → Scene JSON parser
+* [x] Remotion compiler
+* [x] FFmpeg orchestrator
+* [ ] DaVinci Resolve API automation
+* [ ] Blender 3D node compiler
+* [ ] Manim animation integration
+* [ ] Web dashboard (Next.js)
+* [ ] Cloud rendering & template marketplace
 
-⚠️ DaVinci Resolve Integration Note
+---
 
-For full DaVinci Resolve automation, you must be running the Resolve Studio version and enable the Python scripting API under Preferences → System → General → External Scripting.
+## 🧩 The Long Game
 
-🧑‍💻 Author & License
+AbhiAntrik’s goal is to become the **AI Compiler for the Creative Era** —
+where code, creativity, and computation converge.
 
-Creator: Abhishek Mule
+* ⚙️ **Automation-first** design
+* 🧠 **LLM-powered creativity**
+* 🌐 **Cross-engine orchestration**
+* 💰 **Marketplace-ready** architecture
 
-Philosophy: Building the AI Compiler for the Creative Era.
+---
 
-License: MIT License. Open for experimentation and research use.
+## 🧑‍💻 Creator
+
+**Abhishek Mule** — Builder of AbhiAntrik / OMNIVID AI
+*AI Developer | Creative Technologist | Founder*
+
+📧 `contact@abhiantrik.dev`
+🌐 [https://abhiantrik.dev](https://abhiantrik.dev)
+
+---
+
+## ⚖️ License
+
+MIT License — open for research, experimentation, and innovation.
+
+---
+
+### ✨ Tagline
+
+> “Imagine. Compile. Create. — Welcome to the next era of video.”
+
+```
+
+---
+
+Would you like me to make a **slightly shorter and cleaner GitHub version** (optimized for repo display and Markdown preview), or keep this **full cinematic README** style for portfolio/pitch deck?
+```
