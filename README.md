@@ -1,10 +1,3 @@
-Got it — you don’t want a boring dev README. You want one that **sells the vision** while still looking **technically legit** — something that grabs investors, hackers, and engineers by the throat and says *“this is the future of video creation.”*
-
-Here’s the upgraded, high-impact version of your `README.md` 👇
-
----
-
-```markdown
 # ⚡ AbhiAntrik — The AI Compiler for Video Creation
 
 **AbhiAntrik** (codename: **OMNIVID AI**) is building the future of how videos are made.  
