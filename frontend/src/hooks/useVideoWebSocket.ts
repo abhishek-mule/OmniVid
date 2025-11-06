@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 
-const WS_BASE_URL = process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:8000';
+// Use the same origin as the API for WebSocket to avoid CORS issues
+const WS_BASE_URL = process.env.NEXT_PUBLIC_WS_URL || 
+  (typeof window !== 'undefined' 
+    ? window.location.origin.replace(/^http/, 'ws')
+    : 'ws://localhost:8000');
+    
 const API_V1_PREFIX = '/api/v1';
 
 export interface VideoProgressMessage {
@@ -42,6 +47,7 @@ export function useVideoWebSocket(videoId: string | null): UseVideoWebSocketRetu
     if (!videoId) return;
 
     try {
+      // Try both WebSocket endpoints for compatibility
       const wsUrl = `${WS_BASE_URL}${API_V1_PREFIX}/ws/videos/${videoId}`;
       console.log('Connecting to WebSocket:', wsUrl);
       
