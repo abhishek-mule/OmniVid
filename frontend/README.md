@@ -1,15 +1,37 @@
-# OmniVid Frontend
+# 🎬 OmniVid - Cinematic Video Generation Platform
 
-Professional-grade, production-ready frontend for the OMNIVID AI video generation platform.
+A premium, creator-first video generation platform that transforms natural language into stunning professional videos using AI. Built with Next.js 14, Framer Motion, and TailwindCSS for a magical, intuitive user experience.
 
-## Features
+## ✨ Key Features
 
-- Modern, responsive design inspired by Apple, Linear, and Vercel aesthetics
-- Dark/Light mode support with smooth transitions
-- Fully accessible components using Radix UI primitives
-- Type-safe with TypeScript
-- Optimized bundle sizes and performance
-- SEO-friendly with Next.js 14
+### 🎨 Cinematic Landing Page
+- Animated gradient backgrounds with particle effects
+- Bold hero section with dual CTAs
+- Feature showcase with micro-interactions
+- Step-by-step "How It Works" visualization
+- Creator showcase gallery
+- Responsive dark/light theme support
+
+### 🎬 Video Generation Studio
+- Natural language prompt input with smart suggestions
+- Advanced controls: Resolution (720p-4K), FPS (24-60), Duration, Quality
+- 6+ professional templates to choose from
+- Real-time stage-by-stage progress tracking
+- Animated generate button with magical effects
+- Live video preview with playback controls
+
+### 📊 Analytics Dashboard
+- Overview stats: Videos, Watch Time, Views, Engagement
+- Sortable video history with quick previews
+- Status badges and action buttons
+- Animated stat cards with gradient icons
+
+### 🎭 Template Gallery
+- 8+ professionally designed templates
+- Filterable by category and style
+- Real-time search functionality
+- Star ratings and download counts
+- Preview and "Use Template" CTAs
 
 ## Tech Stack
 
@@ -85,33 +107,31 @@ frontend/
 └── tailwind.config.ts    # Tailwind configuration
 ```
 
-## Pages
+## 📁 Pages & Routes
 
 ### Landing Page (`/`)
-- Hero section with CTA
-- Stats showcase
-- Feature highlights
-- Call-to-action section
+- **HeroSection**: Animated background, gradient text, dual CTAs
+- **FeaturesSection**: 6 feature cards with hover effects
+- **HowItWorksSection**: 4-step process visualization
+- **ShowcaseSection**: Video examples gallery
+- **CTASection**: Final call-to-action with decorative elements
+
+### Video Generator (`/generate`)
+- **PromptEditor**: Natural language input with suggestions
+- **VideoControls**: Resolution, FPS, duration, quality selectors
+- **TemplateSelector**: 6 template options with previews
+- **ProgressTracker**: Real-time generation progress (5 stages)
+- **VideoPreview**: Live preview with playback
 
 ### Dashboard (`/dashboard`)
-- Overview statistics
-- Recent videos grid
-- Quick actions
+- **Stats Cards**: 4 animated metric cards
+- **Recent Videos**: Grid with hover previews
+- **Quick Actions**: Play, Download, Share buttons
 
-### Create Video (`/create`)
-- AI prompt interface
-- Asset upload
-- Video settings configuration
-- Real-time generation
-
-### Features (`/features`)
-- Comprehensive feature showcase
-- Use case examples
-
-### Pricing (`/pricing`)
-- Pricing tiers
-- Feature comparison
-- CTA buttons
+### Templates (`/templates`)
+- **TemplateGallery**: 8 templates with filtering
+- **TemplateFilters**: Category, style, and search
+- **Template Cards**: Ratings, tags, download counts
 
 ## Design System
 
