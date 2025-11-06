@@ -1,8 +1,17 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import { ThemeProvider } from '@/components/theme-provider';
-import { Toaster } from '@/components/ui/toaster-new';
+import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/toaster-new";
+import dynamic from 'next/dynamic';
+
+const CatAnimation = dynamic(() => import('@/components/CatAnimation'), {
+  ssr: false,
+});
+
+const ThreeBackground = dynamic(() => import('@/components/ThreeBackground'), {
+  ssr: false,
+});
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -46,16 +55,19 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-          <Toaster />
-        </ThemeProvider>
+      <body className={`${inter.className} relative`}>
+        <ThreeBackground />
+        <div className="relative z-10">
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+            <Toaster />
+          </ThemeProvider>
+        </div>
       </body>
     </html>
   );

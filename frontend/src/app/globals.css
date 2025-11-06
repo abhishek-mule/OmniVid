@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -55,21 +57,47 @@
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 240 4.9% 83.9%;
+<<<<<<< Updated upstream
+=======
   }
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
+@layer components {
+  /* Swiper overrides */
+  .swiper {
+    width: 100%;
+    height: 100%;
+  }
 
-::-webkit-scrollbar-track {
-  @apply bg-background;
-}
+  .swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+>>>>>>> Stashed changes
+  }
 
-::-webkit-scrollbar-thumb {
-  @apply bg-muted-foreground/30 rounded-full hover:bg-muted-foreground/50 transition-colors;
+  .swiper-button-next,
+  .swiper-button-prev {
+    color: white !important;
+  }
+
+  .swiper-pagination-bullet {
+    background: white !important;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-background;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/30 rounded-full hover:bg-muted-foreground/50 transition-colors;
+  }
 }
 
 /* Animation for page transitions */
