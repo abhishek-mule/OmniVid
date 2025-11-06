@@ -6,6 +6,10 @@ import Link from 'next/link';
 import { Navbar } from '@/components/navbar';
 import { Footer } from '@/components/footer';
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+import CreativeSlider from '@/components/CreativeSlider';
+>>>>>>> Stashed changes
 =======
 import CreativeSlider from '@/components/CreativeSlider';
 >>>>>>> Stashed changes
@@ -19,6 +23,7 @@ export default function Home() {
       <section className="relative overflow-hidden pt-32 pb-16 sm:pt-40 sm:pb-24 lg:pt-48 lg:pb-32">
         <div className="container px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="text-center">
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
             <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 text-sm rounded-full bg-muted border border-border">
               <Sparkles className="w-3 h-3" />
@@ -58,9 +63,40 @@ export default function Home() {
                   <Video className="w-10 h-10 text-primary" />
                 </div>
                 <p className="text-base text-muted-foreground">Demo video preview</p>
+=======
+            <CreativeSlider />
+              <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 text-sm rounded-full bg-muted border border-border">
+                <Sparkles className="w-3 h-3" />
+                <span>AI-Powered Video Generation</span>
+>>>>>>> Stashed changes
               </div>
+              <h1 className="text-5xl font-bold tracking-tight text-foreground sm:text-6xl md:text-7xl lg:text-8xl">
+                Create Videos
+                <br />
+                <span className="text-muted-foreground">in Minutes</span>
+              </h1>
+              <p className="max-w-2xl mx-auto mt-8 text-lg leading-relaxed text-muted-foreground">
+                Transform ideas into professional videos with AI. No editing experience required.
+                Just describe what you want, and watch your vision come to life.
+              </p>
+              <div className="flex flex-col items-center justify-center mt-10 gap-4 sm:flex-row">
+                <Button size="lg" className="h-12 px-8" asChild>
+                  <Link href="/generate" className="flex items-center gap-2">
+                    Get Started Free <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </Button>
+                <Button variant="outline" size="lg" className="h-12 px-8" asChild>
+                  <Link href="#demo" className="flex items-center gap-2">
+                    <Play className="w-4 h-4" /> Watch Demo
+                  </Link>
+                </Button>
+              </div>
+              <p className="mt-6 text-sm text-muted-foreground">
+                No credit card required. Start creating instantly.
+              </p>
             </div>
           </div>
+<<<<<<< Updated upstream
         </div>
 
         <div className="container px-4 mx-auto mt-20 max-w-7xl sm:px-6 lg:px-8">
@@ -216,9 +252,22 @@ export default function Home() {
                 </div>
               </div>
 >>>>>>> Stashed changes
+=======
+          <div className="relative px-4 mx-auto mt-20 max-w-6xl sm:px-6 lg:px-8">
+            <div className="relative overflow-hidden rounded-2xl border border-border bg-card shadow-2xl">
+              <div className="relative aspect-[16/9] bg-gradient-to-br from-muted/50 to-muted flex items-center justify-center">
+                <div className="text-center p-8">
+                  <div className="inline-flex items-center justify-center w-20 h-20 mb-4 rounded-2xl bg-primary/10">
+                    <Video className="w-10 h-10 text-primary" />
+                  </div>
+                  <p className="text-base text-muted-foreground">Demo video preview</p>
+                </div>
+              </div>
+>>>>>>> Stashed changes
             </div>
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent" />
           </div>
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
         </div>
       </section>
@@ -228,6 +277,8 @@ export default function Home() {
   );
 }
 =======
+=======
+>>>>>>> Stashed changes
 
           <div className="container px-4 mx-auto mt-20 max-w-7xl sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
@@ -349,4 +400,7 @@ export default function Home() {
       </div>
     );
   }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
