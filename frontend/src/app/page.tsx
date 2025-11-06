@@ -1,44 +1,84 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Check, Video, Sparkles, Zap, BarChart2 } from 'lucide-react';
+import { ArrowRight, Video, Sparkles, Zap, BarChart2, Play, Clock, Users } from 'lucide-react';
 import Link from 'next/link';
+import { Navbar } from '@/components/navbar';
+import { Footer } from '@/components/footer';
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-background">
+      <Navbar />
+
       {/* Hero Section */}
-      <section className="relative overflow-hidden pt-24 pb-16 sm:pt-32 sm:pb-24 lg:pt-40 lg:pb-32">
+      <section className="relative overflow-hidden pt-32 pb-16 sm:pt-40 sm:pb-24 lg:pt-48 lg:pb-32">
         <div className="container px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl">
-              Transform Your Ideas into
-              <span className="text-primary"> Stunning Videos</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 text-sm rounded-full bg-muted border border-border">
+              <Sparkles className="w-3 h-3" />
+              <span>AI-Powered Video Generation</span>
+            </div>
+            <h1 className="text-5xl font-bold tracking-tight text-foreground sm:text-6xl md:text-7xl lg:text-8xl">
+              Create Videos
+              <br />
+              <span className="text-muted-foreground">in Minutes</span>
             </h1>
-            <p className="max-w-2xl mx-auto mt-6 text-lg leading-8 text-muted-foreground">
-              OmniVid AI helps you create professional-quality videos in minutes with the power of artificial intelligence.
-              No technical skills required.
+            <p className="max-w-2xl mx-auto mt-8 text-lg leading-relaxed text-muted-foreground">
+              Transform ideas into professional videos with AI. No editing experience required.
+              Just describe what you want, and watch your vision come to life.
             </p>
-            <div className="flex flex-col items-center justify-center mt-10 gap-y-4 sm:flex-row sm:gap-x-6">
-              <Button size="lg" asChild>
-                <Link href="/dashboard" className="flex items-center">
-                  Get Started <ArrowRight className="w-4 h-4 ml-2" />
+            <div className="flex flex-col items-center justify-center mt-10 gap-4 sm:flex-row">
+              <Button size="lg" className="h-12 px-8" asChild>
+                <Link href="/dashboard" className="flex items-center gap-2">
+                  Get Started Free <ArrowRight className="w-4 h-4" />
                 </Link>
               </Button>
-              <Button variant="outline" size="lg" asChild>
-                <Link href="#features">
-                  Learn More
+              <Button variant="outline" size="lg" className="h-12 px-8" asChild>
+                <Link href="#demo" className="flex items-center gap-2">
+                  <Play className="w-4 h-4" /> Watch Demo
                 </Link>
               </Button>
             </div>
+            <p className="mt-6 text-sm text-muted-foreground">
+              No credit card required. Start creating instantly.
+            </p>
           </div>
         </div>
-        <div className="relative px-4 mx-auto mt-16 max-w-7xl sm:px-6 lg:px-8">
-          <div className="overflow-hidden rounded-xl shadow-2xl ring-1 ring-black/10">
-            <div className="relative aspect-[16/9] bg-muted/50 flex items-center justify-center">
+        <div className="relative px-4 mx-auto mt-20 max-w-6xl sm:px-6 lg:px-8">
+          <div className="relative overflow-hidden rounded-2xl border border-border bg-card shadow-2xl">
+            <div className="relative aspect-[16/9] bg-gradient-to-br from-muted/50 to-muted flex items-center justify-center">
               <div className="text-center p-8">
-                <Video className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                <p className="text-muted-foreground">Your video preview will appear here</p>
+                <div className="inline-flex items-center justify-center w-20 h-20 mb-4 rounded-2xl bg-primary/10">
+                  <Video className="w-10 h-10 text-primary" />
+                </div>
+                <p className="text-base text-muted-foreground">Demo video preview</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="container px-4 mx-auto mt-20 max-w-7xl sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+            <div className="flex items-center gap-4 p-6 rounded-xl border border-border bg-card">
+              <Clock className="w-10 h-10 text-primary" />
+              <div>
+                <div className="text-2xl font-bold">10x Faster</div>
+                <div className="text-sm text-muted-foreground">Video creation speed</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-4 p-6 rounded-xl border border-border bg-card">
+              <Users className="w-10 h-10 text-primary" />
+              <div>
+                <div className="text-2xl font-bold">50K+</div>
+                <div className="text-sm text-muted-foreground">Active creators</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-4 p-6 rounded-xl border border-border bg-card">
+              <Video className="w-10 h-10 text-primary" />
+              <div>
+                <div className="text-2xl font-bold">1M+</div>
+                <div className="text-sm text-muted-foreground">Videos generated</div>
               </div>
             </div>
           </div>
@@ -46,42 +86,57 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-24 bg-background">
+      <section id="features" className="py-32 bg-muted/30">
         <div className="container px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              Everything you need to create amazing videos
+          <div className="max-w-3xl mx-auto text-center mb-16">
+            <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+              Everything you need
             </h2>
             <p className="mt-4 text-lg text-muted-foreground">
-              OmniVid AI combines powerful AI with an intuitive interface to make video creation accessible to everyone.
+              Powerful features designed for professional video creation
             </p>
           </div>
-          <div className="grid max-w-5xl grid-cols-1 gap-8 mx-auto mt-16 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid max-w-6xl grid-cols-1 gap-6 mx-auto sm:grid-cols-2 lg:grid-cols-3">
             {[
               {
-                icon: <Sparkles className="w-6 h-6 text-primary" />,
+                icon: <Sparkles className="w-6 h-6" />,
                 title: 'AI-Powered Generation',
-                description: 'Generate videos from text prompts or scripts using our advanced AI models.'
+                description: 'Transform text prompts into professional videos with advanced AI'
               },
               {
-                icon: <Zap className="w-6 h-6 text-primary" />,
-                title: 'Lightning Fast',
-                description: 'Create videos in minutes, not hours. Our optimized pipeline delivers results quickly.'
+                icon: <Zap className="w-6 h-6" />,
+                title: 'Lightning Fast Rendering',
+                description: 'Generate videos in minutes with our optimized pipeline'
               },
               {
-                icon: <BarChart2 className="w-6 h-6 text-primary" />,
-                title: 'Data-Driven Insights',
-                description: 'Get analytics on your videos to understand viewer engagement and improve content.'
+                icon: <BarChart2 className="w-6 h-6" />,
+                title: 'Analytics Dashboard',
+                description: 'Track performance and engagement metrics in real-time'
+              },
+              {
+                icon: <Video className="w-6 h-6" />,
+                title: 'Multiple Formats',
+                description: 'Export in any format or resolution you need'
+              },
+              {
+                icon: <Users className="w-6 h-6" />,
+                title: 'Team Collaboration',
+                description: 'Work together with your team seamlessly'
+              },
+              {
+                icon: <Clock className="w-6 h-6" />,
+                title: 'Batch Processing',
+                description: 'Generate multiple videos simultaneously'
               }
             ].map((feature, index) => (
-              <div key={index} className="p-6 rounded-xl bg-card">
-                <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 rounded-full bg-primary/10">
+              <div key={index} className="group p-6 rounded-xl border border-border bg-card hover:shadow-lg transition-all">
+                <div className="flex items-center justify-center w-12 h-12 mb-4 rounded-lg bg-primary text-primary-foreground">
                   {feature.icon}
                 </div>
-                <h3 className="text-lg font-semibold text-center text-foreground">
+                <h3 className="text-lg font-semibold mb-2 text-foreground">
                   {feature.title}
                 </h3>
-                <p className="mt-2 text-center text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   {feature.description}
                 </p>
               </div>
@@ -91,30 +146,35 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-primary/5">
+      <section className="py-32 bg-background">
         <div className="container px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              Ready to create amazing videos?
-            </h2>
-            <p className="max-w-2xl mx-auto mt-4 text-lg text-muted-foreground">
-              Join thousands of creators who are already using OmniVid AI to bring their ideas to life.
-            </p>
-            <div className="flex flex-col items-center justify-center mt-8 space-y-3 sm:space-y-0 sm:space-x-4 sm:flex-row">
-              <Button size="lg" asChild>
-                <Link href="/signup">
-                  Get Started for Free <ArrowRight className="w-4 h-4 ml-2" />
-                </Link>
-              </Button>
-              <Button variant="outline" size="lg" asChild>
-                <Link href="/demo">
-                  Watch Demo
-                </Link>
-              </Button>
+          <div className="relative overflow-hidden rounded-3xl border border-border bg-card p-12 sm:p-16">
+            <div className="relative z-10 max-w-3xl mx-auto text-center">
+              <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+                Start creating today
+              </h2>
+              <p className="mt-6 text-lg text-muted-foreground">
+                Join thousands of creators using OmniVid AI to transform their ideas into stunning videos.
+              </p>
+              <div className="flex flex-col items-center justify-center mt-10 gap-4 sm:flex-row">
+                <Button size="lg" className="h-12 px-8" asChild>
+                  <Link href="/dashboard">
+                    Get Started Free <ArrowRight className="w-4 h-4 ml-2" />
+                  </Link>
+                </Button>
+                <Button variant="outline" size="lg" className="h-12 px-8" asChild>
+                  <Link href="/pricing">
+                    View Pricing
+                  </Link>
+                </Button>
+              </div>
             </div>
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent" />
           </div>
         </div>
       </section>
+
+      <Footer />
     </div>
   );
 }
