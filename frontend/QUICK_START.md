@@ -1,186 +1,98 @@
-# 🚀 Quick Start Guide
+## Backend Quick Start
 
-## Installation (2 minutes)
+This guide will get you started with the backend of the OmniVid project. The backend is responsible for the core AI and video processing functionalities.
+
+### Prerequisites
+
+- Docker
+- An IDE that supports the devcontainer spec (like VSCode)
+
+### Getting Started
+
+1.  **Clone the repository**
+
+    ```bash
+    git clone https://github.com/your-username/omnivid.git
+    cd omnivid
+    ```
+
+2.  **Open in Devcontainer**
+
+    Open the project in your IDE. If you're using VSCode, it should automatically prompt you to reopen the project in a devcontainer. This will build the Docker image and install all the necessary dependencies.
+
+3.  **Run the Backend**
+
+    Once the devcontainer is up and running, you can start the backend with the following command:
+
+    ```bash
+    python main.py
+    ```
+
+    This will start the backend server on `http://localhost:8000`.
+
+### API
+
+The backend exposes a single API endpoint:
+
+- `POST /generate`
+
+  This endpoint accepts a JSON payload with the following structure:
+
+  ```json
+  {
+    "script": "Your video script here"
+  }
+  ```
+
+  The `script` field should contain the text that you want to convert into a video.
+
+  You can use `curl` to test the endpoint:
+
+  ```bash
+  curl -X POST -H "Content-Type: application/json" -d '{"script": "Hello, world!"}' http://localhost:8000/generate
+  ```
+
+## Frontend Quick Start
+
+This guide will get you started with the frontend of the OmniVid project. The frontend is a Next.js application that provides the user interface for interacting with the video generation platform.
+
+### Prerequisites
+
+- Node.js 18+
+- npm or yarn
+
+### Installation
 
 ```bash
+# Navigate to the frontend directory
 cd frontend
+
+# Install dependencies
 npm install
+
+# Copy environment variables
+cp .env.local.example .env.local
+
+# Update with your Supabase credentials
+# NEXT_PUBLIC_SUPABASE_URL=your_url
+# NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key
+```
+
+### Development
+
+```bash
+# Start development server
 npm run dev
+
+# Open http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000)
-
-## 📍 Navigation
-
-| Route | Description |
-|-------|-------------|
-| `/` | Landing page with hero, features, showcase |
-| `/generate` | Video generation studio |
-| `/dashboard` | Analytics and video history |
-| `/templates` | Template gallery with filters |
-
-## 🎨 Key Components
-
-### Landing Page Components
-```typescript
-import { HeroSection } from '@/components/landing/HeroSection';
-import { FeaturesSection } from '@/components/landing/FeaturesSection';
-import { HowItWorksSection } from '@/components/landing/HowItWorksSection';
-import { ShowcaseSection } from '@/components/landing/ShowcaseSection';
-import { CTASection } from '@/components/landing/CTASection';
-```
-
-### Video Generator Components
-```typescript
-import { VideoGeneratorStudio } from '@/components/generate/VideoGeneratorStudio';
-import { PromptEditor } from '@/components/generate/PromptEditor';
-import { VideoControls } from '@/components/generate/VideoControls';
-import { TemplateSelector } from '@/components/generate/TemplateSelector';
-import { ProgressTracker } from '@/components/generate/ProgressTracker';
-import { VideoPreview } from '@/components/generate/VideoPreview';
-```
-
-### Dashboard Components
-```typescript
-import { DashboardOverview } from '@/components/dashboard/DashboardOverview';
-```
-
-### Template Components
-```typescript
-import { TemplateGallery } from '@/components/templates/TemplateGallery';
-import { TemplateFilters } from '@/components/templates/TemplateFilters';
-```
-
-### UI Components
-```typescript
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Progress } from '@/components/ui/progress';
-import { Slider } from '@/components/ui/slider';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-```
-
-## 🎯 Common Tasks
-
-### Change Primary Color
-Edit `src/app/globals.css`:
-```css
-:root {
-  --primary: 262 83% 58%; /* Violet - change these values */
-}
-```
-
-### Add New Template
-Edit `src/components/generate/TemplateSelector.tsx`:
-```typescript
-const templates = [
-  // Add new template
-  {
-    id: 'your-template',
-    name: 'Your Template Name',
-    description: 'Description',
-    gradient: 'from-blue-500 to-cyan-600',
-  },
-  // ... existing templates
-];
-```
-
-### Customize Animation Speed
-In any component with Framer Motion:
-```typescript
-// Slower
-transition={{ duration: 1.2 }}
-
-// Faster
-transition={{ duration: 0.4 }}
-```
-
-### Add New Feature Card
-Edit `src/components/landing/FeaturesSection.tsx`:
-```typescript
-const features = [
-  {
-    icon: YourIcon,
-    title: 'Feature Title',
-    description: 'Feature description',
-    gradient: 'from-color-500 to-color-600',
-  },
-  // ... existing features
-];
-```
-
-## 🔧 Troubleshooting
-
-### TypeScript Errors
-```bash
-# Restart TypeScript server in VS Code
-Ctrl+Shift+P → "TypeScript: Restart TS Server"
-```
-
-### Port Already in Use
-```bash
-npx kill-port 3000
-# or
-npm run dev -- -p 3001
-```
-
-### Missing Dependencies
-```bash
-npm install @radix-ui/react-progress @radix-ui/react-slider @radix-ui/react-tabs
-```
-
-### Clear Cache
-```bash
-rm -rf .next node_modules
-npm install
-```
-
-## 📚 Documentation Files
-
-- `README.md` - Main documentation
-- `PLATFORM_GUIDE.md` - Comprehensive platform guide
-- `SETUP.md` - Detailed setup instructions
-- `FEATURES.md` - Complete feature list
-- `QUICK_START.md` - This file
-
-## 🎨 Color Gradients Reference
-
-```css
-/* Primary Gradients */
-violet-fuchsia: from-violet-600 to-fuchsia-600
-violet-purple: from-violet-500 to-purple-600
-cyan-blue: from-cyan-500 to-blue-600
-pink-rose: from-pink-500 to-rose-600
-amber-orange: from-amber-500 to-orange-600
-green-emerald: from-green-500 to-emerald-600
-```
-
-## 🚀 Next Steps
-
-1. **Install dependencies**: `npm install`
-2. **Start dev server**: `npm run dev`
-3. **Explore pages**: Visit `/`, `/generate`, `/dashboard`, `/templates`
-4. **Customize**: Update colors, gradients, content
-5. **Integrate backend**: Connect to your API
-6. **Deploy**: Push to Vercel or your platform
-
-## 💡 Pro Tips
-
-- Use `Ctrl+K` in VS Code to search files quickly
-- All components are in `src/components/`
-- Pages use Next.js App Router in `src/app/`
-- Tailwind classes are in `src/app/globals.css`
-- Icons from `lucide-react` package
-
-## 🎬 Ready to Create!
-
-Your cinematic video generation platform is ready to go. Start the dev server and begin customizing!
+### Build
 
 ```bash
-npm run dev
-```
+# Build for production
+npm run build
 
-**Happy Creating! ✨**
+# Start production server
+npm start
+```
