@@ -4,8 +4,10 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import Link from 'next/link';
+import { useGetStarted } from '@/hooks/useGetStarted';
 
 export function CTASection() {
+  const { start } = useGetStarted();
   return (
     <section className="relative py-24 sm:py-32 overflow-hidden">
       {/* Background gradient */}
@@ -57,12 +59,12 @@ export function CTASection() {
               <Button
                 size="lg"
                 className="h-14 px-10 text-lg font-semibold bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 shadow-lg shadow-violet-500/50 transition-all hover:shadow-xl hover:shadow-violet-500/60 hover:scale-105"
-                asChild
+                onClick={() => start('/app/editor')}
               >
-                <Link href="/generate" className="flex items-center gap-2">
+                <span className="flex items-center gap-2">
                   Get Started Free
                   <ArrowRight className="w-5 h-5" />
-                </Link>
+                </span>
               </Button>
               <Button
                 variant="outline"
