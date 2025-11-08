@@ -1,7 +1,6 @@
-# ⚡ AbhiAntrik — The AI Compiler for Video Creation
+# 🎬 OmniVid - The AI Compiler for Video Creation
 
-**AbhiAntrik** (codename: **OMNIVID AI**) is building the future of how videos are made.  
-No timelines. No templates. Just **type what you imagine**, and let the AI compile it into motion.
+**OmniVid** is a premium, creator-first video generation platform that transforms natural language into stunning professional videos using AI. It combines a powerful backend AI compiler with a sleek, intuitive frontend built with Next.js 14, Framer Motion, and TailwindCSS.
 
 > “Don’t edit videos — **compile them.**”
 
@@ -9,26 +8,53 @@ No timelines. No templates. Just **type what you imagine**, and let the AI compi
 
 ## 🚀 What Is It?
 
-AbhiAntrik is an **AI-driven, multi-engine video automation framework** that fuses:
-- 🎬 **DaVinci Resolve** – cinematic editing & color  
-- 🧮 **Manim** – mathematical animations  
-- 💻 **Remotion** – React-based motion graphics  
-- 🌀 **Blender** – 3D procedural generation  
+OmniVid is an **AI-driven, multi-engine video automation framework** that fuses:
+- 🎬 **DaVinci Resolve** – cinematic editing & color
+- 🧮 **Manim** – mathematical animations
+- 💻 **Remotion** – React-based motion graphics
+- 🌀 **Blender** – 3D procedural generation
 - 🧩 **FFmpeg** – video orchestration & rendering
 
+Together, they form the first-ever **AI compiler for visual storytelling**. A text prompt becomes code → code becomes animation → animation becomes a rendered video.
 
-<img width="640" height="699" alt="image" src="https://github.com/user-attachments/assets/5fe0f6fb-555c-4655-8527-0a4bbea9f77d" />
+---
 
-  
+## ✨ Key Features
 
-Together, they form the first-ever **AI compiler for visual storytelling**.  
-A text prompt becomes code → code becomes animation → animation becomes a rendered video.
+### 🎨 Cinematic Landing Page
+- Animated gradient backgrounds with particle effects
+- Bold hero section with dual CTAs
+- Feature showcase with micro-interactions
+- Step-by-step "How It Works" visualization
+- Creator showcase gallery
+- Responsive dark/light theme support
+
+### 🎬 Video Generation Studio
+- Natural language prompt input with smart suggestions
+- Advanced controls: Resolution (720p-4K), FPS (24-60), Duration, Quality
+- 6+ professional templates to choose from
+- Real-time stage-by-stage progress tracking
+- Animated generate button with magical effects
+- Live video preview with playback controls
+
+### 📊 Analytics Dashboard
+- Overview stats: Videos, Watch Time, Views, Engagement
+- Sortable video history with quick previews
+- Status badges and action buttons
+- Animated stat cards with gradient icons
+
+### 🎭 Template Gallery
+- 8+ professionally designed templates
+- Filterable by category and style
+- Real-time search functionality
+- Star ratings and download counts
+- Preview and "Use Template" CTAs
 
 ---
 
 ## 🧠 How It Works
-```
 
+```
 User Prompt
 │
 ▼
@@ -42,30 +68,7 @@ User Prompt
 │
 ▼
 [FFmpeg Orchestrator] →  Final cinematic export
-
-````
-
----
-
-## 🧩 Core Philosophy
-
-> 🎥 **Prompt → Code → Render.**  
-> The creative engine that bridges imagination and automation.
-
-AbhiAntrik isn’t a video editor — it’s a **creative operating system**.  
-Think of it as **Next.js + Unity + DaVinci Resolve**, fused into one AI brain.
-
----
-
-## 💡 Use-Cases
-
-| Use-Case | Description |
-|-----------|--------------|
-| 🎞️ **Brand Intros & Trailers** | Generate cinematic intros, logo reveals, and transitions. |
-| 📚 **Educational Animations** | Turn math or code into animated explanations. |
-| 🧠 **AI Template Generation** | Auto-create video templates from text. |
-| 🧰 **Batch Video Production** | Automate 1000+ variations with different data/branding. |
-| 🎬 **AI-Assisted Filmmaking** | Script → Scene JSON → Rendered visuals. |
+```
 
 ---
 
@@ -73,87 +76,58 @@ Think of it as **Next.js + Unity + DaVinci Resolve**, fused into one AI brain.
 
 | Layer | Technology |
 |--------|-------------|
+| **Frontend** | Next.js 14, React, Tailwind CSS, Framer Motion |
+| **UI Components** | Radix UI primitives, Lucide React |
+| **State Management** | React Query |
+| **Forms** | React Hook Form + Zod validation |
+| **Database** | Supabase (PostgreSQL) |
 | **Prompt Parsing** | Mixtral-8x7B / GPT-5 |
 | **Core Engine** | Python 3.11 |
-| **Front-End** | React + Remotion |
 | **3D & VFX** | Blender + DaVinci Resolve |
 | **Compositing** | FFmpeg |
 | **Automation** | Python scripting APIs |
 
 ---
 
-## 🧠 Example Workflow
-
-### 🗣️ Input Prompt
-> “Make a glowing 3D intro that says ‘Welcome to AbhiAntrik’ and fades into a rotating Earth animation with ambient music.”
-
-### 🧩 AI Output
-```json
-{
-  "scenes": [
-    {
-      "engine": "Remotion",
-      "type": "TextIntro",
-      "effect": "Glow",
-      "duration": 5
-    },
-    {
-      "engine": "Blender",
-      "type": "3DObject",
-      "asset": "earth.glb",
-      "rotation": [0, 1, 0],
-      "duration": 7
-    }
-  ],
-  "audio": "cinematic_ambient.mp3"
-}
-````
-
-### 💻 CLI Command
-
-```bash
-abhi run "Create cinematic startup intro"
-```
-
-### 🎬 Output
-
-* Text scene → Rendered via Remotion
-* Earth scene → Generated via Blender
-* Audio + transitions → Compiled with FFmpeg
-* Final color & export → Automated in DaVinci Resolve
-
----
-
-## 🧱 Project Structure
-
-```
-abhi_core/         → AI Orchestrator + LLM routing
-parsers/           → Prompt → Scene JSON
-compilers/         → Engine code generators
-engines/           → Wrappers (Resolve, Blender, Remotion, Manim)
-assets/            → Templates, transitions, SFX
-cli/               → Command-line interface
-```
-
----
-
 ## 🧰 Quick Start
 
+### Frontend
+
 ```bash
-# Clone the repo
-git clone https://github.com/abhi-antrik/omnivid-ai.git
-cd omnivid-ai
+# Navigate to the frontend directory
+cd frontend
+
+# Install dependencies
+npm install
+
+# Copy environment variables
+cp .env.local.example .env.local
+
+# Update with your Supabase credentials
+# NEXT_PUBLIC_SUPABASE_URL=your_url
+# NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key
+
+# Start development server
+npm run dev
+
+# Open http://localhost:3000
+```
+
+### Backend
+
+```bash
+# Navigate to the backend directory
+# (Assuming a backend directory exists at the root)
+cd ../backend
 
 # Install dependencies
 pip install -r requirements.txt
-npm install
 
 # Run a test render
 python abhi_core/run.py "Create a logo reveal animation"
 ```
 
 Enable DaVinci Resolve scripting (Studio version):
-
 ```
 Preferences → System → General → External Scripting
 ```
@@ -173,41 +147,6 @@ Preferences → System → General → External Scripting
 
 ---
 
-## 🧩 The Long Game
-
-AbhiAntrik’s goal is to become the **AI Compiler for the Creative Era** —
-where code, creativity, and computation converge.
-
-* ⚙️ **Automation-first** design
-* 🧠 **LLM-powered creativity**
-* 🌐 **Cross-engine orchestration**
-* 💰 **Marketplace-ready** architecture
-
----
-
-## 🧑‍💻 Creator
-
-**Abhishek Mule** — Builder of AbhiAntrik / OMNIVID AI
-*AI Developer | Creative Technologist | Founder*
-
-📧 `contact@abhiantrik.dev`
-🌐 [https://abhiantrik.dev](https://abhiantrik.dev)
-
----
-
 ## ⚖️ License
 
 MIT License — open for research, experimentation, and innovation.
-
----
-
-### ✨ Tagline
-
-> “Imagine. Compile. Create. — Welcome to the next era of video.”
-
-```
-
----
-
-Would you like me to make a **slightly shorter and cleaner GitHub version** (optimized for repo display and Markdown preview), or keep this **full cinematic README** style for portfolio/pitch deck?
-```
