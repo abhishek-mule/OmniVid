@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { AuthForm } from '@/components/auth/auth-form';
+import { AuthFormWrapper } from '@/components/auth/auth-form-wrapper';
 import { Icons } from '@/components/icons';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -31,7 +31,7 @@ export default function LoginPage() {
             Enter your email to sign in to your account
           </p>
         </div>
-        <AuthForm type="login" />
+        <AuthFormWrapper />
         <p className="px-8 text-center text-sm text-muted-foreground">
           <Link
             href="/privacy"
