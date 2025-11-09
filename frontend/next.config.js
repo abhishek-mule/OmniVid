@@ -1,16 +1,21 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  swcMinify: true,
   compiler: {
     styledComponents: true,
   },
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
-  turbopack: {
-    root: __dirname,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  experimental: {
+    // Add any experimental features here
   },
   webpack: (config) => {
+    // Add any webpack configurations here
     return config;
   },
 }
