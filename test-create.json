@@ -1,0 +1,10 @@
+{
+  "prompt": "Test video",
+  "settings": {
+    "resolution": "1080p",
+    "fps": 30,
+    "duration": 15,
+    "quality": "medium",
+    "template": "modern"
+  }
+}
