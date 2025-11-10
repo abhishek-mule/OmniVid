@@ -1,0 +1,1 @@
+"use strict";exports.id=70,exports.ids=[70],exports.modules={35070:(e,r,t)=>{t.r(r),t.d(r,{default:()=>s});let s=(0,t(68570).createProxy)(String.raw`C:\Users\HP\Desktop\omnivid\frontend\src\components\ThreeBackground.tsx#default`)}};

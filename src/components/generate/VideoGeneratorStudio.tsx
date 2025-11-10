@@ -11,9 +11,7 @@ import {
   Settings, 
   Layers, 
   Download,
-  Play,
-  Pause,
-  RotateCcw
+  Play
 } from 'lucide-react';
 import { PromptEditor } from './PromptEditor';
 import { VideoControls } from './VideoControls';
