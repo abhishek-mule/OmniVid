@@ -23,3 +23,7 @@ yarn-error.log*
 
 #vercel
 .vercel
+
+# Build outputs
+.next_old/
+build-output.txt
