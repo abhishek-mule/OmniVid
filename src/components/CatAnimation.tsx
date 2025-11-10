@@ -26,7 +26,7 @@ const CatAnimation: React.FC = () => {
               </div>
               <div className="cat-lower-wrap">
                 <div className="cat-lower">
-                  {[1, 2].map((leg, i) => (
+                  {[1, 2].map((_, i) => (
                     <div key={i} className="cat-leg">
                       {[...Array(15)].map((_, i) => (
                         <div key={i} className="cat-leg">
