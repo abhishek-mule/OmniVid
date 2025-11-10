@@ -28,7 +28,7 @@ type FormData = z.infer<typeof userAuthSchema>;
 
 interface AuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
   type: 'login' | 'register';
-  searchParams: ReturnType<typeof useSearchParams>;
+  searchParams?: ReturnType<typeof useSearchParams>;
 }
 
 export function AuthForm({ className, type, searchParams, ...props }: AuthFormProps) {

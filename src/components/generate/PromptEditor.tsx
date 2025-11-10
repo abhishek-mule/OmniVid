@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
 import { Lightbulb } from 'lucide-react';
 
 interface PromptEditorProps {

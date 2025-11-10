@@ -5,11 +5,9 @@ import { Button } from '@/components/ui/button';
 import { Video, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { ThemeToggle } from '@/components/theme-toggle';
-import { useGetStarted } from '@/hooks/useGetStarted';
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { start } = useGetStarted();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -37,10 +35,10 @@ export function Navbar() {
           <div className="hidden md:flex items-center gap-4">
             <ThemeToggle />
             <Button variant="ghost" asChild>
-              <Link href="/auth/login">Log in</Link>
+              <Link href="/login">Log in</Link>
             </Button>
-            <Button onClick={() => start('/app/editor')}>
-              Get Started
+            <Button asChild>
+              <Link href="/dashboard">Get Started</Link>
             </Button>
           </div>
 
@@ -79,10 +77,10 @@ export function Navbar() {
             </Link>
             <div className="pt-4 space-y-2">
               <Button variant="ghost" className="w-full" asChild>
-                <Link href="/auth/login">Log in</Link>
+                <Link href="/login">Log in</Link>
               </Button>
-              <Button className="w-full" onClick={() => { setMobileMenuOpen(false); start('/app/editor'); }}>
-                Get Started
+              <Button className="w-full" asChild>
+                <Link href="/dashboard">Get Started</Link>
               </Button>
             </div>
           </div>
