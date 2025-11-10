@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Sparkles, Zap, BarChart2, Video, Clock, Users, Wand2, Palette } from 'lucide-react';
+import { Zap, BarChart2, Video, Users, Wand2, Palette } from 'lucide-react';
 
 const features = [
   {

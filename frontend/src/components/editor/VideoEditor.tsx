@@ -10,8 +10,6 @@ import {
   Pause,
   SkipBack,
   SkipForward,
-  Volume2,
-  Maximize,
   Download,
   Layers,
   Type,
@@ -21,14 +19,13 @@ import {
   Settings,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function VideoEditor() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(120);
+  const [duration] = useState(120);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);

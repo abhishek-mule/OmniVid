@@ -25,8 +25,6 @@ export function TemplateCard({
   id,
   name,
   description,
-  category,
-  style,
   difficulty,
   duration,
   rating,
