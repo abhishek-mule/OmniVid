@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import { Lightbulb, Sparkles } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 
 interface PromptInputProps {
   value: string;

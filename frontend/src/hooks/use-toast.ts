@@ -16,9 +16,6 @@ type ToastWithAction = Toast & {
   open?: boolean;
 };
 
-type ToastOptions = {
-  duration?: number;
-};
 
 const actionTypes = {
   ADD_TOAST: 'ADD_TOAST',

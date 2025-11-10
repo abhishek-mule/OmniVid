@@ -97,7 +97,69 @@
   }
 }
 
-/* Animation for page transitions */
+/* CreativeSlider global styles moved from styled-jsx */
+.swiper-pagination-progressbar {
+  background: rgba(255, 255, 255, 0.2);
+  height: 2px !important;
+  max-width: 200px;
+  margin: 0 auto;
+}
+
+.swiper-pagination-progressbar-fill {
+  background: #ffffff;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.swiper-slide-active .title-area,
+.swiper-slide-active .swiper-content p,
+.swiper-slide-active .creative-btn--wrap {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.swiper-slide-active .title-area {
+  animation-delay: 0.3s;
+}
+
+.swiper-slide-active .swiper-content p {
+  animation-delay: 0.5s;
+}
+
+.swiper-slide-active .creative-btn--wrap {
+  animation-delay: 0.7s;
+}
+
+@media (max-width: 768px) {
+  .swiper-content {
+    padding: 0 20px;
+    text-align: center;
+    left: 0 !important;
+    right: 0;
+    transform: translateY(-50%) !important;
+    max-width: 100% !important;
+  }
+
+  .title-area h2 {
+    font-size: 3.5rem !important;
+  }
+
+  .swiper-button-wrapper {
+    padding: 0 20px !important;
+  }
+
+  .slider-pagination-area {
+    display: none !important;
+  }
+}
 .page-enter {
   opacity: 0;
   transform: translateY(10px);

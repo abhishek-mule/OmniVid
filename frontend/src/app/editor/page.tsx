@@ -3,12 +3,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { 
   Play, 
-  Pause, 
   Download, 
   Settings, 
   Sparkles, 
   Clock, 
-  Zap,
   ChevronDown,
   Check,
   Loader2
@@ -24,7 +22,6 @@ import {
 } from '@/components/ui/tabs';
 import { 
   Card, 
-  CardContent, 
   CardHeader, 
   CardTitle, 
   CardDescription,
@@ -39,13 +36,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { simpleApi, TemplateItem } from '@/lib/api';
 
 // Types
-type Template = {
-  id: string;
-  name: string;
-  description: string;
-  thumbnail: string;
-  category: string;
-};
+// Removed unused Template type
 
 type RecentVideo = {
   id: string;
@@ -54,29 +45,7 @@ type RecentVideo = {
 };
 
 // Mock data for templates
-const TEMPLATES: Template[] = [
-  {
-    id: 'logo-reveal',
-    name: 'Logo Reveal',
-    description: 'Elegant logo reveal animation',
-    thumbnail: '/templates/logo-reveal.jpg',
-    category: 'Business',
-  },
-  {
-    id: 'social-post',
-    name: 'Social Media Post',
-    description: 'Engaging social media content',
-    thumbnail: '/templates/social-post.jpg',
-    category: 'Social',
-  },
-  {
-    id: 'product-showcase',
-    name: 'Product Showcase',
-    description: 'Show your product in style',
-    thumbnail: '/templates/product-showcase.jpg',
-    category: 'E-commerce',
-  },
-];
+// Removed unused TEMPLATES mock
 
 // Mock recent videos
 const RECENT_VIDEOS: RecentVideo[] = [
@@ -104,7 +73,7 @@ export default function EditorPage() {
     showAdvanced: false,
     aspectRatio: '16:9',
   });
-  const [videoId, setVideoId] = useState<string | null>(null);
+  const [, setVideoId] = useState<string | null>(null);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [templates, setTemplates] = useState<TemplateItem[]>([]);
   const [templateFilter, setTemplateFilter] = useState<string>('all');
@@ -512,7 +481,7 @@ export default function EditorPage() {
                   
                   {/* Stage Indicators */}
                   <div className="flex justify-between text-xs text-gray-500 pt-2">
-                    {['parsing', 'generating', 'rendering'].map((stage) => (
+                    {(['parsing', 'generating', 'rendering'] as const).map((stage) => (
                       <div key={stage} className="flex flex-col items-center space-y-1">
                         <div className={cn(
                           "w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium",
