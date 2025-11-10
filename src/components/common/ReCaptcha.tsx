@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 
-export const ReCaptchaProvider = ({ children }: { children: React.ReactNode }) => {
+export const ReCaptchaProvider = ({ children }: { children: ReactNode }) => {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
