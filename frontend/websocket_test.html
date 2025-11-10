@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        #output { 
+            margin-top: 20px; 
+            padding: 10px; 
+            border: 1px solid #ccc; 
+            min-height: 200px;
+            background: #f9f9f9;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        .connected { color: green; }
+        .disconnected { color: red; }
+    </style>
+</head>
+<body>
+    <h1>WebSocket Connection Test</h1>
+    <div>
+        <button id="connectBtn">Connect to WebSocket</button>
+        <span id="status" class="disconnected">Disconnected</span>
+    </div>
+    <div id="output">Click the button to connect to WebSocket...</div>
+
+    <script>
+        const connectBtn = document.getElementById('connectBtn');
+        const statusSpan = document.getElementById('status');
+        const outputDiv = document.getElementById('output');
+        let socket = null;
+        const videoId = 'test-' + Math.random().toString(36).substr(2, 9);
+        const wsUrl = `ws://localhost:8000/api/v1/ws/videos/${videoId}`;
+
+        function log(message) {
+            const timestamp = new Date().toISOString();
+            outputDiv.innerHTML += `[${timestamp}] ${message}\n`;
+            outputDiv.scrollTop = outputDiv.scrollHeight;
+        }
+
+        connectBtn.addEventListener('click', () => {
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                log('Already connected to WebSocket');
+                return;
+            }
+
+            log(`Connecting to WebSocket at ${wsUrl}...`);
+            
+            socket = new WebSocket(wsUrl);
+
+            socket.onopen = () => {
+                log('WebSocket connection established');
+                statusSpan.textContent = 'Connected';
+                statusSpan.className = 'connected';
+                connectBtn.textContent = 'Disconnect';
+                
+                // Send a test message
+                socket.send(JSON.stringify({
+                    type: 'ping',
+                    timestamp: new Date().toISOString()
+                }));
+            };
+
+            socket.onmessage = (event) => {
+                log(`Received: ${event.data}`);
+                
+                // If we get a ping, respond with pong
+                try {
+                    const data = JSON.parse(event.data);
+                    if (data.type === 'ping') {
+                        socket.send(JSON.stringify({
+                            type: 'pong',
+                            timestamp: data.timestamp || new Date().toISOString()
+                        }));
+                    }
+                } catch (e) {
+                    log(`Error parsing message: ${e.message}`);
+                }
+            };
+
+            socket.onclose = (event) => {
+                log(`WebSocket connection closed: ${event.code} ${event.reason || 'No reason provided'}`);
+                statusSpan.textContent = 'Disconnected';
+                statusSpan.className = 'disconnected';
+                connectBtn.textContent = 'Connect to WebSocket';
+                socket = null;
+            };
+
+            socket.onerror = (error) => {
+                log(`WebSocket error: ${error.message || 'Unknown error'}`);
+            };
+        });
+
+        // Handle disconnect
+        connectBtn.addEventListener('click', (e) => {
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                log('Closing WebSocket connection...');
+                socket.close(1000, 'User disconnected');
+            }
+        });
+    </script>
+</body>
+</html>
