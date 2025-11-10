@@ -1,0 +1,74 @@
+// Database schema for authentication system 
+ 
+ generator client { 
+   provider = "prisma-client-js" 
+ } 
+ 
+ datasource db { 
+   provider = "postgresql" // or "mysql", "sqlite" 
+   url      = env("DATABASE_URL") 
+ } 
+ 
+ model User { 
+   id            String    @id @default(uuid()) 
+   email         String    @unique 
+   name          String? 
+   password      String?   // hashed, null for OAuth-only users 
+   emailVerified Boolean   @default(false) 
+   image         String? 
+   
+   // OAuth accounts 
+   accounts      Account[] 
+   sessions      Session[] 
+   
+   // Password reset 
+   resetTokens   PasswordResetToken[] 
+   
+   createdAt     DateTime  @default(now()) 
+   updatedAt     DateTime  @updatedAt 
+   
+   @@index([email]) 
+ } 
+ 
+ model Account { 
+   id                String  @id @default(uuid()) 
+   userId            String 
+   type              String  // "oauth" 
+   provider          String  // "google", "github", etc. 
+   providerAccountId String 
+   refresh_token     String? @db.Text 
+   access_token      String? @db.Text 
+   expires_at        Int? 
+   token_type        String? 
+   scope             String? 
+   id_token          String? @db.Text 
+   session_state     String? 
+ 
+   user User @relation(fields: [userId], references: [id], onDelete: Cascade) 
+ 
+   @@unique([provider, providerAccountId]) 
+   @@index([userId]) 
+ } 
+ 
+ model Session { 
+   id           String   @id @default(uuid()) 
+   sessionToken String   @unique 
+   userId       String 
+   expires      DateTime 
+   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade) 
+ 
+   @@index([userId]) 
+ } 
+ 
+ model PasswordResetToken { 
+   id        String   @id @default(uuid()) 
+   userId    String 
+   token     String   @unique 
+   expires   DateTime 
+   used      Boolean  @default(false) 
+   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade) 
+   createdAt DateTime @default(now()) 
+ 
+   @@index([userId]) 
+   @@index([token]) 
+ }
