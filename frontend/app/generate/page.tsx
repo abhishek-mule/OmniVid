@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { Sparkles, Image, Video, Music, Type, ChevronDown, Loader2 } from 'lucide-react';
+import { Sparkles, Image, Video, Music, Type, ChevronDown, Loader2, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -42,20 +42,7 @@ export default function GeneratePage() {
     }
   };
 
-  const getTypeIcon = (type: GenerationType) => {
-    switch (type) {
-      case 'video':
-        return <Video className="w-5 h-5 mr-2" />;
-      case 'image':
-        return <Image className="w-5 h-5 mr-2" />;
-      case 'audio':
-        return <Music className="w-5 h-5 mr-2" />;
-      case 'text':
-        return <Type className="w-5 h-5 mr-2" />;
-      default:
-        return <Sparkles className="w-5 h-5 mr-2" />;
-    }
-  };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 p-4 md:p-8">

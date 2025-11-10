@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { BookOpen, Code, Video, Zap, MessageSquare, FileText, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 
@@ -51,7 +50,6 @@ const docsSections: DocSection[] = [
 ];
 
 export default function DocsPage() {
-  const [activeSection, setActiveSection] = useState<string | null>(null);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 p-4 md:p-8">
@@ -72,8 +70,6 @@ export default function DocsPage() {
                 key={section.id}
                 href={`/docs/${section.id}`}
                 className={`group relative overflow-hidden rounded-2xl bg-slate-800/50 border border-slate-700/50 p-6 hover:border-cyan-500/30 transition-all duration-300`}
-                onMouseEnter={() => setActiveSection(section.id)}
-                onMouseLeave={() => setActiveSection(null)}
               >
                 <div className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <div className={`absolute inset-0 bg-gradient-to-br ${section.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>

@@ -142,4 +142,49 @@ export const healthApi = {
   },
 };
 
+export type TemplateItem = {
+  id: string;
+  name: string;
+  description: string;
+  thumbnail: string;
+  category: string;
+};
+
+function httpToWs(url: string) {
+  if (url.startsWith('https://')) return url.replace('https://', 'wss://');
+  if (url.startsWith('http://')) return url.replace('http://', 'ws://');
+  return url;
+}
+
+export const simpleApi = {
+  async listTemplates(): Promise<TemplateItem[]> {
+    // Placeholder: return empty list if backend templates endpoint is not available
+    try {
+      const res = await axios.get(`${API_BASE_URL}/templates`);
+      return Array.isArray(res.data) ? res.data as TemplateItem[] : [];
+    } catch {
+      return [];
+    }
+  },
+  async createVideo(payload: { prompt: string; settings?: any }): Promise<{ video_id: string }> {
+    const data: VideoCreateRequest = {
+      prompt: payload.prompt,
+      resolution: (payload?.settings?.resolution as any) || '1080p',
+      fps: (payload?.settings?.fps as any) || 30,
+      duration: (payload?.settings?.duration as any) || 15,
+      quality: (payload?.settings?.quality as any) || 'balanced',
+      render_engine: (payload?.settings?.render_engine as any) || 'remotion',
+    };
+    const resp = await videoApi.createVideo(data);
+    return { video_id: resp.id };
+  },
+  getWebSocketUrl(videoId: string): string {
+    const base = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000').replace(/\/$/, '');
+    return `${httpToWs(base)}/ws/videos/${videoId}`;
+  },
+  getDownloadUrl(videoId: string): string {
+    return videoApi.getDownloadUrl(videoId);
+  },
+};
+
 export default apiClient;
