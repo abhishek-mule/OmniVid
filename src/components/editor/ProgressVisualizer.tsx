@@ -58,14 +58,19 @@ export function ProgressVisualizer({
 
   // Handle completion state
   useEffect(() => {
+    let timer: ReturnType<typeof setTimeout> | null = null;
+
     if (progress >= 100 && !isComplete) {
-      const timer = setTimeout(() => {
+      timer = setTimeout(() => {
         setIsComplete(true);
       }, 500);
-      return () => clearTimeout(timer);
     } else if (progress < 100) {
       setIsComplete(false);
     }
+
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
   }, [progress, isComplete]);
 
   const getStageProgress = (stageId: string) => {
