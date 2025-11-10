@@ -1,9 +1,11 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { Play, Star, Download } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useState, useMemo } from 'react';
+import { TemplateCard } from './TemplateCard';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Search, AlertCircle } from 'lucide-react';
 
 interface TemplateGalleryProps {
   category: string;
@@ -11,12 +13,32 @@ interface TemplateGalleryProps {
   searchQuery: string;
 }
 
-const templates = [
+type Difficulty = 'Easy' | 'Medium' | 'Hard';
+
+interface Template {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  style: string;
+  difficulty: Difficulty;
+  duration: string;
+  rating: number;
+  downloads: string;
+  gradient: string;
+  tags: string[];
+}
+
+// Mock data - replace with API call in production
+const mockTemplates: Template[] = [
   {
     id: '1',
     name: 'Modern Product Showcase',
+    description: 'A sleek and modern template perfect for showcasing your latest product with smooth animations.',
     category: 'marketing',
     style: 'modern',
+    difficulty: 'Medium',
+    duration: '1-2 min',
     rating: 4.8,
     downloads: '12.5K',
     gradient: 'from-violet-500 to-purple-600',
@@ -25,8 +47,11 @@ const templates = [
   {
     id: '2',
     name: 'Cinematic Travel Vlog',
+    description: 'Create stunning travel vlogs with this cinematic template featuring dynamic transitions.',
     category: 'entertainment',
     style: 'cinematic',
+    difficulty: 'Hard',
+    duration: '3-5 min',
     rating: 4.9,
     downloads: '18.2K',
     gradient: 'from-cyan-500 to-blue-600',
@@ -35,8 +60,11 @@ const templates = [
   {
     id: '3',
     name: 'Corporate Presentation',
+    description: 'Professional template designed for business presentations and company overviews.',
     category: 'business',
     style: 'corporate',
+    difficulty: 'Easy',
+    duration: '2-3 min',
     rating: 4.7,
     downloads: '9.8K',
     gradient: 'from-slate-500 to-slate-700',
@@ -45,8 +73,11 @@ const templates = [
   {
     id: '4',
     name: 'Social Media Ad',
+    description: 'Eye-catching template optimized for social media platforms with square and vertical formats.',
     category: 'marketing',
     style: 'vibrant',
+    difficulty: 'Medium',
+    duration: '0:30-1:00',
     rating: 4.6,
     downloads: '15.3K',
     gradient: 'from-pink-500 to-rose-600',
@@ -55,8 +86,11 @@ const templates = [
   {
     id: '5',
     name: 'Educational Tutorial',
+    description: 'Clean and clear template designed for educational content and tutorials.',
     category: 'education',
     style: 'minimal',
+    difficulty: 'Easy',
+    duration: '5-10 min',
     rating: 4.8,
     downloads: '11.1K',
     gradient: 'from-green-500 to-emerald-600',
@@ -64,9 +98,170 @@ const templates = [
   },
   {
     id: '6',
-    name: 'Event Highlights',
-    category: 'entertainment',
+    name: 'Tech Product Launch',
+    description: 'Perfect for showcasing new tech products with futuristic animations and transitions.',
+    category: 'technology',
+    style: 'modern',
+    difficulty: 'Hard',
+    duration: '2-3 min',
+    rating: 4.9,
+    downloads: '14.7K',
+    gradient: 'from-blue-500 to-indigo-600',
+    tags: ['Tech', 'Product', 'Innovation'],
+  },
+  {
+    id: '7',
+    name: 'Fitness Motivation',
+    description: 'Energetic template designed for fitness content and workout videos.',
+    category: 'lifestyle',
     style: 'vibrant',
+    difficulty: 'Medium',
+    duration: '1-2 min',
+    rating: 4.7,
+    downloads: '8.9K',
+    gradient: 'from-orange-500 to-amber-600',
+    tags: ['Fitness', 'Health', 'Motivation'],
+  },
+  {
+    id: '8',
+    name: 'Cooking Show',
+    description: 'Beautiful template for cooking tutorials and recipe videos with a warm, inviting feel.',
+    category: 'lifestyle',
+    style: 'creative',
+    difficulty: 'Easy',
+    duration: '3-5 min',
+    rating: 4.8,
+    downloads: '10.2K',
+    gradient: 'from-amber-500 to-yellow-600',
+    tags: ['Cooking', 'Food', 'Recipe'],
+  },
+];
+
+export function TemplateGallery({ category, style, searchQuery }: TemplateGalleryProps) {
+  const [templates, setTemplates] = useState<Template[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Simulate API fetch
+  useEffect(() => {
+    const fetchTemplates = async () => {
+      try {
+        setIsLoading(true);
+        // In a real app, you would fetch from your API:
+        // const response = await fetch('/api/templates');
+        // const data = await response.json();
+        // setTemplates(data);
+        
+        // Using mock data for now
+        setTimeout(() => {
+          setTemplates(mockTemplates);
+          setIsLoading(false);
+        }, 800);
+      } catch (err) {
+        console.error('Error fetching templates:', err);
+        setError('Failed to load templates. Please try again later.');
+        setIsLoading(false);
+      }
+    };
+
+    fetchTemplates();
+  }, []);
+
+  // Filter templates based on category, style, and search query
+  const filteredTemplates = useMemo(() => {
+    return templates.filter((template) => {
+      const matchesCategory = category === 'all' || template.category === category;
+      const matchesStyle = style === 'all' || template.style === style;
+      const matchesSearch = 
+        searchQuery === '' || 
+        template.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        template.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        template.tags.some(tag => 
+          tag.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+      
+      return matchesCategory && matchesStyle && matchesSearch;
+    });
+  }, [templates, category, style, searchQuery]);
+
+  const handleTemplateSelect = (templateId: string) => {
+    // Handle template selection (e.g., navigate to editor with template)
+    console.log('Selected template:', templateId);
+    // router.push(`/editor?template=${templateId}`);
+  };
+
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {[...Array(8)].map((_, i) => (
+          <div key={i} className="space-y-3">
+            <Skeleton className="h-48 w-full rounded-xl" />
+            <Skeleton className="h-4 w-3/4" />
+            <Skeleton className="h-4 w-1/2" />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-12">
+        <div className="text-red-500 mb-4">
+          <AlertCircle className="h-12 w-12 mx-auto" />
+        </div>
+        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+          Something went wrong
+        </h3>
+        <p className="text-gray-600 dark:text-gray-400 mb-4">{error}</p>
+        <Button 
+          onClick={() => window.location.reload()} 
+          variant="outline"
+          className="mx-auto"
+        >
+          Try again
+        </Button>
+      </div>
+    );
+  }
+
+  if (filteredTemplates.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <div className="text-gray-400 mb-4">
+          <Search className="h-12 w-12 mx-auto" />
+        </div>
+        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+          No templates found
+        </h3>
+        <p className="text-gray-600 dark:text-gray-400">
+          Try adjusting your search or filter criteria
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <AnimatePresence>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {filteredTemplates.map((template, index) => (
+          <motion.div
+            key={template.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.05 }}
+            layout
+          >
+            <TemplateCard
+              {...template}
+              onSelect={handleTemplateSelect}
+            />
+          </motion.div>
+        ))}
+      </div>
+    </AnimatePresence>
+  );
+}
     rating: 4.9,
     downloads: '20.5K',
     gradient: 'from-amber-500 to-orange-600',

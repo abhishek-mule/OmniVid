@@ -5,8 +5,10 @@ import { Check } from 'lucide-react';
 import Link from 'next/link';
 import { Navbar } from '@/components/navbar';
 import { Footer } from '@/components/footer';
+import { useGetStarted } from '@/hooks/useGetStarted';
 
 export default function Pricing() {
+  const { start } = useGetStarted();
   const plans = [
     {
       name: 'Free',
@@ -20,7 +22,7 @@ export default function Pricing() {
         '1GB storage'
       ],
       cta: 'Get Started',
-      href: '/dashboard',
+      href: '/app/editor',
       popular: false
     },
     {
@@ -37,7 +39,7 @@ export default function Pricing() {
         'Advanced analytics'
       ],
       cta: 'Start Free Trial',
-      href: '/dashboard',
+      href: '/app/editor',
       popular: true
     },
     {
@@ -111,13 +113,23 @@ export default function Pricing() {
                 ))}
               </ul>
 
-              <Button
-                className="w-full"
-                variant={plan.popular ? 'default' : 'outline'}
-                asChild
-              >
-                <Link href={plan.href}>{plan.cta}</Link>
-              </Button>
+              {plan.href === '/contact' ? (
+                <Button
+                  className="w-full"
+                  variant={plan.popular ? 'default' : 'outline'}
+                  asChild
+                >
+                  <Link href={plan.href}>{plan.cta}</Link>
+                </Button>
+              ) : (
+                <Button
+                  className="w-full"
+                  variant={plan.popular ? 'default' : 'outline'}
+                  onClick={() => start('/app/editor')}
+                >
+                  {plan.cta}
+                </Button>
+              )}
             </div>
           ))}
         </div>

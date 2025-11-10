@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import {
   Sparkles,
@@ -16,8 +18,10 @@ import {
 import Link from 'next/link';
 import { Navbar } from '@/components/navbar';
 import { Footer } from '@/components/footer';
+import { useGetStarted } from '@/hooks/useGetStarted';
 
 export default function Features() {
+  const { start } = useGetStarted();
   const features = [
     {
       icon: <Sparkles className="h-6 w-6" />,
@@ -96,8 +100,8 @@ export default function Features() {
             Everything you need to create, manage, and distribute stunning videos at scale.
           </p>
           <div className="mt-10">
-            <Button size="lg" asChild>
-              <Link href="/dashboard">Start Creating Free</Link>
+            <Button size="lg" onClick={() => start('/app/editor')}>
+              Start Creating Free
             </Button>
           </div>
         </div>
