@@ -11,7 +11,7 @@ export function HeroSection() {
       {/* Animated gradient background */}
       <div className="absolute inset-0 bg-gradient-to-br from-violet-600/20 via-fuchsia-500/20 to-pink-600/20 dark:from-violet-900/30 dark:via-fuchsia-900/30 dark:to-pink-900/30" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(120,119,198,0.3),rgba(255,255,255,0))]" />
-      
+
       {/* Animated particles */}
       <div className="absolute inset-0">
         {[...Array(20)].map((_, i) => (
@@ -117,8 +117,9 @@ export function HeroSection() {
             <p>✨ No credit card required • 🎬 10,000+ videos created • ⚡ 5-minute setup</p>
           </motion.div>
 
-          {/* Video preview mockup */}
+          {/* OmniVid Editor Preview Video */}
           <motion.div
+            id="demo"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1, duration: 1 }}
@@ -126,25 +127,24 @@ export function HeroSection() {
           >
             <div className="relative overflow-hidden rounded-2xl border border-border bg-card shadow-2xl backdrop-blur-sm">
               <div className="absolute inset-0 bg-gradient-to-br from-violet-500/10 via-fuchsia-500/10 to-pink-500/10" />
-              <div className="relative aspect-[16/9] bg-gradient-to-br from-muted/50 to-muted flex items-center justify-center">
-                <motion.div
-                  animate={{
-                    scale: [1, 1.05, 1],
-                  }}
-                  transition={{
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                  className="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center backdrop-blur-sm border border-primary/30"
-                >
-                  <Play className="w-10 h-10 text-primary ml-1" />
-                </motion.div>
-              </div>
+
+              <video
+                src="https://avtshare01.rz.tu-ilmenau.de/avt-vqdb-uhd-1/test_1/segments/bigbuck_bunny_8bit_15000kbps_1080p_60.0fps_h264.mp4"
+                controls
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="relative aspect-[16/9] w-full rounded-2xl object-cover"
+              />
             </div>
-            
+
             {/* Glow effect */}
             <div className="absolute -inset-4 bg-gradient-to-r from-violet-600/20 via-fuchsia-600/20 to-pink-600/20 blur-3xl -z-10" />
+
+            <p className="mt-6 text-muted-foreground text-sm">
+              <span className="font-semibold text-primary">OmniVid Editor Preview</span> – powered by real-time AI animation.
+            </p>
           </motion.div>
         </motion.div>
       </div>

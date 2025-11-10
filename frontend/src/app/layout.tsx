@@ -3,18 +3,13 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster-new";
-import { ReCaptchaProvider } from "@/components/common/ReCaptcha";
 import dynamic from 'next/dynamic';
-
-const CatAnimation = dynamic(() => import('@/components/CatAnimation'), {
-  ssr: false,
-});
-
-const ThreeBackground = dynamic(() => import('@/components/ThreeBackground'), {
-  ssr: false,
-});
+import { ReCaptchaProvider } from "@/components/common/ReCaptcha";
+import { AuthProvider } from "@/context/AuthContext";
+import type { ReactNode } from 'react';
 
 const inter = Inter({ subsets: ['latin'] });
+const ThreeBackground = dynamic(() => import('@/components/ThreeBackground'), { ssr: false });
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://omnivid.ai'),
@@ -52,7 +47,7 @@ export const viewport: Viewport = {
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -66,8 +61,10 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              {children}
-              <Toaster />
+              <AuthProvider>
+                {children}
+                <Toaster />
+              </AuthProvider>
             </ThemeProvider>
           </div>
         </ReCaptchaProvider>

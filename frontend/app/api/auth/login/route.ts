@@ -1,29 +1,88 @@
-import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
-
-export async function POST(request: Request) {
-  try {
-    const body = await request.json();
-    const { email, password } = body || {};
-
-    if (!email || !password) {
-      return NextResponse.json({ message: 'Email and password are required' }, { status: 400 });
-    }
-
-    // In a real app, verify email/password against your user store.
-    // Here we accept any valid inputs to set a session cookie.
-    const token = crypto.randomUUID();
-
-    const res = NextResponse.json({ ok: true, message: 'Logged in', token });
-    res.cookies.set('omni_session', token, {
-      httpOnly: true,
-      sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-    });
-    return res;
-  } catch (e) {
-    return NextResponse.json({ message: 'Invalid request' }, { status: 400 });
-  }
-}
+export const runtime = 'nodejs'
+import { NextResponse } from 'next/server'; 
+ import { 
+   verifyPassword, 
+   createSessionToken, 
+   setSessionCookie, 
+   isValidEmail 
+ } from '@/lib/auth/utils'; 
+ import { 
+   findUserByEmail, 
+   createSession 
+ } from '@/lib/auth/db'; 
+ 
+ export async function POST(request: Request) { 
+   try { 
+     const body = await request.json(); 
+     const { email, password } = body || {}; 
+ 
+     if (!email || !password) { 
+       return NextResponse.json( 
+         { message: 'Email and password are required' }, 
+         { status: 400 } 
+       ); 
+     } 
+ 
+     if (!isValidEmail(email)) { 
+       return NextResponse.json( 
+         { message: 'Invalid email address' }, 
+         { status: 400 } 
+       ); 
+     } 
+ 
+     const user = await findUserByEmail(email); 
+ 
+     if (!user || !user.password) { 
+       return NextResponse.json( 
+         { message: 'Invalid email or password' }, 
+         { status: 401 } 
+       ); 
+     } 
+ 
+     const isValidPassword = await verifyPassword(password, user.password); 
+ 
+     if (!isValidPassword) { 
+       return NextResponse.json( 
+         { message: 'Invalid email or password' }, 
+         { status: 401 } 
+       ); 
+     } 
+ 
+     // Create session in database 
+     const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days 
+     const sessionToken = crypto.randomUUID(); 
+     
+     const session = await createSession({ 
+       userId: user.id, 
+       sessionToken, 
+       expires, 
+     }); 
+ 
+     // Create JWT token 
+     const token = await createSessionToken({ 
+       userId: user.id, 
+       email: user.email, 
+       sessionId: session.id, 
+     }); 
+ 
+     // Set cookie 
+     await setSessionCookie(token); 
+ 
+     return NextResponse.json({ 
+       ok: true, 
+       message: 'Logged in successfully', 
+       user: { 
+         id: user.id, 
+         email: user.email, 
+         name: user.name, 
+         image: user.image, 
+       }, 
+     }); 
+   } catch (error) { 
+     console.error('Login error:', error); 
+     return NextResponse.json( 
+       { message: 'An error occurred during login' }, 
+       { status: 500 } 
+     ); 
+   } 
+ }
