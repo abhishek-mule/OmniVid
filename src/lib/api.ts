@@ -142,62 +142,49 @@ export const healthApi = {
   },
 };
 
-export default apiClient;
-
-export interface SimpleVideoSettings {
-  resolution: string;
-  fps: number;
-  duration?: number;
-  quality: string;
-  template?: string | null;
-}
-
-export interface SimpleVideoCreateRequest {
-  prompt: string;
-  settings: SimpleVideoSettings;
-}
-
-export interface SimpleVideoCreateResponse {
-  id: string;
-  video_id: string;
-  status: string;
-  message: string;
-  prompt?: string;
-  progress?: number;
-  current_stage?: string | null;
-}
-
-export interface SimpleVideoStatus {
-  video_id: string;
-  status: string;
-  progress: number;
-  stage: string;
-  output_url?: string | null;
-  error?: string | null;
-}
-
-export interface TemplateItem {
+export type TemplateItem = {
   id: string;
   name: string;
   description: string;
+  thumbnail: string;
   category: string;
+};
+
+function httpToWs(url: string) {
+  if (url.startsWith('https://')) return url.replace('https://', 'wss://');
+  if (url.startsWith('http://')) return url.replace('http://', 'ws://');
+  return url;
 }
 
 export const simpleApi = {
-  async createVideo(data: SimpleVideoCreateRequest): Promise<SimpleVideoCreateResponse> {
-    const response = await axios.post<SimpleVideoCreateResponse>(`${API_BASE_URL}/api/videos/create`, data);
-    return response.data;
-  },
-  async getVideoStatus(videoId: string): Promise<SimpleVideoStatus> {
-    const response = await axios.get<SimpleVideoStatus>(`${API_BASE_URL}/api/videos/${videoId}/status`);
-    return response.data;
-  },
   async listTemplates(): Promise<TemplateItem[]> {
-    const response = await axios.get<{ templates: TemplateItem[] }>(`${API_BASE_URL}/api/templates`);
-    return response.data.templates ?? [];
+    // Placeholder: return empty list if backend templates endpoint is not available
+    try {
+      const res = await axios.get(`${API_BASE_URL}/templates`);
+      return Array.isArray(res.data) ? res.data as TemplateItem[] : [];
+    } catch {
+      return [];
+    }
+  },
+  async createVideo(payload: { prompt: string; settings?: any }): Promise<{ video_id: string }> {
+    const data: VideoCreateRequest = {
+      prompt: payload.prompt,
+      resolution: (payload?.settings?.resolution as any) || '1080p',
+      fps: (payload?.settings?.fps as any) || 30,
+      duration: (payload?.settings?.duration as any) || 15,
+      quality: (payload?.settings?.quality as any) || 'balanced',
+      render_engine: (payload?.settings?.render_engine as any) || 'remotion',
+    };
+    const resp = await videoApi.createVideo(data);
+    return { video_id: resp.id };
   },
   getWebSocketUrl(videoId: string): string {
-    const base = (API_BASE_URL || 'http://localhost:8000').replace(/^http/, 'ws');
-    return `${base}/ws/videos/${videoId}`; // backend also exposes /api/v1/ws/videos
+    const base = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000').replace(/\/$/, '');
+    return `${httpToWs(base)}/ws/videos/${videoId}`;
+  },
+  getDownloadUrl(videoId: string): string {
+    return videoApi.getDownloadUrl(videoId);
   },
 };
+
+export default apiClient;
