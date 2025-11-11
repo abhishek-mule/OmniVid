@@ -11,9 +11,9 @@ import ProgressVisualization from '@/components/video-gen/ProgressVisualization'
 import ResultDisplay from '@/components/video-gen/ResultDisplay';
 import { Button } from '@/components/ui/button';
 import { Sparkles, AlertCircle } from 'lucide-react';
-import { videoApi, VideoCreateRequest } from '@/lib/api';
+import { videoApi, VideoCreateRequest } from '@omnivid/shared/lib';
 import { useVideoWebSocket } from '@/hooks/useVideoWebSocket';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@omnivid/shared/hooks';
 
 export default function GeneratePage() {
   const [prompt, setPrompt] = useState('');

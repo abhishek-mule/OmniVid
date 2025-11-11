@@ -33,7 +33,7 @@ import {
 // Removed Select components (using native <select> elements instead)
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
-import { simpleApi, TemplateItem } from '@/lib/api';
+import { simpleApi, TemplateItem } from '@omnivid/shared/lib';
 
 // Types
 // Removed unused Template type

@@ -10,6 +10,8 @@ export const metadata: Metadata = {
   description: 'Create a new OMNIVID account',
 };
 
+export const dynamic = 'force-dynamic';
+
 export default function RegisterPage() {
   return (
     <div className="container flex h-screen w-screen flex-col items-center justify-center">

@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster-new";
 import { ReCaptchaProvider } from "@/components/common/ReCaptcha";
-import { AuthProvider } from "@/context/AuthContext";
+import { AuthProvider } from "@omnivid/shared/context";
 
 const ThreeBackground = dynamic(() => import("@/components/ThreeBackground"), {
   ssr: false,

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { login } from '@/lib/auth/server-actions';
+import { login } from '@omnivid/shared/auth';
 // import { cookies } from 'next/headers'; // We will use the Response.cookies API instead of this direct import
 
 // Define the expected structure for the login result

@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { simpleApi } from '@/lib/api';
+import { simpleApi } from '@omnivid/shared/lib';
 
-export default function WsTestPage() {
+function WsTestContent() {
   const params = useSearchParams();
   const id = params.get('id');
   const [messages, setMessages] = useState<string[]>([]);
@@ -36,5 +36,13 @@ export default function WsTestPage() {
       </div>
       <p className="mt-2 text-xs text-gray-500">Append `?id=&lt;videoId&gt;` to the URL to connect.</p>
     </div>
+  );
+}
+
+export default function WsTestPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <WsTestContent />
+    </Suspense>
   );
 }

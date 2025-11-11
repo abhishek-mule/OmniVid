@@ -28,6 +28,10 @@
     "./middleware": {
       "types": "./src/middleware/index.ts",
       "import": "./src/middleware/index.ts"
+    },
+    "./auth": {
+      "types": "./src/lib/auth/index.ts",
+      "import": "./src/lib/auth/index.ts"
     }
   },
   "dependencies": {
