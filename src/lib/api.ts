@@ -142,6 +142,7 @@ export const healthApi = {
   },
 };
 
+// Template related types and utilities
 export type TemplateItem = {
   id: string;
   name: string;
@@ -156,6 +157,7 @@ function httpToWs(url: string) {
   return url;
 }
 
+// Simplified API for template and video operations
 export const simpleApi = {
   async listTemplates(): Promise<TemplateItem[]> {
     // Placeholder: return empty list if backend templates endpoint is not available
