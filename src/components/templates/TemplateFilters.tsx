@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion';
 import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 
 interface TemplateFiltersProps {
   selectedCategory: string;

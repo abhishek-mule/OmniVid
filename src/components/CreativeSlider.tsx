@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay, Parallax, EffectCreative, Mousewheel } from 'swiper/modules';
 import 'swiper/css';
@@ -8,7 +8,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/parallax';
 import 'swiper/css/effect-creative';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ArrowLongRightIcon, ArrowLongLeftIcon } from '@heroicons/react/24/outline';
 
 const slides = [
@@ -45,7 +45,7 @@ export default function CreativeSlider() {
   const swiperRef = useRef<any>(null);
   const paginationRef = useRef<HTMLDivElement>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible] = useState(true);
 
   return (
     <section 
@@ -318,90 +318,6 @@ export default function CreativeSlider() {
         </motion.div>
       </motion.div>
 
-      <style jsx global>{`
-        .swiper-pagination-progressbar {
-          background: rgba(255, 255, 255, 0.2);
-          height: 2px !important;
-          max-width: 200px;
-          margin: 0 auto;
-        }
-        
-        .swiper-pagination-progressbar-fill {
-          background: #ffffff;
-        }
-        
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-          width: 8px;
-        }
-        
-        ::-webkit-scrollbar-track {
-          background: #f1f1f1;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-          background: #888;
-          border-radius: 4px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-          background: #555;
-        }
-        
-        /* Animation for slider content */
-        .swiper-slide-active .title-area,
-        .swiper-slide-active .swiper-content p,
-        .swiper-slide-active .creative-btn--wrap {
-          animation: fadeInUp 0.8s ease-out forwards;
-        }
-        
-        .swiper-slide-active .title-area {
-          animation-delay: 0.3s;
-        }
-        
-        .swiper-slide-active .swiper-content p {
-          animation-delay: 0.5s;
-        }
-        
-        .swiper-slide-active .creative-btn--wrap {
-          animation-delay: 0.7s;
-        }
-        
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        
-        /* Responsive styles */
-        @media (max-width: 768px) {
-          .swiper-content {
-            padding: 0 20px;
-            text-align: center;
-            left: 0 !important;
-            right: 0;
-            transform: translateY(-50%) !important;
-            max-width: 100% !important;
-          }
-          
-          .title-area h2 {
-            font-size: 3.5rem !important;
-          }
-          
-          .swiper-button-wrapper {
-            padding: 0 20px !important;
-          }
-          
-          .slider-pagination-area {
-            display: none !important;
-          }
-        }
-      `}</style>
     </section>
   );
 }

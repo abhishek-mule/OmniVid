@@ -1,9 +1,15 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import LayoutClient from "@/components/LayoutClient";
+import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/toaster-new";
+import dynamic from 'next/dynamic';
+import { ReCaptchaProvider } from "@/components/common/ReCaptcha";
+import { AuthProvider } from "@/context/AuthContext";
+import type { ReactNode } from 'react';
 
 const inter = Inter({ subsets: ['latin'] });
+const ThreeBackground = dynamic(() => import('@/components/ThreeBackground'), { ssr: false });
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://omnivid.ai'),
@@ -41,12 +47,30 @@ export const viewport: Viewport = {
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossOrigin="anonymous" referrerPolicy="no-referrer" />
+      </head>
       <body className={inter.className}>
-        <LayoutClient>{children}</LayoutClient>
+        <ReCaptchaProvider>
+          <ThreeBackground />
+          <div className="relative z-10">
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <AuthProvider>
+                {children}
+                <Toaster />
+              </AuthProvider>
+            </ThemeProvider>
+          </div>
+        </ReCaptchaProvider>
       </body>
     </html>
   );
