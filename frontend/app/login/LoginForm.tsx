@@ -84,7 +84,7 @@ const LoginForm = () => {
         <div className={styles.authHeader}>
           <h2 className={styles.authTitle}>Login to your account</h2>
           <p className={styles.authSubtitle}>
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <Link href="/signup" className={styles.authLink}>
               Sign Up Free!
             </Link>

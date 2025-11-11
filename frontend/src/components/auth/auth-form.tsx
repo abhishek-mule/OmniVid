@@ -254,7 +254,7 @@ export function AuthForm({ className, type, searchParams, ...props }: AuthFormPr
       <p className="px-8 text-center text-sm text-muted-foreground">
         {type === 'login' ? (
           <>
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <Link
               href="/auth/signup"
               className="hover:text-primary underline underline-offset-4"
