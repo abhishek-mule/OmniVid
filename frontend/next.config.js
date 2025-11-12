@@ -3,11 +3,11 @@ const nextConfig = {
   // Enable static export
   output: 'export',
   
-  // Base path for production
-  basePath: process.env.NODE_ENV === 'production' ? '' : '',
+  // Base path for production (empty for root domain)
+  basePath: '',
   
   // Asset prefix for static files
-  assetPrefix: process.env.NODE_ENV === 'production' ? '' : '',
+  assetPrefix: '',
   
   // Image optimization
   images: {
@@ -20,19 +20,24 @@ const nextConfig = {
   // Configure page extensions
   pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
   
-  // Handle trailing slashes
+  // Handle trailing slashes (important for static export)
   trailingSlash: true,
-  
-  // Experimental features
-  experimental: {
-    scrollRestoration: true,
-    // Add any other experimental features here
-  },
   
   // Environment variables
   env: {
     // Add any client-side environment variables here
     NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL || '',
+  },
+  
+  // Disable image optimization API routes in static export
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+      };
+    }
+    return config;
   },
 }
 
