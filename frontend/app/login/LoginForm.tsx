@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import styles from './login.module.css';
 
 const LoginForm = () => {
@@ -53,11 +54,19 @@ const LoginForm = () => {
       {/* Left Panel - Social Login */}
       <div className={styles.authPanelLeft}>
         <div className={styles.brandLogo}>
-          <img 
-            src="https://1.bp.blogspot.com/-3he0CGCSWHA/XyqopZcixRI/AAAAAAAAVM8/Mdfk_mPQa0Ydb7IAH0Iir8F4Ge7xxF0ygCLcBGAsYHQ/s0/logo.png" 
-            width="150" 
-            alt="brand-logo" 
-          />
+          <div className={styles.logoContainer}>
+            <Image 
+              src="https://1.bp.blogspot.com/-3he0CGCSWHA/XyqopZcixRI/AAAAAAAAVM8/Mdfk_mPQa0Ydb7IAH0Iir8F4Ge7xxF0ygCLcBGAsYHQ/s0/logo.png" 
+              width={150}
+              height={50}
+              alt="brand-logo"
+              className={styles.logoImage}
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.src = 'https://via.placeholder.com/150x50?text=Logo';
+              }}
+            />
+          </div>
         </div>
         <p className={styles.socialLoginText}>Login using social media to get quick access</p>
         

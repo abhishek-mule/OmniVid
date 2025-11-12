@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Play, Download, Trash2, Share2, MoreVertical } from 'lucide-react';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -45,10 +46,12 @@ export function VideoCard({
       {/* Thumbnail with play button overlay */}
       <div className="relative aspect-video w-full overflow-hidden bg-muted">
         {thumbnail ? (
-          <img
+          <Image
             src={thumbnail}
             alt={title}
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            fill
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         ) : (
           <div className="flex h-full items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5">
