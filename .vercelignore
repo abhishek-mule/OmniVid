@@ -1,9 +1,15 @@
-# Ignore everything
-**/*
+# Include these files and directories
+frontend/**
+public/**
+package.json
+turbo.json
+vercel.json
+vercel-build.js
 
-# Except these paths
-!frontend/**
-!package.json
-!turbo.json
-!pnpm-lock.yaml
-!pnpm-workspace.yaml
+# Exclude node_modules and other unnecessary files
+**/node_modules
+**/.next
+**/.git
+**/.vercel
+**/.turbo
+**/.env*
