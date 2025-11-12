@@ -8,13 +8,16 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "turbo run dev",
-    "build": "turbo run build",
-    "start": "turbo run start",
-    "lint": "turbo run lint",
-    "vercel-build": "node vercel-build.js"
+    "dev": "turbo run dev --concurrency=10 --no-cache",
+    "build": "turbo run build --concurrency=10 --output-logs=new-only",
+    "start": "turbo run start --concurrency=10",
+    "lint": "turbo run lint --cache-dir=.turbo/cache --no-cache",
+    "format": "prettier --write .",
+    "vercel-build": "node vercel-build.js",
+    "clean": "turbo run clean && rimraf node_modules .next out .turbo"
   },
   "devDependencies": {
+    "rimraf": "^6.1.0",
     "turbo": "^1.10.0"
   }
 }
