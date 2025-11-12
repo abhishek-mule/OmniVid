@@ -13,7 +13,7 @@
     "start": "turbo run start --concurrency=10",
     "lint": "turbo run lint --cache-dir=.turbo/cache --no-cache",
     "format": "prettier --write .",
-    "vercel-build": "node vercel-build.js",
+    "vercel-build": "cd frontend && npm install && npm run build",
     "clean": "turbo run clean && rimraf node_modules .next out .turbo"
   },
   "devDependencies": {
