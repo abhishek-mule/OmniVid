@@ -5,16 +5,10 @@
       "src": "frontend/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "out",
-        "outputDirectory": "out"
+        "distDir": "out"
       }
     }
   ],
-  "build": {
-    "env": {
-      "NEXT_TELEMETRY_DISABLED": "1"
-    }
-  },
   "routes": [
     {
       "src": "/(.*)",
