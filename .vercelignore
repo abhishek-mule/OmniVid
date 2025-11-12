@@ -1,0 +1,9 @@
+# Ignore everything
+**/*
+
+# Except these paths
+!frontend/**
+!package.json
+!turbo.json
+!pnpm-lock.yaml
+!pnpm-workspace.yaml

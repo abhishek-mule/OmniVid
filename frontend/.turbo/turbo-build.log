@@ -51,7 +51,7 @@ Use equal casing. Compare these module identifiers:
     javascript/auto|C:\Users\HP\Desktop\omnivid\node_modules\next\dist\build\webpack\loaders\next-flight-client-module-loader.js!C:\Users\HP\Desktop\omnivid\node_modules\next\dist\build\webpack\loaders\next-swc-loader.js??ruleSet[1].rules[16].oneOf[6].use[1]!C:\Users\HP\Desktop\omnivid\node_modules\react-remove-scroll\dist\es2015\Combination.js|ssr
 * javascript/esm|C:\Users\HP\Desktop\omnivid\node_modules\next\dist\build\webpack\loaders\next-flight-client-module-loader.js!C:\Users\HP\Desktop\omnivid\node_modules\next\dist\build\webpack\loaders\next-swc-loader.js??ruleSet[1].rules[16].oneOf[6].use[1]!c:\Users\HP\Desktop\omnivid\node_modules\tslib\tslib.es6.mjs|ssr
     Used by 21 module(s), i. e.
-    javascript/auto|C:\Users\HP\Desktop\omnivid\node_modules\next\dist\build\webpack\loaders\next-flight-client-module-loader.js!C:\Users\HP\Desktop\omnivid\node_modules\next\dist\build\webpack\loaders\next-swc-loader.js??ruleSet[1].rules[16].oneOf[6].use[1]!c:\Users\HP\Desktop\omnivid\node_modules\@supabase\postgrest-js\dist\cjs\index.js|ssr
+    javascript/auto|C:\Users\HP\Desktop\omnivid\node_modules\next\dist\build\webpack\loaders\next-flight-client-module-loader.js!C:\Users\HP\Desktop\omnivid\node_modules\next\dist\build\webpack\loaders\next-swc-loader.js??ruleSet[1].rules[16].oneOf[6].use[1]!c:\Users\HP\Desktop\omnivid\node_modules\@supabase\auth-js\dist\module\GoTrueAdminApi.js|ssr
 
 Import trace for requested module:
 ../node_modules/tslib/tslib.es6.mjs
@@ -90,6 +90,7 @@ Use equal casing. Compare these module identifiers:
     javascript/auto|C:\Users\HP\Desktop\omnivid\node_modules\next\dist\build\webpack\loaders\next-flight-client-module-loader.js!C:\Users\HP\Desktop\omnivid\node_modules\next\dist\build\webpack\loaders\next-swc-loader.js??ruleSet[1].rules[16].oneOf[5].use[1]!C:\Users\HP\Desktop\omnivid\frontend\src\lib\utils.ts|app-pages-browser
 * javascript/esm|C:\Users\HP\Desktop\omnivid\node_modules\next\dist\build\webpack\loaders\next-flight-client-module-loader.js!C:\Users\HP\Desktop\omnivid\node_modules\next\dist\build\webpack\loaders\next-swc-loader.js??ruleSet[1].rules[16].oneOf[5].use[1]!c:\Users\HP\Desktop\omnivid\node_modules\tailwind-merge\dist\bundle-mjs.mjs|app-pages-browser
     Used by 1 module(s), i. e.
+ ✓ Compiled successfully
     javascript/auto|C:\Users\HP\Desktop\omnivid\node_modules\next\dist\build\webpack\loaders\next-flight-client-module-loader.js!C:\Users\HP\Desktop\omnivid\node_modules\next\dist\build\webpack\loaders\next-swc-loader.js??ruleSet[1].rules[16].oneOf[5].use[1]!c:\Users\HP\Desktop\omnivid\packages\shared\src\lib\utils.ts|app-pages-browser
 
 Import trace for requested module:
@@ -97,6 +98,7 @@ Import trace for requested module:
 ./src/lib/utils.ts
 ./app/editor/page.tsx
 
+   Checking validity of types ...
 ../node_modules/tslib/tslib.es6.mjs
 There are multiple modules with names that only differ in casing.
 This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
@@ -118,8 +120,6 @@ Import trace for requested module:
 ./src/components/video-gen/SettingsPanel.tsx
 ./app/generate/page.tsx
 
- ✓ Compiled successfully
-   Checking validity of types ...
    Collecting page data ...
 PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "windows".
 
@@ -174,12 +174,34 @@ Missing Supabase environment variables
    Generating static pages (8/16) 
    Generating static pages (12/16) 
  ✓ Generating static pages (16/16)
+PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "windows".
+
+This is likely caused by a bundler that has not copied "query_engine-windows.dll.node" next to the resulting bundle.
+Ensure that "query_engine-windows.dll.node" has been copied next to the bundle or in "node_modules\.prisma\client".
+
+We would appreciate if you could take the time to share some information with us.
+Please help us by answering a few questions: https://pris.ly/engine-not-found-bundler-investigation
+
+The following locations have been searched:
+  C:\Users\HP\Desktop\omnivid\frontend\node_modules\.prisma\client
+  C:\Users\HP\Desktop\omnivid\frontend\.next\server
+  C:\Users\HP\Desktop\omnivid\node_modules\@prisma\client
+  C:\Users\HP\Desktop\omnivid\frontend\.prisma\client
+  /tmp/prisma-engines
+    at sl (C:\Users\HP\Desktop\omnivid\frontend\.next\server\chunks\600.js:31:1104)
+    at async Object.loadLibrary (C:\Users\HP\Desktop\omnivid\frontend\.next\server\chunks\600.js:56:9333)
+    at async ol.loadEngine (C:\Users\HP\Desktop\omnivid\frontend\.next\server\chunks\600.js:60:449)
+    at async ol.instantiateLibrary (C:\Users\HP\Desktop\omnivid\frontend\.next\server\chunks\600.js:59:4583) {
+  clientVersion: '6.19.0',
+  errorCode: undefined,
+  retryable: undefined
+}
    Finalizing page optimization ...
    Collecting build traces ...
 
 Route (app)                              Size     First Load JS
 ┌ ○ /                                    3.06 kB         107 kB
-├ ○ /_not-found                          873 B          88.2 kB
+├ ○ /_not-found                          873 B          88.3 kB
 ├ ƒ /api/auth/login                      0 B                0 B
 ├ ƒ /api/auth/logout                     0 B                0 B
 ├ ƒ /api/auth/register                   0 B                0 B
@@ -188,14 +210,14 @@ Route (app)                              Size     First Load JS
 ├ ○ /editor                              9.45 kB         167 kB
 ├ ○ /features                            4.15 kB         108 kB
 ├ ○ /generate                            28.7 kB         195 kB
-├ ○ /login                               2.58 kB        89.9 kB
+├ ○ /login                               2.58 kB          90 kB
 ├ ○ /pricing                             3.72 kB         108 kB
 ├ ƒ /signup                              26.1 kB         163 kB
 └ ○ /ws-test                             1.66 kB         110 kB
-+ First Load JS shared by all            87.3 kB
++ First Load JS shared by all            87.4 kB
   ├ chunks/364-a6fa903c70b0a69a.js       31.7 kB
   ├ chunks/618f8807-89d2faab28039d86.js  53.6 kB
-  └ other shared chunks (total)          2.03 kB
+  └ other shared chunks (total)          2.06 kB
 
 
 ○  (Static)   prerendered as static content
