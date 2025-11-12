@@ -23,11 +23,10 @@ const nextConfig = {
   // Handle trailing slashes
   trailingSlash: true,
   
-  // Disable server-side rendering of Link components
+  // Experimental features
   experimental: {
     scrollRestoration: true,
-    // Enable server actions if needed
-    serverActions: false,
+    // Add any other experimental features here
   },
   
   // Environment variables
