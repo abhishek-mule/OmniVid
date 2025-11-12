@@ -8,13 +8,13 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "turbo run dev --concurrency=10 --no-cache",
-    "build": "turbo run build --concurrency=10 --output-logs=new-only",
-    "start": "turbo run start --concurrency=10",
-    "lint": "turbo run lint --cache-dir=.turbo/cache --no-cache",
-    "format": "prettier --write .",
-    "vercel-build": "cd frontend && npm install && next build",
-    "clean": "turbo run clean && rimraf node_modules .next out .turbo"
+    "dev": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "start": "cd frontend && npm start",
+    "lint": "cd frontend && npm run lint",
+    "format": "cd frontend && npm run format",
+    "vercel-build": "cd frontend && npm install && npm run build",
+    "clean": "cd frontend && npm run clean"
   },
   "devDependencies": {
     "rimraf": "^6.1.0",
