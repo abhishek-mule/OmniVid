@@ -1,27 +1,24 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Enable static export
-  output: 'export',
-  
   // Base path for production (empty for root domain)
   basePath: '',
-  
+
   // Asset prefix for static files
   assetPrefix: '',
-  
+
   // Image optimization
   images: {
-    unoptimized: true, // Required for static export
+    // Optimized images for server rendering
   },
-  
-  // Disable React strict mode for static export
-  reactStrictMode: false,
-  
+
+  // Enable React strict mode
+  reactStrictMode: true,
+
   // Configure page extensions
   pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
-  
-  // Handle trailing slashes (important for static export)
-  trailingSlash: true,
+
+  // Handle trailing slashes
+  trailingSlash: false,
   
   // Environment variables
   env: {
@@ -29,7 +26,7 @@ const nextConfig = {
     NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL || '',
   },
   
-  // Disable image optimization API routes in static export
+  // Disable fs fallback on client side
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
