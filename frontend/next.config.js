@@ -1,32 +1,21 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    // optimizeCss: true, // Temporarily disabled to fix build hang
-    scrollRestoration: true,
-  },
-  // Ensure static files are properly handled
-  distDir: '.next',
-  // Enable static HTML export
-  output: 'standalone',
-  // Ensure public directory is included in the build
+  // Enable static export
+  output: 'export',
+  // Set base path if your app is not served from the root
+  basePath: process.env.NODE_ENV === 'production' ? '' : '',
+  // Enable image optimization
   images: {
-    unoptimized: true, // Disable image optimization if not needed
+    unoptimized: true, // Required for static export
   },
-  // Ensure static files are properly served
-  async headers() {
-    return [
-      {
-        source: '/:all*(svg|jpg|png|webp|avif|otf|ttf|woff|woff2|css|js)',
-        locale: false,
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-        ],
-      },
-    ]
-  },
+  // Disable React strict mode for static export
+  reactStrictMode: false,
+  // Add asset prefix for static export
+  assetPrefix: process.env.NODE_ENV === 'production' ? '' : '',
+  // Configure page extensions
+  pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
+  // Handle trailing slashes
+  trailingSlash: true,
 }
 
 module.exports = nextConfig
