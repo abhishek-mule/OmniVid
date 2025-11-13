@@ -1,110 +1,154 @@
-'use client';
-
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Navbar } from '@/components/navbar';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import {
   Sparkles,
   Video,
+  Edit,
+  Users,
   Zap,
   Shield,
-  Palette,
-  Clock,
+  Cloud,
+  Smartphone,
   Globe,
-  Download,
-  CheckCircle,
-  ArrowRight
-} from 'lucide-react';
-import Link from 'next/link';
+  BarChart3,
+  Clock,
+  Star
+} from "lucide-react";
+
+const features = [
+  {
+    icon: Sparkles,
+    title: "AI-Powered Generation",
+    description: "Transform text prompts into stunning videos using advanced machine learning algorithms.",
+    badge: "AI-Powered",
+    gradient: "from-purple-500 to-pink-500"
+  },
+  {
+    icon: Edit,
+    title: "Professional Editor",
+    description: "Intuitive drag-and-drop timeline with advanced editing tools and effects.",
+    badge: "Professional",
+    gradient: "from-blue-500 to-cyan-500"
+  },
+  {
+    icon: Users,
+    title: "Real-time Collaboration",
+    description: "Work seamlessly with your team using live editing and commenting features.",
+    badge: "Team",
+    gradient: "from-green-500 to-emerald-500"
+  },
+  {
+    icon: Zap,
+    title: "Lightning Fast",
+    description: "Generate videos in minutes with our optimized cloud infrastructure.",
+    badge: "Fast",
+    gradient: "from-yellow-500 to-orange-500"
+  },
+  {
+    icon: Shield,
+    title: "Enterprise Security",
+    description: "Bank-level encryption and compliance for your sensitive content.",
+    badge: "Secure",
+    gradient: "from-red-500 to-rose-500"
+  },
+  {
+    icon: Cloud,
+    title: "Cloud Storage",
+    description: "Unlimited storage with automatic backups and version control.",
+    badge: "Cloud",
+    gradient: "from-indigo-500 to-purple-500"
+  },
+  {
+    icon: Smartphone,
+    title: "Mobile Optimized",
+    description: "Create and edit videos on any device with our responsive design.",
+    badge: "Mobile",
+    gradient: "from-teal-500 to-cyan-500"
+  },
+  {
+    icon: Globe,
+    title: "Global CDN",
+    description: "Deliver content worldwide with our distributed network infrastructure.",
+    badge: "Global",
+    gradient: "from-emerald-500 to-teal-500"
+  },
+  {
+    icon: BarChart3,
+    title: "Analytics Dashboard",
+    description: "Track performance metrics and audience engagement in real-time.",
+    badge: "Analytics",
+    gradient: "from-violet-500 to-purple-500"
+  },
+  {
+    icon: Clock,
+    title: "24/7 Support",
+    description: "Round-the-clock customer support with dedicated account managers.",
+    badge: "Support",
+    gradient: "from-slate-500 to-gray-500"
+  }
+];
 
 export default function FeaturesPage() {
-  const features = [
-    {
-      icon: Sparkles,
-      title: 'AI-Powered Creation',
-      description: 'Advanced AI algorithms generate high-quality videos from your text descriptions with professional editing and effects.'
-    },
-    {
-      icon: Video,
-      title: 'Multiple Formats',
-      description: 'Create videos in various resolutions from HD to 4K, with customizable aspect ratios for different platforms.'
-    },
-    {
-      icon: Zap,
-      title: 'Lightning Fast',
-      description: 'Generate videos in minutes instead of hours. Perfect for content creators, marketers, and businesses on tight deadlines.'
-    },
-    {
-      icon: Palette,
-      title: 'Custom Styling',
-      description: 'Choose from various visual styles, color schemes, and animation presets to match your brand identity.'
-    },
-    {
-      icon: Clock,
-      title: 'Scheduled Generation',
-      description: 'Queue multiple videos for generation and receive them when ready, perfect for batch content creation.'
-    },
-    {
-      icon: Globe,
-      title: 'Multi-Platform Ready',
-      description: 'Optimized output formats for YouTube, TikTok, Instagram, LinkedIn, and other social media platforms.'
-    },
-    {
-      icon: Shield,
-      title: 'Secure & Private',
-      description: 'Your content is processed securely with enterprise-grade encryption and privacy protection.'
-    },
-    {
-      icon: Download,
-      title: 'Easy Export',
-      description: 'Download your videos in multiple formats with one click, ready for immediate use or further editing.'
-    }
-  ];
-
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-
+    <div className="min-h-screen gradient-bg">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-background to-secondary/5">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="mb-8">
-              <h1 className="text-4xl sm:text-6xl font-bold tracking-tight">
-                Powerful Features for
-                <br />
-                <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-                  Video Creation
-                </span>
-              </h1>
-              <p className="mt-6 text-xl text-muted-foreground max-w-2xl mx-auto">
-                Everything you need to create stunning videos with AI. From concept to completion in minutes.
-              </p>
-            </div>
-
-            <Link href="/create">
-              <Button size="lg" className="h-12 px-8">
-                <Sparkles className="mr-2 h-5 w-5" />
+      <section className="relative py-20 overflow-hidden">
+        <div className="absolute inset-0 hero-gradient"></div>
+        <div className="container relative z-10">
+          <div className="text-center max-w-4xl mx-auto animate-fade-in">
+            <Badge variant="secondary" className="mb-4 glass px-4 py-2">
+              <Star className="w-4 h-4 mr-2" />
+              Premium Features
+            </Badge>
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 text-gradient">
+              Powerful Features for
+              <br />
+              <span className="text-foreground">Video Creation</span>
+            </h1>
+            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+              Discover the comprehensive toolkit that makes OmniVid the ultimate choice for AI-powered video generation and editing.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" className="glass-hover premium-shadow">
                 Start Creating
-                <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
-            </Link>
+              <Button size="lg" variant="outline" className="glass-hover">
+                Watch Demo
+              </Button>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Features Grid */}
-      <section className="py-16">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+      <section className="py-20">
+        <div className="container">
+          <div className="text-center mb-16 animate-slide-up">
+            <h2 className="text-4xl font-bold mb-4">Everything You Need</h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              From AI generation to professional editing, we provide all the tools you need to create amazing videos.
+            </p>
+          </div>
+
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {features.map((feature, index) => (
-              <Card key={index} className="h-full">
-                <CardHeader>
-                  <feature.icon className="h-10 w-10 text-primary mb-4" />
+              <Card
+                key={feature.title}
+                className="glass-card group hover:scale-105 transition-all duration-300 animate-fade-in"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <CardHeader className="text-center pb-4">
+                  <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center group-hover:animate-glow`}>
+                    <feature.icon className="w-8 h-8 text-white" />
+                  </div>
+                  <Badge variant="secondary" className="mb-2">
+                    {feature.badge}
+                  </Badge>
                   <CardTitle className="text-xl">{feature.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <CardDescription className="text-base">
+                  <CardDescription className="text-center leading-relaxed">
                     {feature.description}
                   </CardDescription>
                 </CardContent>
@@ -114,72 +158,21 @@ export default function FeaturesPage() {
         </div>
       </section>
 
-      {/* How It Works */}
-      <section className="py-16 bg-muted/30">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold tracking-tight">How It Works</h2>
-            <p className="mt-4 text-lg text-muted-foreground">
-              Create amazing videos in three simple steps
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-primary-foreground">1</span>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Describe Your Video</h3>
-              <p className="text-muted-foreground">
-                Write a detailed description of the video you want to create, including style, duration, and key elements.
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-primary-foreground">2</span>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">AI Generates</h3>
-              <p className="text-muted-foreground">
-                Our advanced AI processes your description and creates a professional video with animations and effects.
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-primary-foreground">3</span>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Download & Share</h3>
-              <p className="text-muted-foreground">
-                Download your video in the perfect format and share it with your audience immediately.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* CTA Section */}
-      <section className="py-16">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-3xl font-bold tracking-tight mb-4">
-              Ready to Experience the Power of AI Video Creation?
-            </h2>
-            <p className="text-lg text-muted-foreground mb-8">
-              Join thousands of creators who have transformed their content workflow with OmniVid
+      <section className="py-20">
+        <div className="container">
+          <div className="glass-card max-w-4xl mx-auto text-center p-12 animate-slide-up">
+            <h2 className="text-4xl font-bold mb-4">Ready to Create Amazing Videos?</h2>
+            <p className="text-xl text-muted-foreground mb-8">
+              Join thousands of creators who trust OmniVid for their video production needs.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/create">
-                <Button size="lg" className="h-12 px-8">
-                  Start Creating Now
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-              <Link href="/pricing">
-                <Button variant="outline" size="lg" className="h-12 px-8">
-                  View Pricing
-                </Button>
-              </Link>
+              <Button size="lg" className="gradient-primary text-white">
+                Get Started Free
+              </Button>
+              <Button size="lg" variant="outline" className="glass-hover">
+                Schedule Demo
+              </Button>
             </div>
           </div>
         </div>

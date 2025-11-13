@@ -1,229 +1,128 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Navbar } from '@/components/navbar';
-import { Footer } from '@/components/footer';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import BackendPipeline from '@/components/video-gen/BackendPipeline';
 import PromptInput from '@/components/video-gen/PromptInput';
 import SettingsPanel from '@/components/video-gen/SettingsPanel';
-import ProgressVisualization from '@/components/video-gen/ProgressVisualization';
 import ResultDisplay from '@/components/video-gen/ResultDisplay';
-import { Button } from '@/components/ui/button';
-import { Sparkles, AlertCircle } from 'lucide-react';
-import { videoApi, VideoCreateRequest } from '@omnivid/shared/lib';
-import { useVideoWebSocket } from '@/hooks/useVideoWebSocket';
-import { useToast } from '@omnivid/shared/hooks';
+import { Sparkles, Zap } from "lucide-react";
+
+interface Settings {
+  resolution: '720p' | '1080p' | '2k' | '4k';
+  fps: 24 | 30 | 60;
+  duration: number;
+  quality: 'fast' | 'balanced' | 'best';
+}
 
 export default function GeneratePage() {
   const [prompt, setPrompt] = useState('');
-  const [settings, setSettings] = useState({
-    resolution: '1080p' as '720p' | '1080p' | '2k' | '4k',
-    fps: 30 as 24 | 30 | 60,
-    duration: 15,
-    quality: 'balanced' as 'fast' | 'balanced' | 'best'
-  });
-  const [videoId, setVideoId] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  
-  const { toast } = useToast();
-  
-  // WebSocket connection for real-time progress
-  const {
-    isConnected,
-    progress,
-    stage,
-    status,
-    outputUrl,
-    error: wsError
-  } = useVideoWebSocket(videoId);
+  const [result, setResult] = useState<string | null>(null);
+  const [settings, setSettings] = useState<Settings>({
+    resolution: '1080p',
+    fps: 30,
+    duration: 30,
+    quality: 'balanced'
+  });
 
   const handleGenerate = async () => {
-    if (!prompt.trim()) {
-      toast({
-        title: 'Error',
-        description: 'Please enter a video description',
-        variant: 'destructive'
-      });
-      return;
-    }
+    if (!prompt.trim()) return;
 
     setIsGenerating(true);
-    setError(null);
-    setVideoId(null);
-
-    try {
-      // Create video generation request
-      const requestData: VideoCreateRequest = {
-        prompt: prompt.trim(),
-        resolution: settings.resolution,
-        fps: settings.fps,
-        duration: settings.duration,
-        quality: settings.quality,
-        render_engine: 'remotion'
-      };
-
-      const response = await videoApi.createVideo(requestData);
-      
-      console.log('Video creation started:', response);
-      setVideoId(response.id);
-      
-      toast({
-        title: 'Success!',
-        description: 'Video generation started. Watch the progress below.',
-      });
-      
-    } catch (err: any) {
-      console.error('Error creating video:', err);
-      setError(err.response?.data?.detail || err.message || 'Failed to start video generation');
+    // Simulate API call
+    setTimeout(() => {
+      setResult('Video generated successfully!');
       setIsGenerating(false);
-      
-      toast({
-        title: 'Error',
-        description: 'Failed to start video generation. Please try again.',
-        variant: 'destructive'
-      });
-    }
+    }, 3000);
   };
 
-  // Update isGenerating based on status
-  const isProcessing = status !== 'success' && status !== 'failed' && isGenerating;
-  const hasCompleted = status === 'success';
-  const hasFailed = status === 'failed' || !!wsError;
-
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      
-      <main className="container mx-auto px-4 py-8 max-w-7xl">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12 mt-20"
-        >
-          <div className="inline-flex items-center gap-2 px-4 py-2 mb-4 text-sm rounded-full bg-primary/10 border border-primary/20">
-            <Sparkles className="w-4 h-4 text-primary" />
-            <span className="font-medium">AI-Powered Video Generation</span>
+    <div className="min-h-screen gradient-bg">
+      <div className="container py-10">
+        <div className="max-w-6xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-12 animate-fade-in">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 mb-6">
+              <Sparkles className="w-8 h-8 text-white" />
+            </div>
+            <h1 className="text-4xl md:text-6xl font-bold mb-4 text-gradient">
+              Generate Your Video
+            </h1>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Transform your ideas into stunning videos with our advanced AI generation technology.
+            </p>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Create Your Video
-          </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Transform your ideas into professional videos with our advanced AI pipeline
-          </p>
-        </motion.div>
 
-        {/* Backend Pipeline Visualization */}
-        <BackendPipeline />
+          <BackendPipeline />
 
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-12">
-          {/* Left Column - Input & Settings */}
-          <div className="lg:col-span-2 space-y-6">
-            <PromptInput 
-              value={prompt}
-              onChange={setPrompt}
-              disabled={isProcessing}
-            />
-            
-            <SettingsPanel
-              settings={settings}
-              onChange={setSettings}
-              disabled={isProcessing}
-            />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <Card className="glass-card">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Zap className="w-5 h-5 text-primary" />
+                  Generation Settings
+                </CardTitle>
+                <CardDescription>
+                  Configure your video generation parameters
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <PromptInput
+                  value={prompt}
+                  onChange={setPrompt}
+                  disabled={isGenerating}
+                />
+                <SettingsPanel
+                  settings={settings}
+                  onChange={setSettings}
+                  disabled={isGenerating}
+                />
+                <Button
+                  onClick={handleGenerate}
+                  disabled={!prompt.trim() || isGenerating}
+                  className="w-full h-12 gradient-primary text-white hover:opacity-90"
+                  size="lg"
+                >
+                  {isGenerating ? 'Generating...' : 'Generate Video'}
+                </Button>
+              </CardContent>
+            </Card>
 
-            {/* Error Display */}
-            {(error || hasFailed) && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="rounded-lg border border-red-500/50 bg-red-500/10 p-4"
-              >
-                <div className="flex items-start gap-3">
-                  <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <h3 className="font-semibold text-red-500 mb-1">Generation Failed</h3>
-                    <p className="text-sm text-red-500/80">{error || wsError || 'An error occurred during video generation'}</p>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="mt-3"
-                      onClick={() => {
-                        setError(null);
-                        setIsGenerating(false);
-                        setVideoId(null);
-                      }}
-                    >
-                      Try Again
-                    </Button>
+            <Card className="glass-card">
+              <CardHeader>
+                <CardTitle>Preview & Results</CardTitle>
+                <CardDescription>Watch your generated video here</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResultDisplay result={result} isLoading={isGenerating} />
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Recent Generations */}
+          <Card className="glass-card mt-12">
+            <CardHeader>
+              <CardTitle>Recent Generations</CardTitle>
+              <CardDescription>Your previously generated videos</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="glass p-4 rounded-lg hover:scale-105 transition-transform cursor-pointer">
+                    <div className="aspect-video bg-muted rounded-lg mb-3 flex items-center justify-center">
+                      <span className="text-muted-foreground">Video {i}</span>
+                    </div>
+                    <h3 className="font-medium mb-1">Generated Video {i}</h3>
+                    <p className="text-sm text-muted-foreground">2 days ago</p>
                   </div>
-                </div>
-              </motion.div>
-            )}
-
-            {/* Generate Button */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-            >
-              <Button
-                size="lg"
-                className="w-full h-14 text-lg font-semibold"
-                onClick={handleGenerate}
-                disabled={isProcessing || !prompt.trim()}
-              >
-                {isProcessing ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
-                    Generating... {Math.round(progress)}%
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="w-5 h-5 mr-2" />
-                    Generate Video
-                  </>
-                )}
-              </Button>
-
-              {/* WebSocket Connection Status */}
-              {videoId && (
-                <div className="mt-2 text-center text-xs text-muted-foreground">
-                  {isConnected ? (
-                    <span className="flex items-center justify-center gap-1">
-                      <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                      Connected to server
-                    </span>
-                  ) : (
-                    <span className="flex items-center justify-center gap-1">
-                      <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
-                      Connecting...
-                    </span>
-                  )}
-                </div>
-              )}
-            </motion.div>
-          </div>
-
-          {/* Right Column - Progress & Result */}
-          <div className="space-y-6">
-            {isProcessing && videoId && (
-              <ProgressVisualization
-                progress={progress}
-                currentStage={stage || 'Initializing'}
-              />
-            )}
-
-            {hasCompleted && outputUrl && videoId && (
-              <ResultDisplay videoUrl={videoApi.getDownloadUrl(videoId)} />
-            )}
-          </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </div>
-      </main>
-
-      <Footer />
+      </div>
     </div>
   );
 }
