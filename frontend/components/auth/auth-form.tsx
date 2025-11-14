@@ -231,7 +231,7 @@ export function AuthForm({ className, type, searchParams, ...props }: AuthFormPr
           {isGitHubLoading ? (
             <Icons.spinner className="h-4 w-4 animate-spin" />
           ) : (
-            <Icons.gitHub className="h-4 w-4" />
+            <Icons.github className="h-4 w-4" />
           )}
           GitHub
         </Button>

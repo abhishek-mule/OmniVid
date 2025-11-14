@@ -8,10 +8,23 @@ import PromptInput from '@/components/video-gen/PromptInput';
 import SettingsPanel from '@/components/video-gen/SettingsPanel';
 import ResultDisplay from '@/components/video-gen/ResultDisplay';
 
+interface Settings {
+  resolution: '720p' | '1080p' | '2k' | '4k';
+  fps: 24 | 30 | 60;
+  duration: number;
+  quality: 'fast' | 'balanced' | 'best';
+}
+
 export default function CreateProjectPage() {
   const [prompt, setPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [result, setResult] = useState<string | null>(null);
+  const [settings, setSettings] = useState<Settings>({
+    resolution: '1080p',
+    fps: 30,
+    duration: 30,
+    quality: 'balanced'
+  });
 
   const handleGenerate = async () => {
     if (!prompt.trim()) return;
@@ -44,7 +57,11 @@ export default function CreateProjectPage() {
                 onChange={setPrompt}
                 disabled={isGenerating}
               />
-              <SettingsPanel />
+              <SettingsPanel 
+                settings={settings}
+                onChange={setSettings}
+                disabled={isGenerating}
+              />
               <Button
                 onClick={handleGenerate}
                 disabled={!prompt.trim() || isGenerating}
