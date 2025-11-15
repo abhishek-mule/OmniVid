@@ -1,4 +1,4 @@
-import { createBrowserClient } from '@supabase/ssr';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 
 export const createClient = () => {
   // Never create a real client on the server during prerender
@@ -40,7 +40,7 @@ export const createClient = () => {
     } as any;
   }
 
-  return createBrowserClient(url!, key!, {
+  return createSupabaseClient(url!, key!, {
     auth: {
       persistSession: true,
       autoRefreshToken: true,

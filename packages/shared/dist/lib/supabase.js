@@ -37,7 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createClient = void 0;
-var ssr_1 = require("@supabase/ssr");
+var supabase_js_1 = require("@supabase/supabase-js");
 var createClient = function () {
     // Never create a real client on the server during prerender
     if (typeof window === 'undefined') {
@@ -83,7 +83,7 @@ var createClient = function () {
             },
         };
     }
-    return (0, ssr_1.createBrowserClient)(url, key, {
+    return (0, supabase_js_1.createClient)(url, key, {
         auth: {
             persistSession: true,
             autoRefreshToken: true,
