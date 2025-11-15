@@ -34,19 +34,28 @@ const buttonVariants = cva(
 );
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'fdprocessedid'>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
+  // Allow but don't require the fdprocessedid attribute
+  fdprocessedid?: string;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button';
+    
+    // Create a new props object without the fdprocessedid attribute
+    const filteredProps = { ...props };
+    if ('fdprocessedid' in filteredProps) {
+      delete (filteredProps as any).fdprocessedid;
+    }
+    
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
-        {...props}
+        {...filteredProps}
       />
     );
   }

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { register } from '@omnivid/shared/auth';
+import { register } from '@omnivid/shared/lib/auth';
 
 export async function POST(request: Request) {
   try {

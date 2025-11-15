@@ -28,15 +28,66 @@ export function WebSocketProvider({ children, url }: WebSocketProviderProps) {
   const ws = useRef<WebSocket | null>(null);
   const reconnectAttempts = useRef(0);
   const maxReconnectAttempts = 5;
-  const reconnectTimeout = useRef<NodeJS.Timeout>();
+  const reconnectTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  const connect = useCallback(() => {
-    if (ws.current) {
-      ws.current.close();
+  // Clean up function to clear the reconnect timeout
+  const clearReconnectTimeout = useCallback(() => {
+    if (reconnectTimeout.current) {
+      clearTimeout(reconnectTimeout.current);
+      reconnectTimeout.current = null;
     }
+  }, []);
 
-    const socket = new WebSocket(url);
+  const handleMessage = useCallback((event: MessageEvent) => {
+    try {
+      const message: WebSocketMessage = JSON.parse(event.data);
+      
+      switch (message.type) {
+        case 'progress':
+          setProgress(Math.min(100, Math.max(0, message.data.percentage)));
+          break;
+        case 'stage_update':
+          setCurrentStage(message.data.stage);
+          break;
+        case 'error':
+          setError(message.data?.message || 'An error occurred');
+          break;
+        case 'complete':
+          setProgress(100);
+          setCurrentStage('complete');
+          break;
+        default:
+          console.warn('Unknown message type:', message.type);
+      }
+    } catch (err) {
+      console.error('Error processing WebSocket message:', err);
+    }
+  }, []);
+
+  const handleClose = useCallback(() => {
+    setIsConnected(false);
     
+    if (reconnectAttempts.current < maxReconnectAttempts) {
+      const timeout = Math.min(1000 * Math.pow(2, reconnectAttempts.current), 10000);
+      reconnectTimeout.current = setTimeout(() => {
+        reconnectAttempts.current += 1;
+        // Reuse the existing connection logic
+        if (ws.current) {
+          ws.current = new WebSocket(url);
+          setupWebSocketHandlers(ws.current);
+        }
+      }, timeout);
+    } else {
+      setError('Connection lost. Please refresh the page to reconnect.');
+    }
+  }, [url]);
+
+  const handleError = useCallback((error: Event) => {
+    console.error('WebSocket error:', error);
+    setError('Connection error. Attempting to reconnect...');  
+  }, []);
+
+  const setupWebSocketHandlers = useCallback((socket: WebSocket) => {
     socket.onopen = () => {
       console.log('WebSocket connected');
       setIsConnected(true);
@@ -44,52 +95,24 @@ export function WebSocketProvider({ children, url }: WebSocketProviderProps) {
       setError(null);
     };
 
-    socket.onmessage = (event: MessageEvent) => {
-      try {
-        const message: WebSocketMessage = JSON.parse(event.data);
-        
-        switch (message.type) {
-          case 'progress':
-            setProgress(Math.min(100, Math.max(0, message.data.percentage)));
-            break;
-          case 'stage_update':
-            setCurrentStage(message.data.stage);
-            break;
-          case 'error':
-            setError(message.data?.message || 'An error occurred');
-            break;
-          case 'complete':
-            setProgress(100);
-            setCurrentStage('complete');
-            break;
-          default:
-            console.warn('Unknown message type:', message.type);
-        }
-      } catch (err) {
-        console.error('Error processing WebSocket message:', err);
-      }
-    };
+    socket.onmessage = handleMessage;
+    socket.onclose = handleClose;
+    socket.onerror = handleError;
+  }, [handleMessage, handleClose, handleError]);
 
-    socket.onclose = () => {
-      setIsConnected(false);
-      
-      if (reconnectAttempts.current < maxReconnectAttempts) {
-        const timeout = Math.min(1000 * Math.pow(2, reconnectAttempts.current), 10000);
-        reconnectTimeout.current = setTimeout(() => {
-          reconnectAttempts.current += 1;
-          connect();
-        }, timeout);
-      } else {
-        setError('Connection lost. Please refresh the page to reconnect.');
-      }
-    };
+  const connect = useCallback(() => {
+    // Clear any existing reconnect timeout
+    clearReconnectTimeout();
+    
+    // Close existing connection if any
+    if (ws.current) {
+      ws.current.close();
+    }
 
-    socket.onerror = (error: Event) => {
-      console.error('WebSocket error:', error);
-      setError('Connection error. Attempting to reconnect...');
-    };
-
+    // Create new WebSocket connection
+    const socket = new WebSocket(url);
     ws.current = socket;
+    setupWebSocketHandlers(socket);
 
     return () => {
       if (reconnectTimeout.current) {
@@ -99,20 +122,21 @@ export function WebSocketProvider({ children, url }: WebSocketProviderProps) {
         socket.close();
       }
     };
-  }, [url]);
+  }, [url, clearReconnectTimeout, setupWebSocketHandlers]);
 
+  // Initialize WebSocket connection on mount
   useEffect(() => {
     connect();
     
+    // Cleanup on unmount
     return () => {
       if (ws.current) {
         ws.current.close();
+        ws.current = null;
       }
-      if (reconnectTimeout.current) {
-        clearTimeout(reconnectTimeout.current);
-      }
+      clearReconnectTimeout();
     };
-  }, [connect]);
+  }, [connect, clearReconnectTimeout]);
 
   const sendMessage = useCallback((message: unknown): boolean => {
     if (ws.current && ws.current.readyState === WebSocket.OPEN) {
