@@ -17,7 +17,8 @@ OmniVid is an **AI-driven, multi-engine video automation framework** that fuses:
 
 Together, they form the first-ever **AI compiler for visual storytelling**. A text prompt becomes code → code becomes animation → animation becomes a rendered video.
 
-![alt text](image.png)
+<img width="215" height="235" alt="image" src="https://github.com/user-attachments/assets/e2ad967f-62cd-4227-8977-034f7fb35191" />
+
 
 
 ---
