@@ -19,6 +19,7 @@
     "sourceMap": true,
     "baseUrl": ".",
     "paths": {
+      "@/*": ["./src/*"],
       "@omnivid/shared": ["./src/index.ts"],
       "@omnivid/shared/*": ["./src/*"]
     }

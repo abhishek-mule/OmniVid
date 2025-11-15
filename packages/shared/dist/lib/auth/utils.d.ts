@@ -1,6 +1,6 @@
 import 'server-only';
 import { z } from 'zod';
-export declare function encrypt(payload: any): Promise<any>;
+export declare function encrypt(payload: any): Promise<string>;
 export declare function decrypt(input: string): Promise<any>;
 export declare function createSession(userId: string): Promise<void>;
 export declare function deleteSession(): void;
@@ -51,8 +51,8 @@ export declare const newPasswordSchema: z.ZodEffects<z.ZodObject<{
     password: string;
     confirmPassword: string;
 }>;
-export declare function hashPassword(password: string): Promise<any>;
-export declare function verifyPassword(password: string, hashed: string): Promise<any>;
+export declare function hashPassword(password: string): Promise<string>;
+export declare function verifyPassword(password: string, hashed: string): Promise<boolean>;
 export declare function isValidEmail(email: string): boolean;
 export declare function isStrongPassword(password: string): {
     valid: boolean;
@@ -62,7 +62,7 @@ export declare function createSessionToken(payload: {
     userId: string;
     email: string;
     sessionId: string;
-}): Promise<any>;
+}): Promise<string>;
 export declare function setSessionCookie(token: string): Promise<void>;
 export declare function getSessionFromCookie(): Promise<any>;
 export declare function clearSessionCookie(): void;
