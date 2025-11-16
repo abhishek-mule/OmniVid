@@ -13,7 +13,7 @@ import { Icons } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import { toast } from '@/hooks/use-toast';
 import Link from 'next/link';
-import { useAuth } from '@omnivid/shared/context';
+// import { useAuth } from '@omnivid/shared/context';
 
 const userAuthSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address' }),
@@ -33,7 +33,7 @@ interface AuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export function AuthForm({ className, type, searchParams, ...props }: AuthFormProps) {
   const router = useRouter();
-  const { refresh } = useAuth();
+  // const { refresh } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [isGitHubLoading, setIsGitHubLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
@@ -71,7 +71,7 @@ export function AuthForm({ className, type, searchParams, ...props }: AuthFormPr
       });
 
       const nextParam = searchParams?.get('next') || '/app/editor';
-      try { await refresh(); } catch {}
+      // try { await refresh(); } catch {}
       router.push(nextParam);
       router.refresh();
     } catch (error) {

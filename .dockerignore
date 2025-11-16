@@ -1,0 +1,40 @@
+# Default: ignore everything
+**/*
+
+# Include only what's needed for the frontend build
+!frontend/package.json
+!frontend/next.config.*
+!frontend/tsconfig.json
+!frontend/public/**
+!frontend/src/**
+!frontend/app/**
+!frontend/components/**
+!frontend/styles/**
+
+# Include shared package
+!packages/shared/package.json
+!packages/shared/tsconfig.json
+!packages/shared/src/**
+
+# Include root package files
+!package.json
+!pnpm-lock.yaml
+!pnpm-workspace.yaml
+
+# Always exclude these
+**/node_modules
+**/.next
+**/build
+**/.git
+**/.DS_Store
+**/Thumbs.db
+**/.env*
+**/*.log
+**/dist
+**/coverage
+**/.cache
+**/.turbo
+**/.vercel
+**/tmp
+**/output
+**/assets

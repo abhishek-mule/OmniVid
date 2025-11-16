@@ -19,6 +19,7 @@ const nextConfig = {
   webpack: (config, { isServer }) => {
     // Add path aliases for the shared package
     config.resolve.alias['@omnivid/shared'] = path.resolve(__dirname, '../packages/shared');
+    config.resolve.alias['@'] = path.resolve(__dirname, './');
     return config;
   },
   
