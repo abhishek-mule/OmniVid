@@ -46,20 +46,20 @@ jobs:
         REDIS_HOST: localhost
         REDIS_PORT: 6379
         DATABASE_URL: sqlite:///./test.db
-        PYTHONPATH: ${{ github.workspace }}/backend/src
+        PYTHONPATH: ${{ github.workspace }}/backend/src:${{ github.workspace }}/backend/tests
       run: |
-        # Set up test environment
-        python -m pip install -e .
-        
         # Print environment info for debugging
         python --version
         pip list
+        
+        # Install package in development mode
+        pip install -e .
         
         # Initialize test database
         python -c "from src.database.connection import Base, engine; Base.metadata.create_all(bind=engine)"
         
         # Run tests with coverage
-        python -m pytest tests/ -v --cov=src --cov-report=xml:coverage.xml
+        python -m pytest -v --cov=src --cov-report=xml:coverage.xml
     
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
