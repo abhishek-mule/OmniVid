@@ -36,10 +36,9 @@ jobs:
     
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
+        python -m pip install --upgrade pip pip-tools
         pip install -r backend/requirements.txt
         pip install -r backend/requirements-test.txt
-        pip install sqlalchemy pytest-cov
     
     - name: Run tests with coverage
       working-directory: ./backend
@@ -47,10 +46,20 @@ jobs:
         REDIS_HOST: localhost
         REDIS_PORT: 6379
         DATABASE_URL: sqlite:///./test.db
+        PYTHONPATH: ${{ github.workspace }}/backend/src
       run: |
-        python -c "import os; print('Current directory:', os.getcwd()); print('Files in directory:', os.listdir('.'))"
+        # Set up test environment
+        python -m pip install -e .
+        
+        # Print environment info for debugging
+        python --version
+        pip list
+        
+        # Initialize test database
         python -c "from src.database.connection import Base, engine; Base.metadata.create_all(bind=engine)"
-        pytest --cov=src --cov-report=xml
+        
+        # Run tests with coverage
+        python -m pytest tests/ -v --cov=src --cov-report=xml:coverage.xml
     
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
