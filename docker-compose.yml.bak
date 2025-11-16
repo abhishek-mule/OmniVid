@@ -1,0 +1,130 @@
+version: '3.8'
+
+services:
+  # Redis - Message broker and result backend
+  redis:
+    image: redis:7-alpine
+    container_name: omnivid-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - omnivid-network
+
+  # FastAPI Backend API
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: omnivid-api
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=False
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - OUTPUT_DIR=/app/output
+      - ASSETS_DIR=/app/assets
+      - TEMP_DIR=/app/tmp
+    volumes:
+      - ./backend:/app
+      - output_data:/app/output
+      - assets_data:/app/assets
+      - tmp_data:/app/tmp
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - omnivid-network
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+  # Celery Worker
+  celery-worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: omnivid-celery-worker
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - OUTPUT_DIR=/app/output
+      - ASSETS_DIR=/app/assets
+      - TEMP_DIR=/app/tmp
+    volumes:
+      - ./backend:/app
+      - output_data:/app/output
+      - assets_data:/app/assets
+      - tmp_data:/app/tmp
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - omnivid-network
+    command: celery -A celery_app worker --loglevel=info --pool=solo
+
+  # Frontend (Next.js)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: omnivid-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - NEXT_PUBLIC_SITE_URL=http://localhost:3000
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - omnivid-network
+    command: npm run start
+
+  # Celery Flower (Optional - Monitoring UI)
+  flower:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: omnivid-flower
+    ports:
+      - "5555:5555"
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      - redis
+      - celery-worker
+    networks:
+      - omnivid-network
+    command: celery -A celery_app flower --port=5555
+    profiles:
+      - monitoring
+
+networks:
+  omnivid-network:
+    driver: bridge
+
+volumes:
+  redis_data:
+    driver: local
+  output_data:
+    driver: local
+  assets_data:
+    driver: local
+  tmp_data:
+    driver: local
