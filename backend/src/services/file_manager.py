@@ -149,8 +149,8 @@ class SecureFileManager:
                     file_size=validation_result["file_size"]
                 )
                 
-                # Update with additional metadata
-                metadata = {
+                # Update with additional asset_metadata
+                asset_metadata = {
                     "file_hash": validation_result["file_hash"],
                     "upload_timestamp": datetime.now().isoformat(),
                     "file_size_mb": round(validation_result["file_size"] / 1024 / 1024, 2)
@@ -159,7 +159,7 @@ class SecureFileManager:
                 asset_repo.update_asset_processing_status(
                     asset.id,
                     is_processed=False,
-                    metadata=str(metadata)
+                    asset_metadata=str(asset_metadata)
                 )
                 
                 return {
@@ -169,7 +169,7 @@ class SecureFileManager:
                     "file_size": asset.file_size,
                     "file_type": asset.file_type,
                     "mime_type": asset.mime_type,
-                    "upload_timestamp": metadata["upload_timestamp"]
+                    "upload_timestamp": asset_metadata["upload_timestamp"]
                 }
                 
             finally:

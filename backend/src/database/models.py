@@ -72,7 +72,7 @@ class Asset(Base):
     project_id = Column(Integer, ForeignKey("projects.id"), nullable=True)
     video_id = Column(Integer, ForeignKey("videos.id"), nullable=True)
     is_processed = Column(Boolean, default=False)
-    metadata = Column(Text, nullable=True)  # JSON string for additional metadata
+    asset_metadata = Column('metadata', Text, nullable=True)  # JSON string for additional metadata
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     
     # Relationships

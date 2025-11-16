@@ -183,12 +183,12 @@ class AssetRepository:
         self.db.refresh(db_asset)
         return db_asset
     
-    def update_asset_processing_status(self, asset_id: int, is_processed: bool, metadata: str = None) -> Optional[Asset]:
+    def update_asset_processing_status(self, asset_id: int, is_processed: bool, asset_metadata: str = None) -> Optional[Asset]:
         db_asset = self.get_asset(asset_id)
         if db_asset:
             db_asset.is_processed = is_processed
-            if metadata:
-                db_asset.metadata = metadata
+            if asset_metadata:
+                db_asset.asset_metadata = asset_metadata
             self.db.commit()
             self.db.refresh(db_asset)
         return db_asset

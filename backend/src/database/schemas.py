@@ -108,7 +108,7 @@ class Asset(AssetBase):
     project_id: Optional[int] = None
     video_id: Optional[int] = None
     is_processed: bool
-    metadata: Optional[str] = None
+    asset_metadata: Optional[str] = None
     created_at: datetime
     project: Optional[Project] = None
     video: Optional[Video] = None
