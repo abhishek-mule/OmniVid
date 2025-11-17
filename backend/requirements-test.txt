@@ -1,6 +1,10 @@
-# Core testing
+﻿# Core testing
 pytest>=7.4.3
 pytest-cov>=4.1.0
+
+# Property-based testing
+hypothesis>=6.82.0
+hypothesis[datetime]>=6.82.0
 
 # Async testing
 pytest-asyncio>=0.21.1

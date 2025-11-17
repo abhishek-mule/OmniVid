@@ -3,14 +3,14 @@ Celery tasks for video processing in OmniVid.
 """
 from celery import current_task
 from sqlalchemy.orm import Session
-from ..workers.celery_app import app
+from src.workers.celery_app import app
 # Import database repositories
-from ..database.connection import SessionLocal
-from ..database.repository import VideoRepository, ProjectRepository, JobRepository, AssetRepository
-from ..database.schemas import VideoCreate
-from ..config.settings import OUTPUT_DIR
+from src.database.connection import SessionLocal
+from src.database.repository import VideoRepository, ProjectRepository, JobRepository, AssetRepository
+from src.database.schemas import VideoCreate
+from src.config.settings import OUTPUT_DIR
 # Import WebSocket manager
-from ..services.websocket_manager import connection_manager
+from src.services.websocket_manager import connection_manager
 import os
 import json
 import logging

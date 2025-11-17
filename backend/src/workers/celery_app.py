@@ -6,7 +6,7 @@ app = Celery(
     'omnivid',
     broker=os.getenv('CELERY_BROKER_URL', 'redis://redis:6379/0'),
     backend=os.getenv('CELERY_RESULT_BACKEND', 'redis://redis:6379/0'),
-    include=['src.workers.tasks']
+    include=['workers.tasks.video_processing']
 )
 
 # Optional configuration, see the application user guide.

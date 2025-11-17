@@ -2,17 +2,62 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
+  workflow_dispatch:
 
 env:
-  PYTHON_VERSION: '3.9'
+  PYTHON_VERSION: '3.11'
+  NODE_VERSION: '18'
   DOCKER_COMPOSE_VERSION: '3.8'
+  DOCKER_BUILDKIT: 1
+  COMPOSE_DOCKER_CLI_BUILD: 1
 
 jobs:
-  test:
-    name: Run Tests
+  lint:
+    name: Lint Code
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python ${{ env.PYTHON_VERSION }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
+    
+    - name: Install Python dependencies
+      working-directory: ./backend
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements-dev.txt
+    
+    - name: Run Python linters
+      working-directory: ./backend
+      run: |
+        black --check .
+        isort --check-only .
+        flake8 .
+    
+    - name: Set up Node.js ${{ env.NODE_VERSION }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'pnpm'
+    
+    - name: Install frontend dependencies
+      working-directory: ./frontend
+      run: pnpm install
+    
+    - name: Run frontend linting
+      working-directory: ./frontend
+      run: pnpm lint
+
+  test-backend:
+    name: Test Backend
+    needs: lint
     runs-on: ubuntu-latest
     
     services:
@@ -25,41 +70,46 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+      
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U test -d test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     - name: Set up Python ${{ env.PYTHON_VERSION }}
       uses: actions/setup-python@v4
       with:
         python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
     
     - name: Install dependencies
+      working-directory: ./backend
       run: |
-        python -m pip install --upgrade pip pip-tools
-        pip install -r backend/requirements.txt
-        pip install -r backend/requirements-test.txt
+        python -m pip install --upgrade pip
+        pip install -r requirements-dev.txt
+        pip install -e .
     
     - name: Run tests with coverage
       working-directory: ./backend
       env:
+        DATABASE_URL: postgresql://test:test@localhost:5432/test
         REDIS_HOST: localhost
         REDIS_PORT: 6379
-        DATABASE_URL: sqlite:///./test.db
-        PYTHONPATH: ${{ github.workspace }}/backend/src:${{ github.workspace }}/backend/tests
+        TESTING: 'true'
       run: |
-        # Print environment info for debugging
-        python --version
-        pip list
-        
-        # Install package in development mode
-        pip install -e .
-        
-        # Initialize test database
-        python -c "from src.database.connection import Base, engine; Base.metadata.create_all(bind=engine)"
-        
-        # Run tests with coverage
-        python -m pytest -v --cov=src --cov-report=xml:coverage.xml
+        python -m pytest -v --cov=src --cov-report=xml:coverage.xml --cov-report=term
     
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
@@ -67,13 +117,36 @@ jobs:
         file: ./backend/coverage.xml
         fail_ci_if_error: false
 
-  build:
-    name: Build Docker Images
-    needs: test
+  test-frontend:
+    name: Test Frontend
+    needs: lint
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+    
+    - name: Set up Node.js ${{ env.NODE_VERSION }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'pnpm'
+    
+    - name: Install dependencies
+      working-directory: ./frontend
+      run: pnpm install
+    
+    - name: Run tests
+      working-directory: ./frontend
+      run: pnpm test:ci
+
+  build-and-push:
+    name: Build and Push Docker Images
+    needs: [test-backend, test-frontend]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+    
+    steps:
+    - uses: actions/checkout@v4
     
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
@@ -84,11 +157,71 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
     
-    - name: Build and push
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta
+      uses: docker/metadata-action@v4
+      with:
+        images: ${{ secrets.DOCKERHUB_USERNAME }}/omnivid
+        tags: |
+          type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
+          type=raw,value=develop,enable=${{ github.ref == format('refs/heads/{0}', 'develop') }}
+          type=sha,format=long
+    
+    - name: Build and push backend
       uses: docker/build-push-action@v4
       with:
-        context: .
-        push: ${{ github.event_name != 'pull_request' }}
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/omnivid:latest
+        context: ./backend
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
+    
+    - name: Build and push frontend
+      uses: docker/build-push-action@v4
+      with:
+        context: ./frontend
+        file: ./frontend/Dockerfile
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}-frontend
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+  deploy-staging:
+    name: Deploy to Staging
+    needs: build-and-push
+    if: github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Deploy to staging
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.STAGING_HOST }}
+        username: ${{ secrets.STAGING_USERNAME }}
+        key: ${{ secrets.STAGING_SSH_KEY }}
+        script: |
+          cd /path/to/staging
+          docker-compose pull
+          docker-compose up -d --force-recreate
+          docker system prune -f
+
+  deploy-production:
+    name: Deploy to Production
+    needs: [build-and-push, deploy-staging]
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Deploy to production
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.PROD_HOST }}
+        username: ${{ secrets.PROD_USERNAME }}
+        key: ${{ secrets.PROD_SSH_KEY }}
+        script: |
+          cd /path/to/production
+          docker-compose pull
+          docker-compose up -d --force-recreate
+          docker system prune -f

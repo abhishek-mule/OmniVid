@@ -1,0 +1,91 @@
+version: '3.8'
+
+services:
+  test-backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile.test
+    environment:
+      - DATABASE_URL=postgresql://test:test@test-postgres:5432/test
+      - REDIS_HOST=test-redis
+      - REDIS_PORT=6379
+      - TESTING=true
+      - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      test-postgres:
+        condition: service_healthy
+      test-redis:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - backend-coverage:/app/htmlcov
+    working_dir: /app
+    command: >
+      sh -c "python -m pytest -v 
+             --cov=src 
+             --cov-report=xml:coverage.xml 
+             --cov-report=term-missing
+             --cov-report=html
+             tests/"
+
+  test-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.test
+    environment:
+      - NODE_ENV=test
+      - CI=true
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - frontend-coverage:/app/coverage
+    working_dir: /app
+    command: pnpm test:ci
+
+  test-redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  test-postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: test
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test -d test"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  test-codecov:
+    image: alpine/curl:latest
+    depends_on:
+      - test-backend
+    volumes:
+      - ./backend/coverage.xml:/coverage.xml
+    environment:
+      - CODECOV_TOKEN=${CODECOV_TOKEN:-}
+    command: >
+      sh -c "if [ -n "$$CODECOV_TOKEN" ]; then
+                curl -s https://codecov.io/bash | bash -s - -f /coverage.xml -t $$CODECOV_TOKEN;
+              else
+                echo 'Skipping Codecov upload: No token provided';
+              fi"
+
+volumes:
+  postgres-data:
+  redis-data:
+  backend-coverage:
+  frontend-coverage:
