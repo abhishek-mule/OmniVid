@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from typing import List, Optional
-from ..database.connection import get_db
-from ..database.repository import ProjectRepository, VideoRepository
-from ..database.schemas import Video, VideoCreate, VideoUpdate
-from ..auth.security import get_current_user
+from src.database.connection import get_db
+from src.database.repository import ProjectRepository, VideoRepository
+from src.database.schemas import Video, VideoCreate, VideoUpdate
+from src.auth.security import get_current_user
 
 router = APIRouter()
 

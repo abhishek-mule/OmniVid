@@ -7,10 +7,10 @@ from sqlalchemy.orm import Session
 from typing import List, Optional
 import logging
 
-from ..database.connection import get_db
-from ..auth.security import get_current_user
-from ..services.file_manager import file_manager, FileValidationError, FileStorageError
-from ..services.task_manager import task_manager
+from src.database.connection import get_db
+from src.auth.security import get_current_user
+from src.services.file_manager import file_manager, FileValidationError, FileStorageError
+from src.services.task_manager import task_manager
 
 router = APIRouter()
 

@@ -2,8 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 # Import database
-from ..database.connection import get_db, engine
-from ..database.models import Base
+from src.database.connection import get_db, engine
+from src.database.models import Base
 
 # Create database tables on startup
 Base.metadata.create_all(bind=engine)
@@ -37,7 +37,7 @@ from .routes.projects import router as projects_router
 from .routes.videos import router as videos_router
 from .routes.files import router as files_router
 from .routes.websocket import router as websocket_router
-from ..auth.routes import router as auth_router
+from src.auth.routes import router as auth_router
 
 app.include_router(auth_router, prefix="/auth", tags=["authentication"])
 app.include_router(projects_router, prefix="/api", tags=["projects"])
