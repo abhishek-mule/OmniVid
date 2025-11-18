@@ -13,7 +13,7 @@ import { Icons } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import { toast } from '@/hooks/use-toast';
 import Link from 'next/link';
-// import { useAuth } from '@omnivid/shared/context';
+import { useSupabaseAuth } from '@omnivid/shared/contexts';
 
 const userAuthSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address' }),
@@ -33,7 +33,7 @@ interface AuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export function AuthForm({ className, type, searchParams, ...props }: AuthFormProps) {
   const router = useRouter();
-  // const { refresh } = useAuth();
+  const { signUp, signInWithPassword, signInWithOAuth, loading } = useSupabaseAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [isGitHubLoading, setIsGitHubLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
@@ -50,19 +50,18 @@ export function AuthForm({ className, type, searchParams, ...props }: AuthFormPr
     setIsLoading(true);
 
     try {
-      const url = type === 'login' ? '/api/auth/login' : '/api/auth/register';
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
+      let result;
+      if (type === 'login') {
+        result = await signInWithPassword(data.email, data.password);
+      } else {
+        result = await signUp(data.email, data.password, {
+          full_name: data.name,
+          username: data.name?.toLowerCase().replace(/\s+/g, '') || 'user',
+        });
+      }
 
-      const responseData = await response.json();
-
-      if (!response.ok) {
-        throw new Error(responseData.message || 'Something went wrong');
+      if (result.error) {
+        throw new Error(result.error.message);
       }
 
       toast({
@@ -71,7 +70,6 @@ export function AuthForm({ className, type, searchParams, ...props }: AuthFormPr
       });
 
       const nextParam = searchParams?.get('next') || '/app/editor';
-      // try { await refresh(); } catch {}
       router.push(nextParam);
       router.refresh();
     } catch (error) {
@@ -93,11 +91,11 @@ export function AuthForm({ className, type, searchParams, ...props }: AuthFormPr
     }
 
     try {
-      const nextParam = searchParams?.get('next');
-      const target = nextParam
-        ? `/api/auth/${provider}?next=${encodeURIComponent(nextParam)}`
-        : `/api/auth/${provider}`;
-      window.location.href = target;
+      const result = await signInWithOAuth(provider);
+      if (result.error) {
+        throw new Error(result.error.message);
+      }
+      // OAuth redirects automatically
     } catch (error) {
       toast({
         title: 'Error',

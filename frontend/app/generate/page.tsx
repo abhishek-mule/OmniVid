@@ -1,41 +1,105 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import BackendPipeline from '@/components/video-gen/BackendPipeline';
 import PromptInput from '@/components/video-gen/PromptInput';
 import SettingsPanel from '@/components/video-gen/SettingsPanel';
 import ResultDisplay from '@/components/video-gen/ResultDisplay';
-import { Sparkles, Zap } from "lucide-react";
+import { Sparkles, Zap, AlertCircle } from "lucide-react";
+import { useAuth } from "@omnivid/shared/contexts/AuthContext";
+import { videoApi } from "@omnivid/shared/lib/auth";
+import { useWebSocket } from "@omnivid/shared/hooks/useWebSocket";
 
 interface Settings {
   resolution: '720p' | '1080p' | '2k' | '4k';
   fps: 24 | 30 | 60;
   duration: number;
   quality: 'fast' | 'balanced' | 'best';
+  engine: 'remotion' | 'ffmpeg' | 'blender' | 'manim';
 }
 
 export default function GeneratePage() {
   const [prompt, setPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
-  const [result, setResult] = useState<string | null>(null);
+  const [result, setResult] = useState<any>(null);
+  const [currentVideoId, setCurrentVideoId] = useState<number | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [settings, setSettings] = useState<Settings>({
     resolution: '1080p',
     fps: 30,
     duration: 30,
-    quality: 'balanced'
+    quality: 'balanced',
+    engine: 'remotion'
   });
 
-  const handleGenerate = async () => {
-    if (!prompt.trim()) return;
+  const router = useRouter();
+  const { user, token } = useAuth();
 
+  // WebSocket for real-time progress updates
+  const wsUrl = currentVideoId ? `ws://localhost:8000/ws/videos/${currentVideoId}` : null;
+  const { messages, isConnected } = useWebSocket(wsUrl || '');
+
+  // Redirect if not authenticated
+  useEffect(() => {
+    if (!user && !token) {
+      router.push('/auth/login');
+    }
+  }, [user, token, router]);
+
+  useEffect(() => {
+    // Handle WebSocket messages for progress updates
+    if (messages.length > 0 && currentVideoId) {
+      const latestMessage = messages[messages.length - 1];
+      if (latestMessage.type === 'progress') {
+        // Update progress (you can extend this based on backend message structure)
+        console.log('Progress update:', latestMessage.data);
+      } else if (latestMessage.type === 'completed') {
+        setIsGenerating(false);
+        setResult({ status: 'completed', videoId: currentVideoId });
+      } else if (latestMessage.type === 'error') {
+        setIsGenerating(false);
+        setError(latestMessage.data || 'Video generation failed');
+      }
+    }
+  }, [messages, currentVideoId]);
+
+  const handleGenerate = async () => {
+    if (!prompt.trim() || !token) return;
+
+    setError(null);
     setIsGenerating(true);
-    // Simulate API call
-    setTimeout(() => {
-      setResult('Video generated successfully!');
+    setResult(null);
+
+    try {
+      // Create video through API
+      const videoData = {
+        title: prompt.slice(0, 100), // Use first 100 chars as title
+        description: prompt,
+        engine: settings.engine,
+        settings: {
+          resolution: settings.resolution,
+          fps: settings.fps,
+          duration: settings.duration,
+          quality: settings.quality,
+        },
+        prompt: prompt,
+      };
+
+      const response = await videoApi.createVideo(token, videoData);
+      const videoId = response.id;
+      setCurrentVideoId(videoId);
+
+      // Video creation successful, waiting for WebSocket updates
+      console.log('Video created with ID:', videoId);
+
+    } catch (err) {
       setIsGenerating(false);
-    }, 3000);
+      setError(err instanceof Error ? err.message : 'Failed to start video generation');
+    }
   };
 
   return (
@@ -69,6 +133,13 @@ export default function GeneratePage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
+                {error && (
+                  <Alert className="border-red-200 bg-red-50">
+                    <AlertCircle className="h-4 w-4 text-red-600" />
+                    <AlertDescription className="text-red-700">{error}</AlertDescription>
+                  </Alert>
+                )}
+
                 <PromptInput
                   value={prompt}
                   onChange={setPrompt}
@@ -85,7 +156,14 @@ export default function GeneratePage() {
                   className="w-full h-12 gradient-primary text-white hover:opacity-90"
                   size="lg"
                 >
-                  {isGenerating ? 'Generating...' : 'Generate Video'}
+                  {isGenerating ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Generating Video... {isConnected ? '(Real-time updates active)' : ''}
+                    </>
+                  ) : (
+                    'Generate Video'
+                  )}
                 </Button>
               </CardContent>
             </Card>

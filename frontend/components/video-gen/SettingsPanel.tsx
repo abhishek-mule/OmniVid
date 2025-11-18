@@ -10,6 +10,7 @@ interface Settings {
   fps: 24 | 30 | 60;
   duration: number;
   quality: 'fast' | 'balanced' | 'best';
+  engine: 'remotion' | 'ffmpeg' | 'blender' | 'manim';
 }
 
 interface SettingsPanelProps {
@@ -26,6 +27,47 @@ export default function SettingsPanel({ settings, onChange, disabled }: Settings
   return (
     <div className="space-y-4 p-4 border rounded-lg">
       <h3 className="font-medium">Video Settings</h3>
+
+      <div className="space-y-2">
+        <Label>Rendering Engine</Label>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild disabled={disabled}>
+            <button className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+              {settings.engine === 'remotion' && 'Remotion (Text/Animation)'}
+              {settings.engine === 'ffmpeg' && 'FFmpeg (Video Processing)'}
+              {settings.engine === 'blender' && 'Blender (3D Graphics)'}
+              {settings.engine === 'manim' && 'Manim (Mathematical)'}
+              <ChevronDown className="h-4 w-4 opacity-50" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem onClick={() => updateSetting('engine', 'remotion')}>
+              <div className="flex flex-col">
+                <span className="font-medium">Remotion</span>
+                <span className="text-xs text-muted-foreground">Text animations & motion graphics</span>
+              </div>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => updateSetting('engine', 'ffmpeg')}>
+              <div className="flex flex-col">
+                <span className="font-medium">FFmpeg</span>
+                <span className="text-xs text-muted-foreground">Video processing & composition</span>
+              </div>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => updateSetting('engine', 'blender')}>
+              <div className="flex flex-col">
+                <span className="font-medium">Blender</span>
+                <span className="text-xs text-muted-foreground">3D graphics & animation</span>
+              </div>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => updateSetting('engine', 'manim')}>
+              <div className="flex flex-col">
+                <span className="font-medium">Manim</span>
+                <span className="text-xs text-muted-foreground">Mathematical animations</span>
+              </div>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
