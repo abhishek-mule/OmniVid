@@ -10,7 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import Link from "next/link";
 import { Eye, EyeOff, Mail, Lock, User, Sparkles, Check, AlertCircle } from "lucide-react";
-import { useAuth } from "@omnivid/shared/contexts/AuthContext";
+import { useSupabaseAuth } from "@omnivid/shared/contexts/SupabaseAuthContext";
 
 export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -25,7 +25,7 @@ export default function SignUpPage() {
   const [error, setError] = useState('');
 
   const router = useRouter();
-  const { signUp } = useAuth();
+  const { signUp } = useSupabaseAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,9 +49,9 @@ export default function SignUpPage() {
     setIsLoading(true);
 
     try {
-      const result = await signUp(email, password, `${firstName} ${lastName}`.trim());
+      const result = await signUp(email, password, { full_name: `${firstName} ${lastName}`.trim() });
       if (result.error) {
-        setError(result.error);
+        setError(result.error.message || 'An error occurred during sign up');
       }
       // On success, the AuthContext will redirect to login
     } catch (err) {
