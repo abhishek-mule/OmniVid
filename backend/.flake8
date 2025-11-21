@@ -1,0 +1,42 @@
+[flake8]
+max-line-length = 88
+max-complexity = 12
+ignore =
+    # E203: whitespace before ':' - conflicts with Black
+    E203,
+    # E501: line too long - handled by Black
+    E501,
+    # W503: line break before binary operator - conflicts with Black
+    W503,
+    # F401: module imported but unused - can be noisy
+    F401,
+    # F403: 'from module import *' used - explicit imports preferred
+    F403,
+    # F405: name may be undefined or defined from star imports
+    F405,
+exclude =
+    .git,
+    __pycache__,
+    .pytest_cache,
+    .tox,
+    .venv,
+    build,
+    dist,
+    node_modules,
+    uploads,
+    assets,
+    tmp,
+    .venv
+per-file-ignores =
+    # Tests can have unused imports
+    tests/*:F401,F811,F841,
+    tests/e2e/*:F401,F811,F841,
+    tests/integration/*:F401,F811,F841,
+    tests/chaos/*:F401,F811,F841,
+    tests/load/*:F401,F811,F841,
+    tests/unit/*:F401,F811,F841,
+    # Migration files might have special imports
+    */migrations/*:F401,
+    # Config files might have unused imports
+    */config/*.py:F401,
+    */settings.py:F401

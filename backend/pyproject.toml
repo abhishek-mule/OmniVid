@@ -1,0 +1,103 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "omnivid-backend"
+version = "0.1.0"
+description = "AI-driven motion graphics compiler backend"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi==0.103.1",
+    "uvicorn[standard]==0.23.2",
+    "python-dotenv==1.0.0",
+    "sqlalchemy[asyncio]==2.0.20",
+    "asyncpg==0.29.0",
+    "python-jose[cryptography]==3.3.0",
+    "passlib[bcrypt]==1.7.4",
+    "bcrypt==4.0.1",
+    "python-multipart==0.0.6",
+    "celery==5.3.4",
+    "redis==5.0.1",
+    "flower==2.0.1",
+    "websockets==12.0",
+    "email-validator>=2.0.0",
+    "supabase==2.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "black==23.9.1",
+    "isort==5.12.0",
+    "flake8==6.0.0",
+    "mypy==1.5.1",
+    "pytest==8.0.0",
+    "pytest-cov==4.1.0",
+    "pytest-asyncio==0.23.3",
+    "pytest-mock==3.12.0",
+    "faker==20.1.0",
+]
+
+[tool.black]
+line-length = 88
+target-version = ['py311']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+  | __pycache__
+  | node_modules
+  | .pytest_cache
+  | uploads
+  | assets
+  | tmp
+)/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
+known_first_party = ["src"]
+known_local_folder = ["src"]
+sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
+skip = ["__init__.py", "node_modules", "uploads", "assets", "tmp"]
+skip_glob = ["*/__pycache__/*", "*/.pytest_cache/*", "*/__pycache__", "*/.pytest_cache"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --cov=src --cov-report=term-missing"
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests",
+    "e2e: End-to-end tests",
+    "chaotic: Chaos engineering tests",
+]
+
+[tool.coverage.run]
+source = ["src"]
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "setup.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+]
