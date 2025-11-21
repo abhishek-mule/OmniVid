@@ -10,7 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import Link from "next/link";
 import { Eye, EyeOff, Mail, Lock, User, Sparkles, Check, AlertCircle } from "lucide-react";
-import { useSupabaseAuth } from "@omnivid/shared/contexts/SupabaseAuthContext";
+import { useSupabaseAuth } from "@/components/auth/AuthProvider";
 
 export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);

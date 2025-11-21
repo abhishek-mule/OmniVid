@@ -40,138 +40,90 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.useAuth = exports.AuthProvider = void 0;
 var react_1 = require("react");
 var navigation_1 = require("next/navigation");
-var supabase_1 = require("@/lib/supabase");
+var auth_1 = require("../lib/auth");
 var AuthContext = (0, react_1.createContext)(undefined);
 var AuthProvider = function (_a) {
     var children = _a.children;
     var _b = (0, react_1.useState)(null), user = _b[0], setUser = _b[1];
-    var _c = (0, react_1.useState)(true), loading = _c[0], setLoading = _c[1];
+    var _c = (0, react_1.useState)(null), token = _c[0], setToken = _c[1];
+    var _d = (0, react_1.useState)(true), loading = _d[0], setLoading = _d[1];
     var router = (0, navigation_1.useRouter)();
-    var supabase = (0, supabase_1.createClient)();
     (0, react_1.useEffect)(function () {
-        // Check active sessions and set the user
-        var subscription = supabase.auth.onAuthStateChange(function (_event, session) {
-            var _a;
-            setUser((_a = session === null || session === void 0 ? void 0 : session.user) !== null && _a !== void 0 ? _a : null);
-            setLoading(false);
-        }).data.subscription;
-        // Check the current session on initial load
-        var checkSession = function () { return __awaiter(void 0, void 0, void 0, function () {
-            var session;
-            var _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0: return [4 /*yield*/, supabase.auth.getSession()];
-                    case 1:
-                        session = (_b.sent()).data.session;
-                        setUser((_a = session === null || session === void 0 ? void 0 : session.user) !== null && _a !== void 0 ? _a : null);
-                        setLoading(false);
-                        return [2 /*return*/];
-                }
-            });
-        }); };
-        checkSession();
-        return function () {
-            subscription === null || subscription === void 0 ? void 0 : subscription.unsubscribe();
-        };
-    }, [supabase]);
+        // Check for stored token on initial load
+        var storedToken = localStorage.getItem('auth_token');
+        if (storedToken) {
+            setToken(storedToken);
+            // TODO: Validate token with backend
+        }
+        setLoading(false);
+    }, []);
     // Sign in with email and password
     var signIn = function (email, password) { return __awaiter(void 0, void 0, void 0, function () {
-        var _a, data, error;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
-                case 0: return [4 /*yield*/, supabase.auth.signInWithPassword({
-                        email: email,
-                        password: password,
-                    })];
+        var data, error_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, auth_1.authApi.login(email, password)];
                 case 1:
-                    _a = _b.sent(), data = _a.data, error = _a.error;
-                    if (data === null || data === void 0 ? void 0 : data.user) {
-                        setUser(data.user);
-                    }
-                    return [2 /*return*/, { data: data, error: error }];
+                    data = _a.sent();
+                    setUser(data.user);
+                    setToken(data.access_token);
+                    localStorage.setItem('auth_token', data.access_token);
+                    router.push('/dashboard');
+                    return [2 /*return*/, { data: data, error: null }];
+                case 2:
+                    error_1 = _a.sent();
+                    return [2 /*return*/, { data: null, error: error_1 instanceof Error ? error_1.message : 'Login failed' }];
+                case 3: return [2 /*return*/];
             }
         });
     }); };
     // Sign up with email and password
     var signUp = function (email, password, fullName) { return __awaiter(void 0, void 0, void 0, function () {
-        var _a, data, error;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
-                case 0: return [4 /*yield*/, supabase.auth.signUp({
-                        email: email,
-                        password: password,
-                        options: {
-                            data: {
-                                full_name: fullName,
-                                email: email,
-                            },
-                            emailRedirectTo: "".concat(window.location.origin, "/dashboard"),
-                        },
-                    })];
+        var username, data, error_2;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    username = email.split('@')[0];
+                    return [4 /*yield*/, auth_1.authApi.signup(email, username, password, fullName)];
                 case 1:
-                    _a = _b.sent(), data = _a.data, error = _a.error;
-                    if (data === null || data === void 0 ? void 0 : data.user) {
-                        setUser(data.user);
-                    }
-                    return [2 /*return*/, { data: data, error: error }];
+                    data = _a.sent();
+                    router.push('/auth/login?message=Account created successfully');
+                    return [2 /*return*/, { data: data, error: null }];
+                case 2:
+                    error_2 = _a.sent();
+                    return [2 /*return*/, { data: null, error: error_2 instanceof Error ? error_2.message : 'Signup failed' }];
+                case 3: return [2 /*return*/];
             }
         });
     }); };
     // Sign out
     var signOut = function () { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, supabase.auth.signOut()];
-                case 1:
-                    _a.sent();
-                    setUser(null);
-                    router.push('/login');
-                    router.refresh();
-                    return [2 /*return*/];
-            }
+            setUser(null);
+            setToken(null);
+            localStorage.removeItem('auth_token');
+            router.push('/auth/login');
+            return [2 /*return*/];
         });
     }); };
-    // Sign in with Google
+    // Sign in with Google (placeholder)
     var signInWithGoogle = function () { return __awaiter(void 0, void 0, void 0, function () {
-        var _a, data, error;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
-                case 0: return [4 /*yield*/, supabase.auth.signInWithOAuth({
-                        provider: 'google',
-                        options: {
-                            redirectTo: "".concat(window.location.origin, "/dashboard"),
-                            queryParams: {
-                                access_type: 'offline',
-                                prompt: 'consent',
-                            },
-                        },
-                    })];
-                case 1:
-                    _a = _b.sent(), data = _a.data, error = _a.error;
-                    return [2 /*return*/, { data: data, error: error }];
-            }
+        return __generator(this, function (_a) {
+            return [2 /*return*/, { data: null, error: 'Google OAuth not implemented' }];
         });
     }); };
-    // Sign in with GitHub
+    // Sign in with GitHub (placeholder)
     var signInWithGithub = function () { return __awaiter(void 0, void 0, void 0, function () {
-        var _a, data, error;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
-                case 0: return [4 /*yield*/, supabase.auth.signInWithOAuth({
-                        provider: 'github',
-                        options: {
-                            redirectTo: "".concat(window.location.origin, "/dashboard"),
-                        },
-                    })];
-                case 1:
-                    _a = _b.sent(), data = _a.data, error = _a.error;
-                    return [2 /*return*/, { data: data, error: error }];
-            }
+        return __generator(this, function (_a) {
+            return [2 /*return*/, { data: null, error: 'GitHub OAuth not implemented' }];
         });
     }); };
     var value = {
         user: user,
+        token: token,
         loading: loading,
         signIn: signIn,
         signUp: signUp,
@@ -180,7 +132,12 @@ var AuthProvider = function (_a) {
         signInWithGithub: signInWithGithub,
     };
     return (<AuthContext.Provider value={value}>
-      {!loading ? children : <div>Loading...</div>}
+      {!loading ? children : (<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+            <p className="mt-4 text-gray-600">Loading OmniVid...</p>
+          </div>
+        </div>)}
     </AuthContext.Provider>);
 };
 exports.AuthProvider = AuthProvider;

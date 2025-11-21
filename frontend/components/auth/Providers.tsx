@@ -1,10 +1,11 @@
 // Auth provider wrapper for Next.js
 "use client";
 
-import { AuthProvider } from '@omnivid/shared/contexts';
+import { ReactNode } from 'react';
+import { AuthProvider } from './AuthProvider';
 
 interface ProvidersProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export function Providers({ children }: ProvidersProps) {

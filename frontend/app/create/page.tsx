@@ -13,6 +13,7 @@ interface Settings {
   fps: 24 | 30 | 60;
   duration: number;
   quality: 'fast' | 'balanced' | 'best';
+  engine: 'remotion' | 'ffmpeg' | 'blender' | 'manim';
 }
 
 export default function CreateProjectPage() {
@@ -23,7 +24,8 @@ export default function CreateProjectPage() {
     resolution: '1080p',
     fps: 30,
     duration: 30,
-    quality: 'balanced'
+    quality: 'balanced',
+    engine: 'remotion'
   });
 
   const handleGenerate = async () => {

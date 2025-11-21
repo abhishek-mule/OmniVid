@@ -14,9 +14,15 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.legacyAuthApi = exports.simpleApi = exports.newVideoApi = void 0;
 __exportStar(require("./utils"), exports);
-__exportStar(require("./api"), exports);
 __exportStar(require("./supabase"), exports);
 __exportStar(require("./websocket"), exports);
-__exportStar(require("./supabase/client"), exports);
+// Export only specific functions to avoid conflicts
+var api_1 = require("./api");
+Object.defineProperty(exports, "newVideoApi", { enumerable: true, get: function () { return api_1.videoApi; } });
+var api_2 = require("./api");
+Object.defineProperty(exports, "simpleApi", { enumerable: true, get: function () { return api_2.simpleApi; } });
+var auth_1 = require("./auth");
+Object.defineProperty(exports, "legacyAuthApi", { enumerable: true, get: function () { return auth_1.authApi; } });
 //# sourceMappingURL=index.js.map

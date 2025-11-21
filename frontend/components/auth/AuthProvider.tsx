@@ -1,6 +1,8 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+'use client';
+
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import type { User, Session, AuthError } from '@supabase/supabase-js';
-import { createClient } from '../lib/supabase/client';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 
 type AuthContextType = {
   user: User | null;
@@ -15,11 +17,22 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
-  const [supabase] = useState(() => createClient());
+  const [supabase] = useState(() => createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+        flowType: 'pkce',
+      },
+    }
+  ));
 
   useEffect(() => {
     // Get initial session
@@ -45,7 +58,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [supabase.auth]);
 
   const signUp = async (email: string, password: string, userData?: { username?: string; full_name?: string }) => {
-    const { data, error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -53,39 +66,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       },
     });
 
-    return { data, error };
+    return { error: error ?? undefined };
   };
 
   const signInWithPassword = async (email: string, password: string) => {
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
-    return { data, error };
+    return { error: error ?? undefined };
   };
 
   const signInWithOAuth = async (provider: 'github' | 'google') => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
         redirectTo: `${window.location.origin}/auth/callback`,
       },
     });
 
-    return { data, error };
+    return { error: error ?? undefined };
   };
 
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
-    return { error };
+    return { error: error ?? undefined };
   };
 
   const updateProfile = async (data: { username?: string; full_name?: string }) => {
     const { error } = await supabase.auth.updateUser({
       data,
     });
-    return { error };
+    return { error: error ?? undefined };
   };
 
   const value: AuthContextType = {

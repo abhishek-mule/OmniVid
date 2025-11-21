@@ -1,10 +1,17 @@
-import type { User } from '@supabase/supabase-js';
+import { type LoginResponse } from '../lib/auth';
+type User = {
+    id: number;
+    email: string;
+    username: string;
+    full_name: string;
+};
 type AuthContextType = {
     user: User | null;
+    token: string | null;
     loading: boolean;
     signIn: (email: string, password: string) => Promise<{
-        data: any;
-        error: any;
+        data: LoginResponse | null;
+        error: string | null;
     }>;
     signUp: (email: string, password: string, fullName: string) => Promise<{
         data: any;

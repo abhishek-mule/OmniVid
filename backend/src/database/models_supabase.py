@@ -2,9 +2,11 @@
 Database models for Supabase integration
 """
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text, Float, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, DeclarativeBase
 from sqlalchemy.sql import func
-from ..database.connection import Base
+
+class Base(DeclarativeBase):
+    pass
 
 class UserProfile(Base):
     __tablename__ = "user_profiles"

@@ -13,7 +13,7 @@ import { Icons } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import { toast } from '@/hooks/use-toast';
 import Link from 'next/link';
-import { useSupabaseAuth } from '@omnivid/shared/contexts';
+import { useSupabaseAuth } from './AuthProvider';
 
 const userAuthSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address' }),

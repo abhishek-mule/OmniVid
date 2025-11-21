@@ -8,7 +8,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: omnivid
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -36,6 +36,10 @@ services:
       - PYTHONUNBUFFERED=1
       - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/omnivid
       - REDIS_URL=redis://redis:6379/0
+      - USE_SUPABASE=true
+      - NEXT_PUBLIC_SUPABASE_URL=https://wlsbwwwprvfqryzgmznd.supabase.co
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indsc2J3d3dwcnZmcXJ5emdtem5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI1MzUzOTMsImV4cCI6MjA3ODExMTM5M30.RdtVodd0MOLjcdoJpL62AWsPpVWkVqQUPg_Ys3jxOWY
+      - SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indsc2J3d3dwcnZmcXJ5emdtem5kIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MjUzNTM5MywiZXhwIjoyMDc4MTExMzkzfQ.8eET4WjRrMceQuBz9eeuwffBSH9tYuRxBM1DYLGvrYc
     volumes:
       - ./backend:/app
       - /app/__pycache__

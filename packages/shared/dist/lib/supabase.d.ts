@@ -1,1 +1,2 @@
-export declare const createClient: () => any;
+export * from './supabase/client';
+export * from './types';

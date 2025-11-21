@@ -27,56 +27,8 @@ export declare function resetPassword(formData: FormData): Promise<{
     success: boolean;
     error?: undefined;
 }>;
-export declare function getCurrentUser(): Promise<({
-    accounts: {
-        id: string;
-        userId: string;
-        type: string;
-        provider: string;
-        providerAccountId: string;
-        refresh_token: string | null;
-        access_token: string | null;
-        expires_at: number | null;
-        token_type: string | null;
-        scope: string | null;
-        id_token: string | null;
-        session_state: string | null;
-    }[];
-} & {
-    image: string | null;
-    id: string;
-    name: string | null;
-    email: string;
-    password: string | null;
-    emailVerified: boolean;
-    createdAt: Date;
-    updatedAt: Date;
-}) | null>;
-export declare function requireAuth(): Promise<{
-    accounts: {
-        id: string;
-        userId: string;
-        type: string;
-        provider: string;
-        providerAccountId: string;
-        refresh_token: string | null;
-        access_token: string | null;
-        expires_at: number | null;
-        token_type: string | null;
-        scope: string | null;
-        id_token: string | null;
-        session_state: string | null;
-    }[];
-} & {
-    image: string | null;
-    id: string;
-    name: string | null;
-    email: string;
-    password: string | null;
-    emailVerified: boolean;
-    createdAt: Date;
-    updatedAt: Date;
-}>;
+export declare function getCurrentUser(): Promise<any>;
+export declare function requireAuth(): Promise<any>;
 export declare function handleOAuthCallback(provider: string, profile: {
     id: string;
     email: string;
