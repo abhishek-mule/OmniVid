@@ -7,6 +7,14 @@
     },
     "dev": {
       "cache": false
+    },
+    "lint": {
+      "dependsOn": ["^lint"]
+    },
+    "lint:fix": {
+      "dependsOn": ["^lint:fix"]
+    }
+      "dependsOn": ["^lint:fix"]
     }
   }
 }

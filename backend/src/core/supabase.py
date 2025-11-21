@@ -14,9 +14,11 @@ service_key: str = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
 supabase: Client = create_client(url, key)
 supabase_admin: Client = create_client(url, service_key)
 
+
 def get_supabase() -> Client:
     """Get Supabase client for regular operations."""
     return supabase
+
 
 def get_supabase_admin() -> Client:
     """Get Supabase client for admin operations."""

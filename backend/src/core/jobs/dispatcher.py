@@ -1,6 +1,7 @@
 """
 Job Dispatcher: Submits rendering tasks to the processing queue.
 """
+
 import uuid
 from typing import Dict, List, Optional, Any, Callable
 from datetime import datetime
@@ -8,6 +9,7 @@ import json
 import logging
 
 logger = logging.getLogger(__name__)
+
 
 class Job:
     """Represents a video generation job."""
@@ -18,7 +20,7 @@ class Job:
         prompt: str,
         scene_json: Dict[str, Any],
         output_path: str,
-        priority: int = 1
+        priority: int = 1,
     ):
         self.job_id = job_id
         self.prompt = prompt
@@ -46,21 +48,23 @@ class Job:
             "progress": self.progress,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "started_at": self.started_at.isoformat() if self.started_at else None,
-            "completed_at": self.completed_at.isoformat() if self.completed_at else None,
+            "completed_at": (
+                self.completed_at.isoformat() if self.completed_at else None
+            ),
             "worker_id": self.worker_id,
             "result": self.result,
-            "error": self.error
+            "error": self.error,
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'Job':
+    def from_dict(cls, data: Dict[str, Any]) -> "Job":
         """Create job from dictionary."""
         job = cls(
             job_id=data["job_id"],
             prompt=data["prompt"],
             scene_json=data["scene_json"],
             output_path=data["output_path"],
-            priority=data.get("priority", 1)
+            priority=data.get("priority", 1),
         )
         job.status = data.get("status", "pending")
         job.progress = data.get("progress", 0)
@@ -68,6 +72,7 @@ class Job:
         job.result = data.get("result")
         job.error = data.get("error")
         return job
+
 
 class JobDispatcher:
     """Manages the job queue and dispatches tasks to workers."""
@@ -84,7 +89,7 @@ class JobDispatcher:
         prompt: str,
         scene_json: Dict[str, Any],
         output_path: str,
-        priority: int = 1
+        priority: int = 1,
     ) -> str:
         """
         Submit a new rendering job.
@@ -136,7 +141,7 @@ class JobDispatcher:
             "worker_id": worker_id,
             "capabilities": capabilities,  # ["remotion", "manim", "ffmpeg"]
             "active_jobs": [],
-            "last_seen": datetime.now()
+            "last_seen": datetime.now(),
         }
         logger.info(f"Registered worker {worker_id} with capabilities: {capabilities}")
 
@@ -149,7 +154,9 @@ class JobDispatcher:
             del self.workers[worker_id]
             logger.info(f"Unregistered worker {worker_id}")
 
-    def worker_heartbeat(self, worker_id: str, job_statuses: List[Dict[str, Any]]) -> None:
+    def worker_heartbeat(
+        self, worker_id: str, job_statuses: List[Dict[str, Any]]
+    ) -> None:
         """Handle heartbeat from worker with job status updates."""
         if worker_id in self.workers:
             self.workers[worker_id]["last_seen"] = datetime.now()
@@ -194,10 +201,16 @@ class JobDispatcher:
         return {
             "total_workers": len(self.workers),
             "total_jobs": len(self.jobs),
-            "pending_jobs": len([j for j in self.jobs.values() if j.status == "pending"]),
-            "running_jobs": len([j for j in self.jobs.values() if j.status == "running"]),
-            "completed_jobs": len([j for j in self.jobs.values() if j.status == "completed"]),
-            "failed_jobs": len([j for j in self.jobs.values() if j.status == "failed"])
+            "pending_jobs": len(
+                [j for j in self.jobs.values() if j.status == "pending"]
+            ),
+            "running_jobs": len(
+                [j for j in self.jobs.values() if j.status == "running"]
+            ),
+            "completed_jobs": len(
+                [j for j in self.jobs.values() if j.status == "completed"]
+            ),
+            "failed_jobs": len([j for j in self.jobs.values() if j.status == "failed"]),
         }
 
     def add_status_callback(self, callback: Callable[[Job], None]) -> None:
@@ -221,7 +234,9 @@ class JobDispatcher:
             active_jobs = worker_info["active_jobs"]
 
             # Check if worker can handle this job and isn't overloaded
-            if required_engine in capabilities and len(active_jobs) < 3:  # Max 3 jobs per worker
+            if (
+                required_engine in capabilities and len(active_jobs) < 3
+            ):  # Max 3 jobs per worker
                 active_jobs.append(job.job_id)
                 job.status = "assigned"
                 job.worker_id = worker_id
@@ -257,6 +272,7 @@ class JobDispatcher:
         cutoff = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
         # Simple implementation - in practice would check timestamps
         return 0
+
 
 # Global instance
 job_dispatcher = JobDispatcher()

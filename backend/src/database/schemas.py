@@ -2,14 +2,17 @@ from pydantic import BaseModel, EmailStr
 from typing import Optional, List
 from datetime import datetime
 
+
 # User Schemas
 class UserBase(BaseModel):
     email: EmailStr
     username: str
     full_name: Optional[str] = None
 
+
 class UserCreate(UserBase):
     password: str
+
 
 class UserUpdate(BaseModel):
     email: Optional[EmailStr] = None
@@ -17,15 +20,17 @@ class UserUpdate(BaseModel):
     full_name: Optional[str] = None
     is_active: Optional[bool] = None
 
+
 class User(UserBase):
     id: int
     is_active: bool
     is_superuser: bool
     created_at: datetime
     updated_at: Optional[datetime] = None
-    
+
     class Config:
         from_attributes = True
+
 
 # Project Schemas
 class ProjectBase(BaseModel):
@@ -33,14 +38,17 @@ class ProjectBase(BaseModel):
     description: Optional[str] = None
     is_public: bool = False
 
+
 class ProjectCreate(ProjectBase):
     pass
+
 
 class ProjectUpdate(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
     is_public: Optional[bool] = None
     status: Optional[str] = None
+
 
 class Project(ProjectBase):
     id: int
@@ -50,9 +58,10 @@ class Project(ProjectBase):
     updated_at: Optional[datetime] = None
     owner: User
     videos: List["Video"] = []
-    
+
     class Config:
         from_attributes = True
+
 
 # Video Schemas
 class VideoBase(BaseModel):
@@ -60,9 +69,11 @@ class VideoBase(BaseModel):
     description: Optional[str] = None
     prompt: str
 
+
 class VideoCreate(VideoBase):
     project_id: int
     settings: Optional[str] = None
+
 
 class VideoUpdate(BaseModel):
     title: Optional[str] = None
@@ -71,6 +82,7 @@ class VideoUpdate(BaseModel):
     status: Optional[str] = None
     progress: Optional[int] = None
     settings: Optional[str] = None
+
 
 class Video(VideoBase):
     id: int
@@ -86,9 +98,10 @@ class Video(VideoBase):
     updated_at: Optional[datetime] = None
     completed_at: Optional[datetime] = None
     project: Project
-    
+
     class Config:
         from_attributes = True
+
 
 # Asset Schemas
 class AssetBase(BaseModel):
@@ -97,9 +110,11 @@ class AssetBase(BaseModel):
     file_type: str
     mime_type: str
 
+
 class AssetCreate(AssetBase):
     project_id: Optional[int] = None
     video_id: Optional[int] = None
+
 
 class Asset(AssetBase):
     id: int
@@ -112,23 +127,27 @@ class Asset(AssetBase):
     created_at: datetime
     project: Optional[Project] = None
     video: Optional[Video] = None
-    
+
     class Config:
         from_attributes = True
+
 
 # Job Schemas
 class JobBase(BaseModel):
     task_id: str
     video_id: int
 
+
 class JobCreate(JobBase):
     pass
+
 
 class JobUpdate(BaseModel):
     status: Optional[str] = None
     progress: Optional[int] = None
     result: Optional[str] = None
     error: Optional[str] = None
+
 
 class Job(JobBase):
     id: int
@@ -139,9 +158,10 @@ class Job(JobBase):
     created_at: datetime
     updated_at: Optional[datetime] = None
     completed_at: Optional[datetime] = None
-    
+
     class Config:
         from_attributes = True
+
 
 # Update forward references
 Project.model_rebuild()

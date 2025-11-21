@@ -11,6 +11,7 @@ from src.database.connection import engine, Base, create_tables
 
 # Routes imports come later based on USE_SUPABASE setting
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Import routers here to avoid import issues
@@ -22,15 +23,19 @@ async def lifespan(app: FastAPI):
 
     # Import auth routes conditionally based on USE_SUPABASE
     import os
-    use_supabase = os.getenv('USE_SUPABASE', 'false').lower() == 'true'
+
+    use_supabase = os.getenv("USE_SUPABASE", "false").lower() == "true"
 
     if use_supabase:
         from src.auth.supabase_routes import router as auth_router
+
         # Initialize Supabase client - tables are managed by Supabase
         from src.core.supabase import get_supabase
+
         _ = get_supabase()  # Initialize the client
     else:
         from src.auth.routes import router as auth_router
+
         # Create database tables on startup when not using Supabase
         async with engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
@@ -41,13 +46,14 @@ async def lifespan(app: FastAPI):
     if not use_supabase:
         await engine.dispose()
 
+
 app = FastAPI(
     title="OmniVid API",
     description="Backend API for OmniVid application",
     version="0.1.0",
     docs_url="/docs",
     redoc_url="/redoc",
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
 # Configure CORS
@@ -57,16 +63,19 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-    expose_headers=["Content-Disposition"]
+    expose_headers=["Content-Disposition"],
 )
+
 
 @app.get("/")
 async def root():
     return {"message": "Welcome to OmniVid API"}
 
+
 @app.get("/health")
 async def health_check():
     return {"status": "healthy"}
+
 
 # Import routers here
 from .routes.health import router as health_router
@@ -77,7 +86,8 @@ from .routes.websocket import router as websocket_router
 
 # Import auth routes conditionally based on USE_SUPABASE
 import os
-use_supabase = os.getenv('USE_SUPABASE', 'false').lower() == 'true'
+
+use_supabase = os.getenv("USE_SUPABASE", "false").lower() == "true"
 
 if use_supabase:
     from src.auth.supabase_routes import router as auth_router
@@ -93,4 +103,5 @@ app.include_router(health_router)
 
 # AI routes
 from .routes.ai import router as ai_router
+
 app.include_router(ai_router, prefix="/api/ai", tags=["ai"])

@@ -2,6 +2,7 @@
 AI-powered video generation API routes.
 Provides endpoints for natural language to video conversion using OmniVid Lite.
 """
+
 from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
 from sqlalchemy.orm import Session
 from typing import Dict, List, Optional, Any
@@ -19,24 +20,37 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
+
 # Pydantic models
 class AIVideoRequest(BaseModel):
     """Request model for AI video generation."""
-    prompt: str = Field(..., description="Natural language description of the video to generate", min_length=1, max_length=1000)
+
+    prompt: str = Field(
+        ...,
+        description="Natural language description of the video to generate",
+        min_length=1,
+        max_length=1000,
+    )
     project_id: int = Field(..., description="Project ID to associate the video with")
     title: Optional[str] = Field(None, description="Optional title for the video")
-    settings: Optional[Dict[str, Any]] = Field(default_factory=dict, description="Additional rendering settings")
+    settings: Optional[Dict[str, Any]] = Field(
+        default_factory=dict, description="Additional rendering settings"
+    )
+
 
 class AIVideoResponse(BaseModel):
     """Response model for AI video generation requests."""
+
     video_id: int
     job_id: str
     status: str = "processing"
     message: str = "AI video generation started successfully"
     estimated_duration: Optional[float] = None
 
+
 class VideoStatusResponse(BaseModel):
     """Response model for video status inquiries."""
+
     video_id: int
     status: str
     progress: float
@@ -46,12 +60,13 @@ class VideoStatusResponse(BaseModel):
     error_message: Optional[str] = None
     ai_metadata: Optional[Dict[str, Any]] = None
 
+
 @router.post("/generate", response_model=AIVideoResponse)
 async def generate_ai_video(
     request: AIVideoRequest,
     background_tasks: BackgroundTasks,
     current_user: dict = Depends(get_current_user),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     """Generate a video from natural language prompt using AI."""
     try:
@@ -61,14 +76,13 @@ async def generate_ai_video(
 
         if not project:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Project not found"
+                status_code=status.HTTP_404_NOT_FOUND, detail="Project not found"
             )
 
         if project.user_id != current_user["user_id"]:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail="Not authorized to create videos in this project"
+                detail="Not authorized to create videos in this project",
             )
 
         # Create video record in database
@@ -77,7 +91,7 @@ async def generate_ai_video(
             title=request.title or f"AI Generated: {request.prompt[:50]}...",
             status="processing",
             prompt=request.prompt,
-            settings=request.settings or {}
+            settings=request.settings or {},
         )
 
         video_repo = VideoRepository(db)
@@ -89,6 +103,7 @@ async def generate_ai_video(
 
         # Ensure output directory exists
         import os
+
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
         # Progress callback function
@@ -96,7 +111,9 @@ async def generate_ai_video(
             try:
                 # Update video progress in database
                 progress_percentage = min(max(progress, 0), 100)
-                updated_video = video_repo.update_video_progress(video.id, progress_percentage / 100.0, status.lower())
+                updated_video = video_repo.update_video_progress(
+                    video.id, progress_percentage / 100.0, status.lower()
+                )
 
                 # Send WebSocket update to client
                 try:
@@ -107,8 +124,8 @@ async def generate_ai_video(
                             "video_id": video.id,
                             "progress": progress_percentage,
                             "status": status.lower(),
-                            "message": message
-                        }
+                            "message": message,
+                        },
                     )
                 except Exception as ws_error:
                     logger.warning(f"WebSocket broadcast failed: {ws_error}")
@@ -123,16 +140,20 @@ async def generate_ai_video(
                 job_id = await render_pipeline.start_ai_render(
                     prompt=request.prompt,
                     output_path=output_path,
-                    progress_callback=progress_callback
+                    progress_callback=progress_callback,
                 )
 
                 # Update video with job_id
                 video_repo.update_video_job_id(video.id, job_id)
 
-                logger.info(f"Started AI video generation for video {video.id}, job {job_id}")
+                logger.info(
+                    f"Started AI video generation for video {video.id}, job {job_id}"
+                )
 
             except Exception as e:
-                logger.error(f"Failed to start AI video generation for video {video.id}: {e}")
+                logger.error(
+                    f"Failed to start AI video generation for video {video.id}: {e}"
+                )
 
                 # Update video status to failed
                 try:
@@ -152,7 +173,7 @@ async def generate_ai_video(
             job_id="",  # Will be set asynchronously
             status="processing",
             message="AI video generation started. You will receive progress updates via WebSocket.",
-            estimated_duration=estimated_duration
+            estimated_duration=estimated_duration,
         )
 
     except HTTPException:
@@ -161,14 +182,15 @@ async def generate_ai_video(
         logger.error(f"Error in AI video generation: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to start AI video generation"
+            detail="Failed to start AI video generation",
         )
+
 
 @router.get("/videos/{video_id}/status", response_model=VideoStatusResponse)
 def get_ai_video_status(
     video_id: int,
     current_user: dict = Depends(get_current_user),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     """Get the status of an AI-generated video."""
     try:
@@ -178,8 +200,7 @@ def get_ai_video_status(
 
         if not video:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Video not found"
+                status_code=status.HTTP_404_NOT_FOUND, detail="Video not found"
             )
 
         # Check project ownership
@@ -189,7 +210,7 @@ def get_ai_video_status(
         if project.user_id != current_user["user_id"]:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail="Not authorized to access this video"
+                detail="Not authorized to access this video",
             )
 
         # Get additional status from render pipeline if job_id exists
@@ -204,7 +225,7 @@ def get_ai_video_status(
                     ai_metadata = {
                         "scene_type": ai_spec.get("scene_type"),
                         "engine_used": job_status.get("engine_type"),
-                        "parameters": ai_spec.get("parameters", {})
+                        "parameters": ai_spec.get("parameters", {}),
                     }
 
         return VideoStatusResponse(
@@ -215,7 +236,7 @@ def get_ai_video_status(
             created_at=video.created_at.isoformat() if video.created_at else None,
             completed_at=video.completed_at.isoformat() if video.completed_at else None,
             error_message=video.error_message,
-            ai_metadata=ai_metadata
+            ai_metadata=ai_metadata,
         )
 
     except HTTPException:
@@ -224,15 +245,16 @@ def get_ai_video_status(
         logger.error(f"Error getting AI video status: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to get video status"
+            detail="Failed to get video status",
         )
+
 
 @router.post("/videos/{video_id}/retry")
 def retry_ai_video_generation(
     video_id: int,
     background_tasks: BackgroundTasks,
     current_user: dict = Depends(get_current_user),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     """Retry AI video generation for a failed video."""
     try:
@@ -242,8 +264,7 @@ def retry_ai_video_generation(
 
         if not video:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Video not found"
+                status_code=status.HTTP_404_NOT_FOUND, detail="Video not found"
             )
 
         # Check project ownership
@@ -253,14 +274,14 @@ def retry_ai_video_generation(
         if project.user_id != current_user["user_id"]:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail="Not authorized to retry this video"
+                detail="Not authorized to retry this video",
             )
 
         # Only allow retry for failed videos
         if video.status != "failed":
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Can only retry failed videos"
+                detail="Can only retry failed videos",
             )
 
         # Reset video status
@@ -277,7 +298,9 @@ def retry_ai_video_generation(
                 job_id = await render_pipeline.start_ai_render(
                     prompt=video.prompt,
                     output_path=output_path,
-                    progress_callback=lambda p, s, m: video_repo.update_video_progress(video_id, p / 100.0, s.lower())
+                    progress_callback=lambda p, s, m: video_repo.update_video_progress(
+                        video_id, p / 100.0, s.lower()
+                    ),
                 )
 
                 video_repo.update_video_job_id(video.id, job_id)
@@ -298,8 +321,9 @@ def retry_ai_video_generation(
         logger.error(f"Error retrying AI video generation: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retry video generation"
+            detail="Failed to retry video generation",
         )
+
 
 @router.get("/engines")
 def get_available_ai_engines(current_user: dict = Depends(get_current_user)):
@@ -312,15 +336,16 @@ def get_available_ai_engines(current_user: dict = Depends(get_current_user)):
                 "natural_language": True,
                 "code_generation": True,
                 "multi_engine": True,
-                "real_time_progress": True
-            }
+                "real_time_progress": True,
+            },
         }
     except Exception as e:
         logger.error(f"Error getting available engines: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to get available engines"
+            detail="Failed to get available engines",
         )
+
 
 @router.get("/capabilities")
 def get_ai_capabilities(current_user: dict = Depends(get_current_user)):
@@ -336,6 +361,6 @@ def get_ai_capabilities(current_user: dict = Depends(get_current_user)):
             "Intelligent scene detection",
             "Code generation for animation engines",
             "Multi-engine orchestration",
-            "Real-time progress updates"
-        ]
+            "Real-time progress updates",
+        ],
     }

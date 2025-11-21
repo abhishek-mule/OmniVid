@@ -1,16 +1,28 @@
 """
 Database models for Supabase integration
 """
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text, Float, ForeignKey
+
+from sqlalchemy import (
+    Column,
+    Integer,
+    String,
+    Boolean,
+    DateTime,
+    Text,
+    Float,
+    ForeignKey,
+)
 from sqlalchemy.orm import relationship, DeclarativeBase
 from sqlalchemy.sql import func
+
 
 class Base(DeclarativeBase):
     pass
 
+
 class UserProfile(Base):
     __tablename__ = "user_profiles"
-    
+
     id = Column(String(255), primary_key=True)  # UUID from Supabase
     email = Column(String(255), unique=True, index=True, nullable=False)
     username = Column(String(100), unique=True, index=True, nullable=False)
@@ -19,13 +31,14 @@ class UserProfile(Base):
     is_superuser = Column(Boolean, default=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
-    
+
     # Relationships
     projects = relationship("Project", back_populates="owner")
 
+
 class Project(Base):
     __tablename__ = "projects"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(255), nullable=False)
     description = Column(Text, nullable=True)
@@ -34,15 +47,16 @@ class Project(Base):
     status = Column(String(50), default="draft")  # draft, active, archived
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
-    
+
     # Relationships
     owner = relationship("UserProfile", back_populates="projects")
     videos = relationship("Video", back_populates="project")
     assets = relationship("Asset", back_populates="project")
 
+
 class Video(Base):
     __tablename__ = "videos"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(255), nullable=False)
     description = Column(Text, nullable=True)
@@ -51,21 +65,24 @@ class Video(Base):
     video_url = Column(String(500), nullable=True)
     thumbnail_url = Column(String(500), nullable=True)
     duration = Column(Float, nullable=True)  # in seconds
-    status = Column(String(50), default="pending")  # pending, processing, completed, failed
+    status = Column(
+        String(50), default="pending"
+    )  # pending, processing, completed, failed
     progress = Column(Integer, default=0)  # 0-100
     settings = Column(Text, nullable=True)  # JSON string for video generation settings
     error_message = Column(Text, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     completed_at = Column(DateTime(timezone=True), nullable=True)
-    
+
     # Relationships
     project = relationship("Project", back_populates="videos")
     assets = relationship("Asset", back_populates="video")
 
+
 class Asset(Base):
     __tablename__ = "assets"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     filename = Column(String(255), nullable=False)
     original_filename = Column(String(255), nullable=False)
@@ -76,16 +93,19 @@ class Asset(Base):
     project_id = Column(Integer, ForeignKey("projects.id"), nullable=True)
     video_id = Column(Integer, ForeignKey("videos.id"), nullable=True)
     is_processed = Column(Boolean, default=False)
-    asset_metadata = Column('metadata', Text, nullable=True)  # JSON string for additional metadata
+    asset_metadata = Column(
+        "metadata", Text, nullable=True
+    )  # JSON string for additional metadata
     created_at = Column(DateTime(timezone=True), server_default=func.now())
-    
+
     # Relationships
     project = relationship("Project", back_populates="assets")
     video = relationship("Video", back_populates="assets")
 
+
 class Job(Base):
     __tablename__ = "jobs"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     task_id = Column(String(255), unique=True, nullable=False)  # Celery task ID
     video_id = Column(Integer, ForeignKey("videos.id"), nullable=False)

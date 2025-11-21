@@ -47,7 +47,7 @@ export default function GeneratePage() {
       loadProjects();
       loadAiCapabilities();
     }
-  }, [token]);
+  }, [token]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadProjects = async () => {
     if (!token) return;

@@ -6,7 +6,7 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 
 # Conditionally import Supabase
-use_supabase = os.getenv('USE_SUPABASE', 'false').lower() == 'true'
+use_supabase = os.getenv("USE_SUPABASE", "false").lower() == "true"
 if use_supabase:
     try:
         from src.core.supabase import get_supabase
@@ -22,7 +22,10 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-def create_access_token(data: Dict[str, Any], expires_delta: Optional[timedelta] = None) -> str:
+
+def create_access_token(
+    data: Dict[str, Any], expires_delta: Optional[timedelta] = None
+) -> str:
     """
     Create a JWT access token
     """
@@ -33,6 +36,7 @@ def create_access_token(data: Dict[str, Any], expires_delta: Optional[timedelta]
         expire = datetime.utcnow() + timedelta(minutes=15)
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+
 
 async def get_current_user(token: str = Depends(oauth2_scheme)) -> Dict[str, Any]:
     """
@@ -55,7 +59,9 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> Dict[str, Any
     if use_supabase and get_supabase:
         # Get user from Supabase
         supabase = get_supabase()
-        response = supabase.table("users").select("*").eq("id", user_id).single().execute()
+        response = (
+            supabase.table("users").select("*").eq("id", user_id).single().execute()
+        )
 
         if not response.data:
             raise credentials_exception
@@ -63,11 +69,8 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> Dict[str, Any
         return response.data
     else:
         # Return basic user info from token (for non-Supabase mode)
-        return {
-            "id": user_id,
-            "email": payload.get("email"),
-            "is_active": True
-        }
+        return {"id": user_id, "email": payload.get("email"), "is_active": True}
+
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """
@@ -76,6 +79,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     # This is a placeholder. In a real app, use a proper password hashing library
     # like passlib with bcrypt
     return plain_password == hashed_password  # Insecure! Replace with proper hashing
+
 
 def get_password_hash(password: str) -> str:
     """
