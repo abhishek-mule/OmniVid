@@ -2,15 +2,15 @@
 Celery task integration tests.
 """
 
+from unittest.mock import MagicMock, patch
+
 import pytest
-from unittest.mock import patch, MagicMock
-from ..src.workers.celery_app import app as celery_app
-from ..src.workers.tasks.video_processing import (
-    generate_video,
-    render_video_blender,
-    process_video_upload,
-)
+
 from ..src.services.task_manager import TaskManager
+from ..src.workers.celery_app import app as celery_app
+from ..src.workers.tasks.video_processing import (generate_video,
+                                                  process_video_upload,
+                                                  render_video_blender)
 
 
 @pytest.fixture

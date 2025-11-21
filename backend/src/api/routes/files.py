@@ -2,28 +2,17 @@
 File management API routes for secure upload and download operations.
 """
 
-from fastapi import (
-    APIRouter,
-    Depends,
-    HTTPException,
-    status,
-    UploadFile,
-    File,
-    Form,
-    Query,
-)
+import logging
+from typing import List, Optional
+
+from fastapi import (APIRouter, Depends, File, Form, HTTPException, Query,
+                     UploadFile, status)
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
-from typing import List, Optional
-import logging
-
-from src.database.connection import get_db
 from src.auth.security import get_current_user
-from src.services.file_manager import (
-    file_manager,
-    FileValidationError,
-    FileStorageError,
-)
+from src.database.connection import get_db
+from src.services.file_manager import (FileStorageError, FileValidationError,
+                                       file_manager)
 from src.services.task_manager import task_manager
 
 router = APIRouter()

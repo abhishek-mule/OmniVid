@@ -2,23 +2,19 @@
 Task management service for video processing.
 """
 
-from sqlalchemy.orm import Session
-from ..workers.celery_app import app
-from ..database.connection import SessionLocal
-from ..database.repository import (
-    VideoRepository,
-    JobRepository,
-    ProjectRepository,
-    AssetRepository,
-)
-from ..database.schemas import JobCreate
-from ..workers.tasks.video_processing import (
-    generate_video,
-    render_video_blender,
-    process_video_upload,
-)
-import uuid
 import logging
+import uuid
+
+from sqlalchemy.orm import Session
+
+from ..database.connection import SessionLocal
+from ..database.repository import (AssetRepository, JobRepository,
+                                   ProjectRepository, VideoRepository)
+from ..database.schemas import JobCreate
+from ..workers.celery_app import app
+from ..workers.tasks.video_processing import (generate_video,
+                                              process_video_upload,
+                                              render_video_blender)
 
 logger = logging.getLogger(__name__)
 
@@ -163,8 +159,8 @@ class TaskManager:
 
     def cleanup_old_tasks(self, older_than_hours: int = 24) -> dict:
         """Clean up old task results."""
-        from datetime import datetime, timedelta
         import time
+        from datetime import datetime, timedelta
 
         try:
             # Get tasks older than specified hours

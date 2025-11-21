@@ -3,13 +3,13 @@ AI service for natural language video generation.
 Converts natural language prompts into animation code for render engines.
 """
 
+import asyncio
+import json
+import logging
 import os
 import re
-import json
-from typing import Dict, List, Optional, Any, Tuple
 from datetime import datetime
-import logging
-import asyncio
+from typing import Any, Dict, List, Optional, Tuple
 
 logger = logging.getLogger(__name__)
 

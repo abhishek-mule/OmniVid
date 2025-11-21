@@ -2,18 +2,14 @@
 Render pipeline service for coordinating video render engines.
 """
 
+import logging
 import os
 import uuid
-from typing import Dict, List, Optional, Any, Callable
 from datetime import datetime
-import logging
+from typing import Any, Callable, Dict, List, Optional
 
-from ..render_engines.base import (
-    RenderEngineManager,
-    RenderEngineType,
-    RenderStatus,
-    RenderResult,
-)
+from ..render_engines.base import (RenderEngineManager, RenderEngineType,
+                                   RenderResult, RenderStatus)
 from ..render_engines.blender.engine import BlenderRenderEngine
 from ..render_engines.ffmpeg.engine import FfmpegRenderEngine
 from ..render_engines.manim.engine import ManimRenderEngine
@@ -430,8 +426,8 @@ class RenderPipelineService:
 
     def _create_scene_from_code(self, code_spec: Dict[str, Any], job_id: str) -> str:
         """Create a scene file from generated code."""
-        import tempfile
         import os
+        import tempfile
 
         engine = code_spec["engine"]
         code_content = code_spec["code"]
@@ -514,9 +510,9 @@ export default Config;
     def _cleanup_ai_job_files(self, job_id: str):
         """Clean up temporary files created during AI job processing."""
         try:
-            import tempfile
-            import shutil
             import os
+            import shutil
+            import tempfile
 
             temp_dir = os.path.join(tempfile.gettempdir(), f"omnivid_ai_{job_id}")
             if os.path.exists(temp_dir):

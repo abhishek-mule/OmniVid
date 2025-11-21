@@ -1,17 +1,11 @@
-from sqlalchemy.orm import Session
 from typing import List, Optional
-from ..database.models import User, Project, Video, Asset, Job
-from ..database.schemas import (
-    UserCreate,
-    UserUpdate,
-    ProjectCreate,
-    ProjectUpdate,
-    VideoCreate,
-    VideoUpdate,
-    AssetCreate,
-    JobCreate,
-    JobUpdate,
-)
+
+from sqlalchemy.orm import Session
+
+from ..database.models import Asset, Job, Project, User, Video
+from ..database.schemas import (AssetCreate, JobCreate, JobUpdate,
+                                ProjectCreate, ProjectUpdate, UserCreate,
+                                UserUpdate, VideoCreate, VideoUpdate)
 
 
 # User Repository

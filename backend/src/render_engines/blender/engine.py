@@ -2,14 +2,15 @@
 Blender render engine implementation.
 """
 
+import logging
 import os
-import bpy
+import shutil
 import subprocess
 import tempfile
-import shutil
-from typing import Dict, List, Optional, Any
 from pathlib import Path
-import logging
+from typing import Any, Dict, List, Optional
+
+import bpy
 
 from .base import RenderEngine, RenderEngineType, RenderResult, RenderStatus
 

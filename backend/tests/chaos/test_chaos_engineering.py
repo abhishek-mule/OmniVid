@@ -2,16 +2,17 @@
 Chaos engineering tests for OmniVid backend.
 """
 
-import pytest
-import time
-import signal
-import subprocess
-import requests
-import docker
-from typing import Optional, List, Dict, Any
-from pathlib import Path
 import json
 import random
+import signal
+import subprocess
+import time
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
+import docker
+import pytest
+import requests
 
 # Configuration
 TEST_TIMEOUT = 60  # seconds

@@ -2,23 +2,26 @@
 End-to-end tests for the complete video generation workflow.
 """
 
-import pytest
 import asyncio
 import json
 import time
-from unittest.mock import patch, AsyncMock
+from unittest.mock import AsyncMock, patch
+
+import pytest
 from fastapi.testclient import TestClient
 from fastapi.websockets import WebSocketDisconnect
 from sqlalchemy.orm import Session
 
+from ..src.api.main import app
 # Import from the application
 from ..src.database.connection import Base, engine, get_db
-from ..src.database.models import User, Project, Video
-from ..src.database.repository import UserRepository, ProjectRepository, VideoRepository
-from ..src.database.schemas import UserCreate, ProjectCreate, VideoCreate, LoginRequest
-from ..src.api.main import app
-from ..src.workers.celery_app import celery_app
+from ..src.database.models import Project, User, Video
+from ..src.database.repository import (ProjectRepository, UserRepository,
+                                       VideoRepository)
+from ..src.database.schemas import (LoginRequest, ProjectCreate, UserCreate,
+                                    VideoCreate)
 from ..src.services.websocket_manager import connection_manager
+from ..src.workers.celery_app import celery_app
 
 
 class TestVideoGenerationWorkflow:

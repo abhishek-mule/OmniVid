@@ -2,9 +2,11 @@
 Unit tests for utility functions using property-based testing.
 """
 
-from hypothesis import given, strategies as st
-from hypothesis.extra.datetime import datetimes
 from datetime import datetime, timezone
+
+from hypothesis import given
+from hypothesis import strategies as st
+from hypothesis.extra.datetime import datetimes
 
 
 def test_format_duration():

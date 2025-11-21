@@ -2,17 +2,20 @@
 Updated authentication routes with Supabase integration
 """
 
+import os
+from typing import Optional
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import HTTPBearer
+from pydantic import BaseModel, EmailStr
 from sqlalchemy.orm import Session
+
+from ..auth.supabase_auth import (create_user_from_supabase,
+                                  get_current_supabase_user)
 from ..database.connection import get_db
+from ..database.models_supabase import UserProfile
 from ..database.repository import UserRepository
 from ..database.schemas import User, UserCreate
-from ..auth.supabase_auth import get_current_supabase_user, create_user_from_supabase
-from ..database.models_supabase import UserProfile
-from pydantic import BaseModel, EmailStr
-from typing import Optional
-import os
 
 router = APIRouter()
 

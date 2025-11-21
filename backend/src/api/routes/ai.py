@@ -3,16 +3,17 @@ AI-powered video generation API routes.
 Provides endpoints for natural language to video conversion using OmniVid Lite.
 """
 
-from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
-from sqlalchemy.orm import Session
-from typing import Dict, List, Optional, Any
-from pydantic import BaseModel, Field
 import logging
+from typing import Any, Dict, List, Optional
 
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, status
+from pydantic import BaseModel, Field
+from sqlalchemy.orm import Session
+
+from ...auth.security import get_current_user
 from ...database.connection import get_db
 from ...database.repository import ProjectRepository, VideoRepository
 from ...database.schemas import VideoCreate
-from ...auth.security import get_current_user
 from ...services.render_pipeline import render_pipeline
 from ...services.websocket_manager import websocket_manager
 

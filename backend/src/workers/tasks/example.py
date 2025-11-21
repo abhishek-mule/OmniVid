@@ -1,5 +1,6 @@
-from ..celery_app import app
 import time
+
+from ..celery_app import app
 
 
 @app.task

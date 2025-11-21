@@ -5,22 +5,14 @@ Database integration tests for OmniVid backend.
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+
 from ..src.database.connection import Base, get_db
-from ..src.database.models import User, Project, Video, Asset, Job
-from ..src.database.repository import (
-    UserRepository,
-    ProjectRepository,
-    VideoRepository,
-    AssetRepository,
-    JobRepository,
-)
-from ..src.database.schemas import (
-    UserCreate,
-    ProjectCreate,
-    VideoCreate,
-    AssetCreate,
-    JobCreate,
-)
+from ..src.database.models import Asset, Job, Project, User, Video
+from ..src.database.repository import (AssetRepository, JobRepository,
+                                       ProjectRepository, UserRepository,
+                                       VideoRepository)
+from ..src.database.schemas import (AssetCreate, JobCreate, ProjectCreate,
+                                    UserCreate, VideoCreate)
 
 # Test database setup
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"

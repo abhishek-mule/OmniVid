@@ -2,12 +2,12 @@
 Manim render engine implementation.
 """
 
+import logging
 import os
+import shutil
 import subprocess
 import tempfile
-import shutil
-from typing import Dict, List, Optional, Any
-import logging
+from typing import Any, Dict, List, Optional
 
 from .base import RenderEngine, RenderEngineType, RenderResult, RenderStatus
 

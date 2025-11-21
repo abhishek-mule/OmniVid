@@ -2,16 +2,19 @@
 Authentication tests for OmniVid backend.
 """
 
+from datetime import timedelta
+
 import pytest
 from fastapi.testclient import TestClient
-from datetime import timedelta
+
+from ..src.api.main import app
+from ..src.auth.schemas import LoginRequest, RegisterRequest
+from ..src.auth.security import (create_access_token, get_password_hash,
+                                 verify_password)
 from ..src.database.connection import Base, engine
 from ..src.database.models import User
 from ..src.database.repository import UserRepository
 from ..src.database.schemas import UserCreate
-from ..src.auth.security import create_access_token, verify_password, get_password_hash
-from ..src.auth.schemas import RegisterRequest, LoginRequest
-from ..src.api.main import app
 
 client = TestClient(app)
 

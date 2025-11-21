@@ -1,5 +1,6 @@
 ﻿import os
-from setuptools import setup, find_packages
+
+from setuptools import find_packages, setup
 
 # Read requirements from the clean file if it exists, otherwise use defaults
 requirements = []

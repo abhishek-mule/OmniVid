@@ -1,13 +1,13 @@
-from fastapi import FastAPI, Depends, HTTPException, status
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.security import OAuth2PasswordBearer
 import asyncio
 from contextlib import asynccontextmanager
 from typing import List
 
+from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import OAuth2PasswordBearer
 # Import database and models
 from sqlalchemy.ext.asyncio import AsyncEngine
-from src.database.connection import engine, Base, create_tables
+from src.database.connection import Base, create_tables, engine
 
 # Routes imports come later based on USE_SUPABASE setting
 
@@ -15,20 +15,19 @@ from src.database.connection import engine, Base, create_tables
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Import routers here to avoid import issues
+    # Import auth routes conditionally based on USE_SUPABASE
+    import os
+
+    from .routes.files import router as files_router
     from .routes.health import router as health_router
     from .routes.projects import router as projects_router
     from .routes.videos import router as videos_router
-    from .routes.files import router as files_router
     from .routes.websocket import router as websocket_router
-
-    # Import auth routes conditionally based on USE_SUPABASE
-    import os
 
     use_supabase = os.getenv("USE_SUPABASE", "false").lower() == "true"
 
     if use_supabase:
         from src.auth.supabase_routes import router as auth_router
-
         # Initialize Supabase client - tables are managed by Supabase
         from src.core.supabase import get_supabase
 
@@ -77,15 +76,15 @@ async def health_check():
     return {"status": "healthy"}
 
 
+# Import auth routes conditionally based on USE_SUPABASE
+import os
+
+from .routes.files import router as files_router
 # Import routers here
 from .routes.health import router as health_router
 from .routes.projects import router as projects_router
 from .routes.videos import router as videos_router
-from .routes.files import router as files_router
 from .routes.websocket import router as websocket_router
-
-# Import auth routes conditionally based on USE_SUPABASE
-import os
 
 use_supabase = os.getenv("USE_SUPABASE", "false").lower() == "true"
 

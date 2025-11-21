@@ -2,14 +2,16 @@
 Race condition and concurrency tests for OmniVid backend.
 """
 
-import pytest
-import time
 import threading
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
+
+import pytest
 from sqlalchemy.orm import Session
+
 from ..src.database.connection import SessionLocal
-from ..src.database.models import Video, User, Project
-from ..src.database.repository import VideoRepository, ProjectRepository
+from ..src.database.models import Project, User, Video
+from ..src.database.repository import ProjectRepository, VideoRepository
 
 # Test data
 TEST_USER_ID = 1

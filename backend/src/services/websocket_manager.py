@@ -4,9 +4,9 @@ WebSocket manager for real-time video progress updates.
 
 import json
 import logging
-from typing import Dict, Set, Optional
+from typing import Dict, Optional, Set
+
 from fastapi import WebSocket, WebSocketDisconnect
-from fastapi import WebSocket
 
 logger = logging.getLogger(__name__)
 

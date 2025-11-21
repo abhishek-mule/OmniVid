@@ -1,7 +1,8 @@
 import asyncio
-import requests
 import json
 import os
+
+import requests
 from dotenv import load_dotenv
 
 # Load environment variables

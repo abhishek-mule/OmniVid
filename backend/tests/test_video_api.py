@@ -2,11 +2,12 @@
 Tests for the OmniVid video generation API endpoints.
 """
 
+import json
+from datetime import datetime
+from unittest.mock import MagicMock, patch
+
 import pytest
 from fastapi.testclient import TestClient
-from unittest.mock import patch, MagicMock
-from datetime import datetime
-import json
 
 # Import the FastAPI app
 from ..src.api.main import app

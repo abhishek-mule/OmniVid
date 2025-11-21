@@ -2,11 +2,11 @@
 Render engine abstraction layer for OmniVid.
 """
 
-from abc import ABC, abstractmethod
-from typing import Dict, List, Optional, Any
-from enum import Enum
-import logging
 import json
+import logging
+from abc import ABC, abstractmethod
+from enum import Enum
+from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -255,8 +255,8 @@ class RenderEngineManager:
 
     def cleanup_completed_jobs(self, older_than_hours: int = 24) -> int:
         """Clean up completed jobs older than specified hours."""
-        from datetime import datetime, timedelta
         import time
+        from datetime import datetime, timedelta
 
         cutoff_time = time.time() - (older_than_hours * 3600)
         cleaned_count = 0

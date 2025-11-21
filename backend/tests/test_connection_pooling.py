@@ -2,12 +2,15 @@
 Database connection pooling tests.
 """
 
-import pytest
-import time
 import threading
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
+
+import pytest
 from sqlalchemy import create_engine, text
-from ..src.database.connection import Base, SessionLocal, SQLALCHEMY_DATABASE_URL
+
+from ..src.database.connection import (SQLALCHEMY_DATABASE_URL, Base,
+                                       SessionLocal)
 
 # Test with a smaller pool size to better test pooling behavior
 TEST_DB_URL = f"{SQLALCHEMY_DATABASE_URL}_pool_test"

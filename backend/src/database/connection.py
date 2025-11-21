@@ -1,15 +1,12 @@
-from sqlalchemy.ext.asyncio import (
-    create_async_engine,
-    AsyncSession,
-    async_sessionmaker,
-    async_scoped_session,
-)
-from sqlalchemy.pool import NullPool
-from sqlalchemy.orm import sessionmaker
-import os
 import asyncio
+import os
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator, Optional
+
+from sqlalchemy.ext.asyncio import (AsyncSession, async_scoped_session,
+                                    async_sessionmaker, create_async_engine)
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import NullPool
 
 # Conditionally import the Base class based on USE_SUPABASE setting
 use_supabase = os.getenv("USE_SUPABASE", "false").lower() == "true"

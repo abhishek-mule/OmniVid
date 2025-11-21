@@ -4,11 +4,14 @@ API endpoint tests for projects and videos.
 
 import pytest
 from fastapi.testclient import TestClient
-from ..src.database.connection import Base, engine
-from ..src.database.models import User, Project, Video
-from ..src.database.repository import UserRepository, ProjectRepository, VideoRepository
-from ..src.database.schemas import UserCreate, ProjectCreate, VideoCreate, LoginRequest
+
 from ..src.api.main import app
+from ..src.database.connection import Base, engine
+from ..src.database.models import Project, User, Video
+from ..src.database.repository import (ProjectRepository, UserRepository,
+                                       VideoRepository)
+from ..src.database.schemas import (LoginRequest, ProjectCreate, UserCreate,
+                                    VideoCreate)
 
 client = TestClient(app)
 

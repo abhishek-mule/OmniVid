@@ -2,11 +2,11 @@
 Remotion Compiler: Converts Scene JSON to Remotion React code.
 """
 
-import os
 import json
-from typing import Dict, List, Optional, Any
-from pathlib import Path
 import logging
+import os
+from pathlib import Path
+from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 

@@ -2,16 +2,14 @@
 Render pipeline integration tests.
 """
 
-import pytest
-import tempfile
 import os
-from unittest.mock import patch, MagicMock, Mock
-from ..src.render_engines.base import (
-    RenderEngineManager,
-    RenderEngineType,
-    RenderResult,
-    RenderStatus,
-)
+import tempfile
+from unittest.mock import MagicMock, Mock, patch
+
+import pytest
+
+from ..src.render_engines.base import (RenderEngineManager, RenderEngineType,
+                                       RenderResult, RenderStatus)
 from ..src.services.render_pipeline import RenderPipelineService
 
 

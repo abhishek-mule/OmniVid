@@ -6,7 +6,8 @@ and providing default values where necessary.
 """
 
 import os
-from typing import Dict, Any
+from typing import Any, Dict
+
 from dotenv import load_dotenv
 
 # Load environment variables from .env file if it exists

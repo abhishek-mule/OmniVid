@@ -2,27 +2,22 @@
 Celery tasks for video processing in OmniVid.
 """
 
-from celery import current_task
-from sqlalchemy.orm import Session
-from src.workers.celery_app import app
-
-# Import database repositories
-from src.database.connection import SessionLocal
-from src.database.repository import (
-    VideoRepository,
-    ProjectRepository,
-    JobRepository,
-    AssetRepository,
-)
-from src.database.schemas import VideoCreate
-from src.config.settings import OUTPUT_DIR
-
-# Import WebSocket manager
-from src.services.websocket_manager import connection_manager
-import os
 import json
 import logging
+import os
 from datetime import datetime
+
+from celery import current_task
+from sqlalchemy.orm import Session
+from src.config.settings import OUTPUT_DIR
+# Import database repositories
+from src.database.connection import SessionLocal
+from src.database.repository import (AssetRepository, JobRepository,
+                                     ProjectRepository, VideoRepository)
+from src.database.schemas import VideoCreate
+# Import WebSocket manager
+from src.services.websocket_manager import connection_manager
+from src.workers.celery_app import app
 
 logger = logging.getLogger(__name__)
 
@@ -360,6 +355,7 @@ def cleanup_old_jobs():
     db = SessionLocal()
     try:
         from datetime import timedelta
+
         from sqlalchemy import and_
 
         # Clean up jobs older than 7 days

@@ -4,13 +4,14 @@ POST /api/v1/generate - Convert prompt to Scene JSON to Code to Video.
 GET /api/v1/status/:job_id - Check render status.
 """
 
-from fastapi import APIRouter, Depends, HTTPException, status
-from typing import Dict, Any
-from pydantic import BaseModel, Field
 import logging
+from typing import Any, Dict
 
-from ...core.parser.llm_parser import parser
+from fastapi import APIRouter, Depends, HTTPException, status
+from pydantic import BaseModel, Field
+
 from ...core.jobs.dispatcher import job_dispatcher
+from ...core.parser.llm_parser import parser
 
 logger = logging.getLogger(__name__)
 

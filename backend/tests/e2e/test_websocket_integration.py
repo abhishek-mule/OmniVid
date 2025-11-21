@@ -2,10 +2,11 @@
 WebSocket-specific tests for real-time progress updates.
 """
 
-import pytest
 import json
-from fastapi.testclient import TestClient
 from unittest.mock import patch
+
+import pytest
+from fastapi.testclient import TestClient
 
 from ..src.api.main import app
 from ..src.services.websocket_manager import connection_manager

@@ -1,18 +1,10 @@
-from sqlalchemy import (
-    Column,
-    Integer,
-    String,
-    Boolean,
-    DateTime,
-    Text,
-    Float,
-    ForeignKey,
-    Table,
-)
-from sqlalchemy.orm import relationship, Mapped, mapped_column, DeclarativeBase
-from sqlalchemy.sql import func
-from typing import List, Optional
 from datetime import datetime
+from typing import List, Optional
+
+from sqlalchemy import (Boolean, Column, DateTime, Float, ForeignKey, Integer,
+                        String, Table, Text)
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy.sql import func
 
 
 # Base class for all models

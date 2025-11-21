@@ -2,13 +2,14 @@
 Load testing for OmniVid backend.
 """
 
-import pytest
-import time
-from locust import HttpUser, task, between
-from locust.env import Environment
-from locust.stats import stats_printer, stats_history
-from locust.log import setup_logging
 import json
+import time
+
+import pytest
+from locust import HttpUser, between, task
+from locust.env import Environment
+from locust.log import setup_logging
+from locust.stats import stats_history, stats_printer
 
 
 class OmniVidUser(HttpUser):

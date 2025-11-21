@@ -2,12 +2,13 @@
 Supabase authentication middleware and utilities for FastAPI backend
 """
 
-from fastapi import Request, HTTPException, status
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from supabase import create_client, Client
-import os
 import logging
-from typing import Optional, Dict, Any
+import os
+from typing import Any, Dict, Optional
+
+from fastapi import HTTPException, Request, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from supabase import Client, create_client
 
 logger = logging.getLogger(__name__)
 

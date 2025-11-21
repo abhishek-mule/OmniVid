@@ -2,17 +2,9 @@
 Database models for Supabase integration
 """
 
-from sqlalchemy import (
-    Column,
-    Integer,
-    String,
-    Boolean,
-    DateTime,
-    Text,
-    Float,
-    ForeignKey,
-)
-from sqlalchemy.orm import relationship, DeclarativeBase
+from sqlalchemy import (Boolean, Column, DateTime, Float, ForeignKey, Integer,
+                        String, Text)
+from sqlalchemy.orm import DeclarativeBase, relationship
 from sqlalchemy.sql import func
 
 
