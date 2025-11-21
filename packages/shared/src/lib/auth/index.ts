@@ -133,6 +133,96 @@ export const videoApi = {
   },
 };
 
+// AI API calls for OmniVid Lite
+export const aiApi = {
+  generateVideo: async (token: string, prompt: string, projectId: number, options?: {
+    title?: string;
+    settings?: any;
+  }) => {
+    const response = await fetch(`${API_BASE_URL}/api/ai/generate`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        prompt,
+        project_id: projectId,
+        title: options?.title,
+        settings: options?.settings,
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ detail: 'AI video generation failed' }));
+      throw new Error(error.detail || 'Failed to generate AI video');
+    }
+
+    return response.json();
+  },
+
+  getVideoStatus: async (token: string, videoId: number) => {
+    const response = await fetch(`${API_BASE_URL}/api/ai/videos/${videoId}/status`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch video status');
+    }
+
+    return response.json();
+  },
+
+  retryVideoGeneration: async (token: string, videoId: number) => {
+    const response = await fetch(`${API_BASE_URL}/api/ai/videos/${videoId}/retry`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to retry video generation');
+    }
+
+    return response.json();
+  },
+
+  getAvailableEngines: async (token: string) => {
+    const response = await fetch(`${API_BASE_URL}/api/ai/engines`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch available engines');
+    }
+
+    return response.json();
+  },
+
+  getCapabilities: async (token: string) => {
+    const response = await fetch(`${API_BASE_URL}/api/ai/capabilities`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch AI capabilities');
+    }
+
+    return response.json();
+  },
+};
+
 // Projects API calls
 export const projectApi = {
   getProjects: async (token: string) => {
