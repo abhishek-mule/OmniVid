@@ -26,7 +26,8 @@ exclude =
     uploads,
     assets,
     tmp,
-    .venv
+    .venv,
+    *.egg-info
 per-file-ignores =
     # Tests can have unused imports
     tests/*:F401,F811,F841,

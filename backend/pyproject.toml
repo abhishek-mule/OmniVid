@@ -71,7 +71,7 @@ known_first_party = ["src"]
 known_local_folder = ["src"]
 sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
 skip = ["__init__.py", "node_modules", "uploads", "assets", "tmp"]
-skip_glob = ["*/__pycache__/*", "*/.pytest_cache/*", "*/__pycache__", "*/.pytest_cache"]
+skip_glob = ["*/__pycache__/*", "*/.pytest_cache/*", "*/__pycache__", "*/.pytest_cache", "build/**/*", "dist/**/*", "*.egg-info/**"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
