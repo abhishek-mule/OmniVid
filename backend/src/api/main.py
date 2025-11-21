@@ -5,6 +5,7 @@ from typing import List
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer
+
 # Import database and models
 from sqlalchemy.ext.asyncio import AsyncEngine
 from src.database.connection import Base, create_tables, engine
@@ -28,6 +29,7 @@ async def lifespan(app: FastAPI):
 
     if use_supabase:
         from src.auth.supabase_routes import router as auth_router
+
         # Initialize Supabase client - tables are managed by Supabase
         from src.core.supabase import get_supabase
 
@@ -80,6 +82,7 @@ async def health_check():
 import os
 
 from .routes.files import router as files_router
+
 # Import routers here
 from .routes.health import router as health_router
 from .routes.projects import router as projects_router

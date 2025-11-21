@@ -8,11 +8,20 @@ from sqlalchemy.orm import sessionmaker
 
 from ..src.database.connection import Base, get_db
 from ..src.database.models import Asset, Job, Project, User, Video
-from ..src.database.repository import (AssetRepository, JobRepository,
-                                       ProjectRepository, UserRepository,
-                                       VideoRepository)
-from ..src.database.schemas import (AssetCreate, JobCreate, ProjectCreate,
-                                    UserCreate, VideoCreate)
+from ..src.database.repository import (
+    AssetRepository,
+    JobRepository,
+    ProjectRepository,
+    UserRepository,
+    VideoRepository,
+)
+from ..src.database.schemas import (
+    AssetCreate,
+    JobCreate,
+    ProjectCreate,
+    UserCreate,
+    VideoCreate,
+)
 
 # Test database setup
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"

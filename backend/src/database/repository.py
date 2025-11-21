@@ -3,9 +3,17 @@ from typing import List, Optional
 from sqlalchemy.orm import Session
 
 from ..database.models import Asset, Job, Project, User, Video
-from ..database.schemas import (AssetCreate, JobCreate, JobUpdate,
-                                ProjectCreate, ProjectUpdate, UserCreate,
-                                UserUpdate, VideoCreate, VideoUpdate)
+from ..database.schemas import (
+    AssetCreate,
+    JobCreate,
+    JobUpdate,
+    ProjectCreate,
+    ProjectUpdate,
+    UserCreate,
+    UserUpdate,
+    VideoCreate,
+    VideoUpdate,
+)
 
 
 # User Repository

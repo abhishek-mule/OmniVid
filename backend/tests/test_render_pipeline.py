@@ -8,8 +8,12 @@ from unittest.mock import MagicMock, Mock, patch
 
 import pytest
 
-from ..src.render_engines.base import (RenderEngineManager, RenderEngineType,
-                                       RenderResult, RenderStatus)
+from ..src.render_engines.base import (
+    RenderEngineManager,
+    RenderEngineType,
+    RenderResult,
+    RenderStatus,
+)
 from ..src.services.render_pipeline import RenderPipelineService
 
 

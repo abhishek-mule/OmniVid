@@ -5,8 +5,14 @@ from sqlalchemy.orm import Session
 from src.auth.security import get_current_user
 from src.database.connection import get_db
 from src.database.repository import ProjectRepository, VideoRepository
-from src.database.schemas import (Project, ProjectCreate, ProjectUpdate, Video,
-                                  VideoCreate, VideoUpdate)
+from src.database.schemas import (
+    Project,
+    ProjectCreate,
+    ProjectUpdate,
+    Video,
+    VideoCreate,
+    VideoUpdate,
+)
 
 router = APIRouter()
 

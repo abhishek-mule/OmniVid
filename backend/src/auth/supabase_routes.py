@@ -10,8 +10,7 @@ from fastapi.security import HTTPBearer
 from pydantic import BaseModel, EmailStr
 from sqlalchemy.orm import Session
 
-from ..auth.supabase_auth import (create_user_from_supabase,
-                                  get_current_supabase_user)
+from ..auth.supabase_auth import create_user_from_supabase, get_current_supabase_user
 from ..database.connection import get_db
 from ..database.models_supabase import UserProfile
 from ..database.repository import UserRepository

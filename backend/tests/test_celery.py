@@ -8,9 +8,11 @@ import pytest
 
 from ..src.services.task_manager import TaskManager
 from ..src.workers.celery_app import app as celery_app
-from ..src.workers.tasks.video_processing import (generate_video,
-                                                  process_video_upload,
-                                                  render_video_blender)
+from ..src.workers.tasks.video_processing import (
+    generate_video,
+    process_video_upload,
+    render_video_blender,
+)
 
 
 @pytest.fixture

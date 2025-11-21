@@ -5,9 +5,13 @@ from fastapi.security import HTTPBearer
 from sqlalchemy.orm import Session
 
 from ..auth.schemas import LoginRequest, RegisterRequest, Token
-from ..auth.security import (create_access_token, get_current_active_user,
-                             get_current_user, get_password_hash,
-                             verify_password)
+from ..auth.security import (
+    create_access_token,
+    get_current_active_user,
+    get_current_user,
+    get_password_hash,
+    verify_password,
+)
 from ..config.settings import ACCESS_TOKEN_EXPIRE_MINUTES
 from ..database.connection import get_db
 from ..database.repository import UserRepository

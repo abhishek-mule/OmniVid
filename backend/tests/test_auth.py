@@ -9,8 +9,7 @@ from fastapi.testclient import TestClient
 
 from ..src.api.main import app
 from ..src.auth.schemas import LoginRequest, RegisterRequest
-from ..src.auth.security import (create_access_token, get_password_hash,
-                                 verify_password)
+from ..src.auth.security import create_access_token, get_password_hash, verify_password
 from ..src.database.connection import Base, engine
 from ..src.database.models import User
 from ..src.database.repository import UserRepository

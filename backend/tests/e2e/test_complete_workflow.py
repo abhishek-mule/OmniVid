@@ -13,13 +13,12 @@ from fastapi.websockets import WebSocketDisconnect
 from sqlalchemy.orm import Session
 
 from ..src.api.main import app
+
 # Import from the application
 from ..src.database.connection import Base, engine, get_db
 from ..src.database.models import Project, User, Video
-from ..src.database.repository import (ProjectRepository, UserRepository,
-                                       VideoRepository)
-from ..src.database.schemas import (LoginRequest, ProjectCreate, UserCreate,
-                                    VideoCreate)
+from ..src.database.repository import ProjectRepository, UserRepository, VideoRepository
+from ..src.database.schemas import LoginRequest, ProjectCreate, UserCreate, VideoCreate
 from ..src.services.websocket_manager import connection_manager
 from ..src.workers.celery_app import celery_app
 

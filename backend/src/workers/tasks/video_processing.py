@@ -10,11 +10,17 @@ from datetime import datetime
 from celery import current_task
 from sqlalchemy.orm import Session
 from src.config.settings import OUTPUT_DIR
+
 # Import database repositories
 from src.database.connection import SessionLocal
-from src.database.repository import (AssetRepository, JobRepository,
-                                     ProjectRepository, VideoRepository)
+from src.database.repository import (
+    AssetRepository,
+    JobRepository,
+    ProjectRepository,
+    VideoRepository,
+)
 from src.database.schemas import VideoCreate
+
 # Import WebSocket manager
 from src.services.websocket_manager import connection_manager
 from src.workers.celery_app import app

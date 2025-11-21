@@ -9,8 +9,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import pytest
 from sqlalchemy import create_engine, text
 
-from ..src.database.connection import (SQLALCHEMY_DATABASE_URL, Base,
-                                       SessionLocal)
+from ..src.database.connection import SQLALCHEMY_DATABASE_URL, Base, SessionLocal
 
 # Test with a smaller pool size to better test pooling behavior
 TEST_DB_URL = f"{SQLALCHEMY_DATABASE_URL}_pool_test"
