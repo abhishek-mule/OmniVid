@@ -2,6 +2,7 @@ from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
+
 from src.auth.security import get_current_user
 from src.database.connection import get_db
 from src.database.repository import ProjectRepository, VideoRepository

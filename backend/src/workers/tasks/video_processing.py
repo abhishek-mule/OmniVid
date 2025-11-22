@@ -9,6 +9,7 @@ from datetime import datetime
 
 from celery import current_task
 from sqlalchemy.orm import Session
+
 from src.config.settings import OUTPUT_DIR
 
 # Import database repositories
@@ -181,81 +182,151 @@ def generate_video(self, video_data: dict, user_id: int):
 
 @app.task(bind=True)
 def render_video_blender(self, video_data: dict, user_id: int):
-    """Celery task to render a video using Blender."""
+    """Celery task to render a video using Blender with process isolation."""
+    from src.render_engines.blender.engine import BlenderRenderEngine
+
     db = SessionLocal()
     try:
         video_repo = VideoRepository(db)
         video_id = video_data.get("video_id")
+        prompt = video_data.get("prompt", "default scene")
+        settings = video_data.get("settings", {})
+
+        # Get video information
+        video = video_repo.get_video(video_id)
+        if not video:
+            raise ValueError(f"Video {video_id} not found")
 
         # Broadcast initial progress
         connection_manager.broadcast_progress_update(
             video_id=str(video_id),
-            progress=10,
+            progress=5,
             stage="Initializing Blender render engine",
             status="processing",
         )
 
-        # Update progress for Blender rendering
         current_task.update_state(
             state="PROGRESS",
             meta={
-                "current": 10,
+                "current": 5,
                 "total": 100,
                 "status": "Initializing Blender render engine",
             },
         )
 
-        video = video_repo.get_video(video_id)
-        if not video:
-            raise ValueError(f"Video {video_id} not found")
+        # Initialize Blender Render Engine
+        engine = BlenderRenderEngine()
+        if not engine.initialize():
+            raise RuntimeError("Failed to initialize Blender render engine")
 
-        # Simulate Blender rendering process
-        render_steps = [
-            (20, "Loading Blender scene"),
-            (40, "Processing 3D assets"),
-            (60, "Rendering frames"),
-            (80, "Compositing scene"),
-            (95, "Encoding final video"),
-        ]
+        video_repo.update_video_progress(video_id, 10, "processing")
+        connection_manager.broadcast_progress_update(
+            video_id=str(video_id),
+            progress=10,
+            stage="Creating Blender scene (isolated process)",
+            status="processing",
+        )
+        current_task.update_state(
+            state="PROGRESS",
+            meta={
+                "current": 10,
+                "total": 100,
+                "status": "Creating Blender scene (isolated process)",
+            },
+        )
 
-        for progress, status in render_steps:
-            video_repo.update_video_progress(video_id, progress, "processing")
-            current_task.update_state(
-                state="PROGRESS",
-                meta={"current": progress, "total": 100, "status": status},
-            )
+        try:
+            # Update settings with job ID for manifest
+            settings['job_id'] = f"video_{video_id}"
 
-            # Broadcast progress via WebSocket
+            # Step 1: Create production-ready scene with manifest
+            logger.info(f"Creating production scene for video {video_id} with prompt: {prompt}")
+            blend_path = engine.create_scene(prompt, settings)
+
+            video_repo.update_video_progress(video_id, 30, "processing")
             connection_manager.broadcast_progress_update(
                 video_id=str(video_id),
-                progress=progress,
-                stage=status,
+                progress=30,
+                stage="Production scene created (manifest validated)",
+                status="processing",
+            )
+            current_task.update_state(
+                state="PROGRESS",
+                meta={
+                    "current": 30,
+                    "total": 100,
+                    "status": "Production scene created (manifest validated)",
+                },
+            )
+
+            # Step 2: Render video in isolated process with full validation
+            output_path = f"{OUTPUT_DIR}/videos/{video_id}_blender.mp4"
+            os.makedirs(os.path.dirname(output_path), exist_ok=True)
+
+            logger.info(f"Rendering production video {video_id} to: {output_path}")
+            result = engine.render_video(blend_path, output_path)
+
+            if not result.success:
+                raise RuntimeError(f"Blender rendering failed: {result.error_message}")
+
+            # Step 3: Post-render cleanup and artifact management
+            video_repo.update_video_progress(video_id, 95, "processing")
+            connection_manager.broadcast_progress_update(
+                video_id=str(video_id),
+                progress=95,
+                stage="Render completed, cleaning up artifacts",
                 status="processing",
             )
 
-            import time
+            # Clean up job-specific temporary files only (preserve .blend for debugging)
+            try:
+                from src.workers.jobs_cleanup import cleanup_job_artifacts_sync
+                cleanup_job_artifacts_sync(video_id)
+            except Exception as cleanup_error:
+                logger.warning(f"Cleanup failed for video {video_id}: {cleanup_error}")
+                # Don't fail the whole render for cleanup issues
 
-            time.sleep(3)
-
-        # Complete the rendering
-        video_repo.update_video(
-            video_id,
-            {
-                "video_url": f"/output/blender/{video_id}_blender.mp4",
+            # Update video with completion data
+            video_update = {
+                "video_url": f"/videos/{video_id}_blender.mp4",
+                "thumbnail_url": f"/thumbnails/{video_id}_blender.jpg",  # Would generate actual thumbnail
+                "duration": result.duration or 10.0,
                 "status": "completed",
-            },
-        )
-        video_repo.update_video_progress(video_id, 100, "completed")
+                "resolution": result.resolution or (1920, 1080),
+            }
+            video_repo.update_video(video_id, video_update)
+            video_repo.update_video_progress(video_id, 100, "completed")
 
-        # Broadcast completion
-        connection_manager.broadcast_completion(
-            video_id=str(video_id), output_url=f"/output/blender/{video_id}_blender.mp4"
-        )
+            # Broadcast completion
+            connection_manager.broadcast_completion(
+                video_id=str(video_id),
+                output_url=video_update["video_url"],
+                thumbnail_url=video_update["thumbnail_url"]
+            )
 
-        return {"video_id": video_id, "engine": "blender", "status": "completed"}
+            current_task.update_state(
+                state="PROGRESS",
+                meta={"current": 100, "total": 100, "status": "Completed"},
+            )
+
+            logger.info(f"Blender rendering completed for video {video_id}")
+            return {
+                "video_id": video_id,
+                "engine": "blender",
+                "status": "completed",
+                "scene_path": blend_path,
+                "output_path": output_path
+            }
+
+        except Exception as e:
+            # Clean up on failure
+            engine.cleanup()
+            raise
 
     except Exception as e:
         logger.error(f"Blender rendering failed for video {video_id}: {str(e)}")
+
+        # Update video status to failed
         video_repo.update_video_progress(video_id, 0, "failed")
         video_repo.update_video(video_id, {"error_message": str(e)})
 
@@ -263,9 +334,14 @@ def render_video_blender(self, video_data: dict, user_id: int):
         connection_manager.broadcast_progress_update(
             video_id=str(video_id),
             progress=0,
-            stage="Error",
+            stage="Blender render failed",
             status="failed",
             error=str(e),
+        )
+
+        current_task.update_state(
+            state="FAILED",
+            meta={"error": str(e), "current": 0, "total": 100},
         )
         raise
     finally:

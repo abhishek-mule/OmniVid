@@ -8,6 +8,7 @@ from fastapi.security import OAuth2PasswordBearer
 
 # Import database and models
 from sqlalchemy.ext.asyncio import AsyncEngine
+
 from src.database.connection import Base, create_tables, engine
 
 # Routes imports come later based on USE_SUPABASE setting

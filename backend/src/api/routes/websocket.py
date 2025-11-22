@@ -5,6 +5,7 @@ WebSocket routes for real-time video progress updates.
 import logging
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+
 from src.services.websocket_manager import connection_manager
 
 router = APIRouter()
