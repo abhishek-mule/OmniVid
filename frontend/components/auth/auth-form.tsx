@@ -55,8 +55,7 @@ export function AuthForm({ className, type, searchParams, ...props }: AuthFormPr
         result = await signInWithPassword(data.email, data.password);
       } else {
         result = await signUp(data.email, data.password, {
-          full_name: data.name,
-          username: data.name?.toLowerCase().replace(/\s+/g, '') || 'user',
+          full_name: data.name || data.email.split('@')[0],
         });
       }
 
@@ -65,17 +64,18 @@ export function AuthForm({ className, type, searchParams, ...props }: AuthFormPr
       }
 
       toast({
-        title: type === 'login' ? 'Welcome back!' : 'Account created!',
-        description: `You have successfully ${type === 'login' ? 'signed in' : 'signed up'}.`,
+        title: type === 'login' ? 'Login successful!' : 'Account created!',
+        description: `Welcome to OmniVid${type === 'login' ? ' back' : ''}!`,
       });
 
-      const nextParam = searchParams?.get('next') || '/app/editor';
+      // Redirect to home page or specified redirect
+      const nextParam = searchParams?.get('next') || '/';
       router.push(nextParam);
-      router.refresh();
     } catch (error) {
+      console.error('Auth error:', error);
       toast({
-        title: 'Error',
-        description: error instanceof Error ? error.message : 'Something went wrong',
+        title: 'Authentication Error',
+        description: error instanceof Error ? error.message : 'Something went wrong during authentication',
         variant: 'destructive',
       });
     } finally {
@@ -115,9 +115,9 @@ export function AuthForm({ className, type, searchParams, ...props }: AuthFormPr
     <div className={cn('grid gap-6', className)} {...props}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid gap-4">
-          {type === 'register' && (
+        {type === 'register' && (
             <div className="grid gap-2">
-              <Label htmlFor="name">Name</Label>
+              <Label htmlFor="name">Full Name</Label>
               <Input
                 id="name"
                 placeholder="John Doe"
@@ -129,7 +129,7 @@ export function AuthForm({ className, type, searchParams, ...props }: AuthFormPr
                 {...register('name')}
               />
               {errors?.name && (
-                <p className="px-1 text-xs text-red-600">
+                <p className="text-xs text-red-600">
                   {errors.name.message}
                 </p>
               )}
@@ -207,47 +207,7 @@ export function AuthForm({ className, type, searchParams, ...props }: AuthFormPr
         </div>
       </form>
 
-      <div className="relative">
-        <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t" />
-        </div>
-        <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-background px-2 text-muted-foreground">
-            Or continue with
-          </span>
-        </div>
-      </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <Button
-          variant="outline"
-          type="button"
-          disabled={isLoading || isGitHubLoading}
-          onClick={() => handleOAuthLogin('github')}
-          className="flex items-center justify-center gap-2"
-        >
-          {isGitHubLoading ? (
-            <Icons.spinner className="h-4 w-4 animate-spin" />
-          ) : (
-            <Icons.github className="h-4 w-4" />
-          )}
-          GitHub
-        </Button>
-        <Button
-          variant="outline"
-          type="button"
-          disabled={isLoading || isGoogleLoading}
-          onClick={() => handleOAuthLogin('google')}
-          className="flex items-center justify-center gap-2"
-        >
-          {isGoogleLoading ? (
-            <Icons.spinner className="h-4 w-4 animate-spin" />
-          ) : (
-            <Icons.google className="h-4 w-4" />
-          )}
-          Google
-        </Button>
-      </div>
 
       <p className="px-8 text-center text-sm text-muted-foreground">
         {type === 'login' ? (

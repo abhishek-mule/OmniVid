@@ -4,14 +4,133 @@ FFmpeg render engine implementation.
 
 import logging
 import os
+import re
 import shutil
 import subprocess
 import tempfile
-from typing import Any, Dict, List, Optional
+import time
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
 
 from .base import RenderEngine, RenderEngineType, RenderResult, RenderStatus
 
 logger = logging.getLogger(__name__)
+
+
+class FFMpegSupervisor:
+    """Lightweight supervisor for FFMPEG processes with retry logic."""
+
+    def __init__(self, ffmpeg_path: str):
+        self.ffmpeg_path = Path(ffmpeg_path)
+        self.ffprobe_path = None
+        self._find_ffprobe()
+
+    def _find_ffprobe(self):
+        """Find ffprobe executable in same directory as ffmpeg."""
+        ffmpeg_dir = self.ffmpeg_path.parent
+        ffprobe_path = ffmpeg_dir / "ffprobe"
+        if os.name == 'nt':  # Windows
+            ffprobe_path = ffmpeg_dir / "ffprobe.exe"
+
+        if ffprobe_path.exists() and os.access(ffprobe_path, os.X_OK):
+            self.ffprobe_path = ffprobe_path
+        else:
+            # Try system PATH
+            try:
+                import shutil
+                ffprobe_sys = shutil.which("ffprobe")
+                if ffprobe_sys:
+                    self.ffprobe_path = Path(ffprobe_sys)
+            except:
+                pass
+
+    def has_ffprobe(self) -> bool:
+        """Check if ffprobe is available."""
+        return self.ffprobe_path is not None and self.ffprobe_path.exists()
+
+    def execute_with_retry(
+        self,
+        cmd: List[str],
+        job_id: str,
+        timeout_seconds: int = 300,
+        max_retries: int = 2
+    ) -> Tuple[bool, str, str, int]:
+        """
+        Execute FFMPEG command with retry logic and progress monitoring.
+        Returns: (success, stdout, stderr, exit_code)
+        """
+        last_stderr = ""
+        last_stdout = ""
+
+        for attempt in range(max_retries + 1):
+            try:
+                logger.info(f"FFMPEG attempt {attempt + 1}/{max_retries + 1} for job {job_id}")
+
+                # Execute command
+                process = subprocess.Popen(
+                    cmd,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    text=True,
+                    env=os.environ.copy()
+                )
+
+                start_time = time.time()
+                stdout_parts = []
+                stderr_parts = []
+
+                # Monitor with timeout
+                while True:
+                    if process.poll() is not None:
+                        break
+
+                    if time.time() - start_time > timeout_seconds:
+                        process.terminate()
+                        try:
+                            process.wait(timeout=5)
+                        except subprocess.TimeoutExpired:
+                            process.kill()
+                        raise subprocess.TimeoutExpired("FFMPEG timeout", timeout=timeout_seconds)
+
+                    time.sleep(0.1)  # Brief polling interval
+
+                # Get final output
+                final_stdout, final_stderr = process.communicate()
+
+                stdout_parts.append(final_stdout)
+                stderr_parts.append(final_stderr)
+
+                complete_stdout = ''.join(stdout_parts)
+                complete_stderr = ''.join(stderr_parts)
+
+                if process.returncode == 0:
+                    return True, complete_stdout, complete_stderr, 0
+
+                logger.warning(f"FFMPEG attempt {attempt + 1} failed with code {process.returncode}")
+
+                # Don't retry if it's the last attempt
+                if attempt == max_retries:
+                    return False, complete_stdout, complete_stderr, process.returncode or -1
+
+                last_stdout = complete_stdout
+                last_stderr = complete_stderr
+
+                # Brief delay before retry
+                time.sleep(1)
+
+            except subprocess.TimeoutExpired:
+                logger.warning(f"FFMPEG timeout on attempt {attempt + 1}")
+                if attempt == max_retries:
+                    return False, last_stdout, last_stderr, -2
+                time.sleep(2)
+
+            except Exception as e:
+                logger.error(f"FFMPEG execution error on attempt {attempt + 1}: {e}")
+                if attempt == max_retries:
+                    return False, last_stdout, last_stderr, -3
+                time.sleep(1)
+
+        return False, last_stdout, last_stderr, -4
 
 
 class FfmpegRenderEngine(RenderEngine):
@@ -20,6 +139,7 @@ class FfmpegRenderEngine(RenderEngine):
     def __init__(self):
         super().__init__("FFmpeg", ["mp4", "avi", "mov", "mkv", "webm", "flv"])
         self.ffmpeg_path = None
+        self.supervisor = None
         self.temp_dir = None
 
     def initialize(self) -> bool:
@@ -30,13 +150,13 @@ class FfmpegRenderEngine(RenderEngine):
 
             self.ffmpeg_path = shutil.which("ffmpeg")
 
-            if not self.ffmpeg_path:
                 # Check common installation paths
                 common_paths = [
                     "/usr/bin/ffmpeg",
                     "/usr/local/bin/ffmpeg",
                     "C:\\ffmpeg\\bin\\ffmpeg.exe",
                     "C:\\Program Files\\ffmpeg\\bin\\ffmpeg.exe",
+                    
                 ]
 
                 for path in common_paths:

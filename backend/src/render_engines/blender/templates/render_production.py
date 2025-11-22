@@ -5,8 +5,8 @@ Implements all guardrails for CI reliability.
 
 import bpy
 import json
-import sys
 import os
+import sys
 import hashlib
 import time
 import subprocess

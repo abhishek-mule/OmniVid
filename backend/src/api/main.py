@@ -16,28 +16,14 @@ from src.database.connection import Base, create_tables, engine
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Import routers here to avoid import issues
-    # Import auth routes conditionally based on USE_SUPABASE
-    import os
-
-    from .routes.files import router as files_router
-    from .routes.health import router as health_router
-    from .routes.projects import router as projects_router
-    from .routes.videos import router as videos_router
-    from .routes.websocket import router as websocket_router
-
+    # Only do conditional initialization here to avoid import issues
     use_supabase = os.getenv("USE_SUPABASE", "false").lower() == "true"
 
     if use_supabase:
-        from src.auth.supabase_routes import router as auth_router
-
         # Initialize Supabase client - tables are managed by Supabase
         from src.core.supabase import get_supabase
-
         _ = get_supabase()  # Initialize the client
     else:
-        from src.auth.routes import router as auth_router
-
         # Create database tables on startup when not using Supabase
         async with engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
@@ -46,7 +32,10 @@ async def lifespan(app: FastAPI):
 
     # Clean up on shutdown
     if not use_supabase:
-        await engine.dispose()
+        try:
+            await engine.dispose()
+        except Exception:
+            pass  # Avoid unhandled shutdown errors
 
 
 app = FastAPI(
@@ -61,7 +50,7 @@ app = FastAPI(
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, replace with your frontend URL
+    allow_origins=["*"],  # ⚠️ SECURITY: Replace with frontend URL(s) before production deployment
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -101,10 +90,10 @@ app.include_router(auth_router, prefix="/auth", tags=["authentication"])
 app.include_router(projects_router, prefix="/api", tags=["projects"])
 app.include_router(videos_router, prefix="/api", tags=["videos"])
 app.include_router(files_router, prefix="/api/files", tags=["files"])
-app.include_router(websocket_router, prefix="", tags=["websocket"])
+app.include_router(websocket_router, prefix="/ws", tags=["websocket"])  # Avoid conflicts with /health, /
 app.include_router(health_router)
 
-# AI routes
-from .routes.ai import router as ai_router
+# AI routes - temporarily commented out due to import issues
+# from .routes.ai import router as ai_router
 
-app.include_router(ai_router, prefix="/api/ai", tags=["ai"])
+# app.include_router(ai_router, prefix="/api/ai", tags=["ai"])

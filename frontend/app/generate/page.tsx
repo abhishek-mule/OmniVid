@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { AuthGuard } from '@/components/auth/middleware';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -25,6 +26,7 @@ export default function GeneratePage() {
   const [projects, setProjects] = useState<any[]>([]);
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
   const [aiCapabilities, setAiCapabilities] = useState<any>(null);
+  const [apiTestStatus, setApiTestStatus] = useState<string>('');
 
   const router = useRouter();
   const { user, session } = useSupabaseAuth();
@@ -34,18 +36,41 @@ export default function GeneratePage() {
   const wsUrl = currentVideoId ? `ws://localhost:8000/ws/videos/${currentVideoId}` : null;
   const { messages, isConnected } = useWebSocket(wsUrl || '');
 
-  // Redirect if not authenticated
+  // Test API connectivity on page load
   useEffect(() => {
-    if (!user && !token) {
-      router.push('/auth/login');
+    testBackendConnectivity();
+  }, []);
+
+  const testBackendConnectivity = async () => {
+    try {
+      setApiTestStatus('Testing backend connection...');
+
+      // Test health endpoint
+      const response = await fetch('http://localhost:8000/health');
+      if (!response.ok) {
+        throw new Error(`Health check failed: ${response.status}`);
+      }
+
+      const data = await response.json();
+      if (data.status !== 'healthy') {
+        throw new Error('Backend not healthy');
+      }
+
+      setApiTestStatus('✅ Backend connection successful!');
+    } catch (error) {
+      setApiTestStatus(`❌ API Connection Error: ${error.message}`);
+      console.error('API Connectivity Test Failed:', error);
     }
-  }, [user, token, router]);
+  };
 
   // Load projects and AI capabilities on mount
   useEffect(() => {
+    // Always load AI capabilities (doesn't need auth)
+    loadAiCapabilities();
+
+    // Only load projects if user is authenticated
     if (token) {
       loadProjects();
-      loadAiCapabilities();
     }
   }, [token]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -136,8 +161,8 @@ export default function GeneratePage() {
   };
 
   return (
-    <div className="min-h-screen gradient-bg">
-      <div className="container py-10">
+    <AuthGuard>
+      <div className="min-h-screen gradient-bg">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="text-center mb-12 animate-fade-in">
@@ -252,43 +277,57 @@ export default function GeneratePage() {
             </Card>
           </div>
 
-          {/* AI Capabilities Info */}
-          {aiCapabilities && (
-            <Card className="glass-card mt-12">
-              <CardHeader>
-                <CardTitle>AI Capabilities</CardTitle>
-                <CardDescription>Powered by intelligent video generation</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="text-center">
-                    <Badge variant="outline" className="mb-2">Engines</Badge>
-                    <p className="text-sm text-muted-foreground">
-                      {aiCapabilities.supported_engines?.join(', ') || 'Remotion, Manim, FFmpeg'}
-                    </p>
+            {/* API Test Status */}
+            <div className="mt-8 text-center">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-500 mb-4">
+                <Zap className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Backend Connectivity Test</h3>
+              <p className="text-sm text-muted-foreground mb-2">{apiTestStatus}</p>
+              <div className="flex justify-center space-x-4 text-xs">
+                <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full">Backend: 8000</span>
+                <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full">Frontend: 3000</span>
+                <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded-full">CORS Enabled</span>
+              </div>
+            </div>
+
+            {/* AI Capabilities Info */}
+            {aiCapabilities && (
+              <Card className="glass-card mt-12">
+                <CardHeader>
+                  <CardTitle>AI Capabilities</CardTitle>
+                  <CardDescription>Powered by intelligent video generation</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="text-center">
+                      <Badge variant="outline" className="mb-2">Engines</Badge>
+                      <p className="text-sm text-muted-foreground">
+                        {aiCapabilities.supported_engines?.join(', ') || 'Remotion, Manim, FFmpeg'}
+                      </p>
+                    </div>
+                    <div className="text-center">
+                      <Badge variant="outline" className="mb-2">Scenes</Badge>
+                      <p className="text-sm text-muted-foreground">
+                        {aiCapabilities.supported_scenes?.join(', ') || 'Text, Math, Animation'}
+                      </p>
+                    </div>
+                    <div className="text-center">
+                      <Badge variant="outline" className="mb-2">Resolution</Badge>
+                      <p className="text-sm text-muted-foreground">
+                        Up to {aiCapabilities.supported_resolutions?.[1] || '4K'}
+                      </p>
+                    </div>
+                    <div className="text-center">
+                      <Badge variant="outline" className="mb-2">Generation</Badge>
+                      <p className="text-sm text-muted-foreground">
+                        {aiCapabilities.estimated_generation_time || '10-60 seconds'}
+                      </p>
+                    </div>
                   </div>
-                  <div className="text-center">
-                    <Badge variant="outline" className="mb-2">Scenes</Badge>
-                    <p className="text-sm text-muted-foreground">
-                      {aiCapabilities.supported_scenes?.join(', ') || 'Text, Math, Animation'}
-                    </p>
-                  </div>
-                  <div className="text-center">
-                    <Badge variant="outline" className="mb-2">Resolution</Badge>
-                    <p className="text-sm text-muted-foreground">
-                      Up to {aiCapabilities.supported_resolutions?.[1] || '4K'}
-                    </p>
-                  </div>
-                  <div className="text-center">
-                    <Badge variant="outline" className="mb-2">Generation</Badge>
-                    <p className="text-sm text-muted-foreground">
-                      {aiCapabilities.estimated_generation_time || '10-60 seconds'}
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          )}
+                </CardContent>
+              </Card>
+            )}
         </div>
       </div>
     </div>

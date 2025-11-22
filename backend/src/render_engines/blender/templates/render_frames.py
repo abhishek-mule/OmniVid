@@ -1,9 +1,11 @@
 """
 Production-Grade Blender Frame Renderer
-- Non-destructive scene loading
-- Direct rendering API
-- Robust error handling
-- Process-safe operations
+- SHA256 manifest validation
+- .ok marker atomic completion per frame
+- Blender supervisor integration with timeout/retry
+- Auto-camera bounding box positioning
+- Stream-based frame hashing
+- FFmpeg video assembly with progress monitoring
 """
 
 import bpy
@@ -16,6 +18,9 @@ import atexit
 import signal
 import math
 import mathutils
+import hashlib
+import tempfile
+import shutil
 from pathlib import Path
 from typing import Tuple, Optional, Dict, Any, List
 

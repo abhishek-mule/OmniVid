@@ -10,12 +10,12 @@ from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, status
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
-from ...auth.security import get_current_user
-from ...database.connection import get_db
-from ...database.repository import ProjectRepository, VideoRepository
-from ...database.schemas import VideoCreate
-from ...services.render_pipeline import render_pipeline
-from ...services.websocket_manager import websocket_manager
+from auth.security import get_current_user
+from database.connection import get_db
+from database.repository import ProjectRepository, VideoRepository
+from database.schemas import VideoCreate
+from services.render_pipeline import render_pipeline
+from services.websocket_manager import websocket_manager
 
 logger = logging.getLogger(__name__)
 
